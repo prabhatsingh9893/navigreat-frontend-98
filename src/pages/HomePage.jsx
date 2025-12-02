@@ -7,7 +7,7 @@ function HomePage() {
 
   // --- 3. The Bridge: Fetch data from localhost:5000 ---
   useEffect(() => {
-    fetch('http://localhost:5000/api/mentors')
+    fetch('https://navigreat-backend-98.onrender.com/api/mentors')
       .then(response => response.json())
       .then(data => {
         console.log("Data received from backend:", data); // Check console to see data
