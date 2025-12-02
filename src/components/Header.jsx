@@ -1,9 +1,20 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 
 function Header() {
   const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
+  
+  // Check if user is logged in
+  const user = localStorage.getItem('user');
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    alert("Logged out successfully!");
+    navigate('/login');
+  };
 
   return (
     <header className="fixed w-full bg-white z-50 shadow-sm top-0">
@@ -19,15 +30,30 @@ function Header() {
             <Link to="/" className="text-gray-600 hover:text-blue-600 font-medium">Home</Link>
             <a href="/#about" className="text-gray-600 hover:text-blue-600 font-medium">About Us</a>
             <a href="/#mentors" className="text-gray-600 hover:text-blue-600 font-medium">Mentors</a>
-            <a href="/#faq" className="text-gray-600 hover:text-blue-600 font-medium">FAQ</a>
             
-            {/* Contact Page Link */}
-            <Link to="/contact" className="bg-blue-600 text-white px-5 py-2 rounded-lg font-medium hover:bg-blue-700 transition">
-              Contact
-            </Link>
+            <Link to="/contact" className="text-gray-600 hover:text-blue-600 font-medium">Contact</Link>
+
+            {/* Login / Logout Logic */}
+            {user ? (
+              <div className="flex items-center gap-4">
+                <span className="text-blue-600 font-bold">Hi, {user}</span>
+                <button onClick={handleLogout} className="bg-red-500 text-white px-5 py-2 rounded-lg font-medium hover:bg-red-600 transition">
+                  Logout
+                </button>
+              </div>
+            ) : (
+              <div className="flex gap-4">
+                <Link to="/login" className="text-gray-600 hover:text-blue-600 font-medium py-2">
+                  Login
+                </Link>
+                <Link to="/signup" className="bg-blue-600 text-white px-5 py-2 rounded-lg font-medium hover:bg-blue-700 transition">
+                  Sign Up
+                </Link>
+              </div>
+            )}
           </div>
 
-          {/* Mobile Menu Button (Hamburger) */}
+          {/* Mobile Menu Button */}
           <div className="md:hidden">
             <button onClick={() => setIsOpen(!isOpen)} className="text-gray-600 focus:outline-none">
               {isOpen ? <X size={24} /> : <Menu size={24} />}
@@ -39,11 +65,19 @@ function Header() {
         {isOpen && (
           <div className="md:hidden mt-4 pb-4 space-y-4 bg-white shadow-lg rounded-lg p-4 absolute w-full left-0">
             <Link to="/" className="block text-gray-600 hover:text-blue-600" onClick={() => setIsOpen(false)}>Home</Link>
-            <a href="/#about" className="block text-gray-600 hover:text-blue-600" onClick={() => setIsOpen(false)}>About Us</a>
-            <a href="/#mentors" className="block text-gray-600 hover:text-blue-600" onClick={() => setIsOpen(false)}>Mentors</a>
-            <Link to="/contact" className="block w-full text-center bg-blue-600 text-white py-2 rounded-lg" onClick={() => setIsOpen(false)}>
-              Contact
-            </Link>
+            <Link to="/contact" className="block text-gray-600 hover:text-blue-600" onClick={() => setIsOpen(false)}>Contact</Link>
+            
+            {user ? (
+              <>
+                <div className="text-blue-600 font-bold py-2">Hi, {user}</div>
+                <button onClick={() => { handleLogout(); setIsOpen(false); }} className="block w-full text-center bg-red-500 text-white py-2 rounded-lg">Logout</button>
+              </>
+            ) : (
+              <>
+                <Link to="/login" className="block text-gray-600 hover:text-blue-600" onClick={() => setIsOpen(false)}>Login</Link>
+                <Link to="/signup" className="block w-full text-center bg-blue-600 text-white py-2 rounded-lg" onClick={() => setIsOpen(false)}>Sign Up</Link>
+              </>
+            )}
           </div>
         )}
       </nav>
