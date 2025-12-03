@@ -1,16 +1,15 @@
-import React, { useEffect, useState } from 'react'; // <--- 1. We imported Hooks
+import React, { useEffect, useState } from 'react';
 import { Users, BookOpen, Award, ChevronDown } from 'lucide-react';
+import { Link } from 'react-router-dom'; // <--- 1. Link Import किया
 
 function HomePage() {
-  // --- 2. State to hold the data coming from the Backend ---
   const [mentors, setMentors] = useState([]);
 
-  // --- 3. The Bridge: Fetch data from localhost:5000 ---
   useEffect(() => {
     fetch('https://navigreat-backend-98.onrender.com/api/mentors')
       .then(response => response.json())
       .then(data => {
-        console.log("Data received from backend:", data); // Check console to see data
+        console.log("Data received:", data);
         setMentors(data);
       })
       .catch(error => console.error('Error fetching mentors:', error));
@@ -30,14 +29,17 @@ function HomePage() {
               Connect with mentors from IITs, NITs, and top global universities. 
               Get career clarity, build skills, and achieve your goals faster.
             </p>
+            
+            {/* 👇 2. बटन को लिंक में बदला 👇 */}
             <div className="flex flex-col sm:flex-row gap-4">
-              <button className="bg-white text-blue-600 px-8 py-3 rounded-lg font-bold hover:bg-gray-100 transition">
+              <Link to="/mentors" className="bg-white text-blue-600 px-8 py-3 rounded-lg font-bold hover:bg-gray-100 transition text-center">
                 Find a Mentor
-              </button>
-              <button className="border-2 border-white text-white px-8 py-3 rounded-lg font-bold hover:bg-white/10 transition">
+              </Link>
+              <Link to="/become-mentor" className="border-2 border-white text-white px-8 py-3 rounded-lg font-bold hover:bg-white/10 transition text-center">
                 Become a Mentor
-              </button>
+              </Link>
             </div>
+
           </div>
           <div className="md:w-1/2 flex justify-center">
             <img 
@@ -87,20 +89,17 @@ function HomePage() {
         </div>
       </section>
 
-      {/* 4. EXPERT MENTORS SECTION (NOW DYNAMIC) */}
+      {/* 4. EXPERT MENTORS SECTION */}
       <section id="mentors" className="py-24 bg-gray-50">
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-gray-900">Expert Mentors</h2>
-            <p className="text-gray-600 mt-4 text-lg">Learn from the best minds (Data fetched from Backend)</p>
+            <p className="text-gray-600 mt-4 text-lg">Learn from the best minds at top institutions worldwide</p>
           </div>
           
-          {/* This Grid is now powered by the Backend Data */}
           <div className="grid md:grid-cols-3 gap-8">
             {mentors.length === 0 ? (
-              <div className="col-span-3 text-center py-10">
-                <p className="text-xl text-gray-500 animate-pulse">Loading Mentors from Server...</p>
-              </div>
+              <p className="text-center col-span-3 text-gray-500 animate-pulse">Loading Mentors from Server...</p>
             ) : (
               mentors.map((mentor) => (
                 <div key={mentor.id} className="bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-xl transition">
