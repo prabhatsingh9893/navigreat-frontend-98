@@ -29,7 +29,7 @@ function Header() {
           <div className="hidden md:flex items-center space-x-8">
             <Link to="/" className="text-gray-600 hover:text-blue-600 font-medium">Home</Link>
             <a href="/#about" className="text-gray-600 hover:text-blue-600 font-medium">About Us</a>
-            <a href="/#mentors" className="text-gray-600 hover:text-blue-600 font-medium">Mentors</a>
+            <Link to="/mentors" className="...">Mentors</Link>
             
             <Link to="/contact" className="text-gray-600 hover:text-blue-600 font-medium">Contact</Link>
 

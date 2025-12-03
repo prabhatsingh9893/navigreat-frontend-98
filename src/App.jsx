@@ -6,7 +6,7 @@ import HomePage from './pages/HomePage.jsx';
 import ContactPage from './pages/ContactPage.jsx';
 import LoginPage from './pages/LoginPage.jsx';   // <--- New
 import SignupPage from './pages/SignupPage.jsx'; // <--- New
-
+import MentorsPage from './pages/MentorsPage.jsx';
 function App() {
   return (
     <div className="flex flex-col min-h-screen">
@@ -17,6 +17,7 @@ function App() {
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/login" element={<LoginPage />} />   {/* <--- New */}
           <Route path="/signup" element={<SignupPage />} /> {/* <--- New */}
+          <Route path="/mentors" element={<MentorsPage />} />
         </Routes>
       </main>
       <Footer />
