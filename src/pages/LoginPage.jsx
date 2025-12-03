@@ -19,12 +19,14 @@ function LoginPage() {
       });
       const data = await response.json();
       
-      if (data.success) {
-        localStorage.setItem('token', data.token); // Save the token
-        localStorage.setItem('user', data.username);
-        alert("✅ Login Successful! Welcome " + data.username);
-        navigate('/'); // Redirect to Home
-      } else {
+     if (data.success) {
+  localStorage.setItem('token', data.token);
+  // 👇 यहाँ बदलाव: अब हम पूरा यूजर ऑब्जेक्ट सेव कर रहे हैं
+  localStorage.setItem('userData', JSON.stringify(data.user)); 
+  
+  alert("✅ Login Successful!");
+  navigate('/dashboard'); // अब हम होम नहीं, Dashboard पर भेजेंगे
+}else {
         alert("❌ Error: " + data.message);
       }
     } catch (error) {
