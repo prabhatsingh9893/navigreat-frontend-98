@@ -8,12 +8,14 @@ import LoginPage from './pages/LoginPage.jsx';   // <--- New
 import SignupPage from './pages/SignupPage.jsx'; // <--- New
 import MentorsPage from './pages/MentorsPage.jsx';
 import MentorSignupPage from './pages/MentorSignupPage.jsx';
+import DashboardPage from './pages/DashboardPage.jsx';
 function App() {
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
       <main className="flex-grow">
         <Routes>
+          <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/become-mentor" element={<MentorSignupPage />} />
           <Route path="/" element={<HomePage />} />
           <Route path="/contact" element={<ContactPage />} />
