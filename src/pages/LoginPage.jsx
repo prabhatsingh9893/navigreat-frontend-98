@@ -28,11 +28,13 @@ function LoginPage() {
       toast.dismiss(loadingToast);
 
       if (data.success) {
-        localStorage.setItem('token', data.token);
-        localStorage.setItem('userData', JSON.stringify(data.user));
-        toast.success("Welcome back!");
-        navigate('/dashboard');
-      } else {
+  localStorage.setItem('token', data.token);
+  localStorage.setItem('userData', JSON.stringify(data.user));
+  toast.success("Welcome back!");
+  
+  // 👇 Navigate हटाकर यह लिखें (ताकि पेज रिफ्रेश हो और Header अपडेट हो)
+  window.location.href = "/"; 
+} else {
         toast.error(data.message);
       }
     } catch (error) {
@@ -60,11 +62,13 @@ function LoginPage() {
       const data = await response.json();
 
       if (data.success) {
-        localStorage.setItem('token', data.token);
-        localStorage.setItem('userData', JSON.stringify(data.user));
-        toast.success("Google Login Successful!");
-        navigate('/dashboard');
-      }
+  localStorage.setItem('token', data.token);
+  localStorage.setItem('userData', JSON.stringify(data.user));
+  toast.success("Google Login Successful!");
+  
+  // 👇 Navigate हटाकर यह लिखें
+  window.location.href = "/";
+}
     } catch (error) {
       console.error(error);
       toast.error("Google Login Failed");
