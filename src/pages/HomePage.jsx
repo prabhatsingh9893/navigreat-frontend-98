@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Users, BookOpen, Award, ChevronDown, MapPin } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom'; // <--- useNavigate Import किया
-import toast from 'react-hot-toast'; // <--- Toast Import किया
+import { Link, useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 
 function HomePage() {
   const [mentors, setMentors] = useState([]);
   const navigate = useNavigate();
 
-  // 1. Fetch Data
+  // 1. Fetch Mentors Data
   useEffect(() => {
     fetch('https://navigreat-backend-98.onrender.com/api/mentors')
       .then(response => response.json())
@@ -15,10 +15,11 @@ function HomePage() {
       .catch(error => console.error('Error fetching mentors:', error));
   }, []);
 
-  // 2. Book Session Logic (यही वह जादू है जो बटन को चलाएगा)
+  // 2. Book Session Logic
   const handleBookSession = async (mentorName) => {
     const userData = localStorage.getItem('userData'); 
     
+    // Check Login
     if (!userData) {
       toast.error("🔒 Please Login first!");
       navigate('/login');
@@ -98,7 +99,7 @@ function HomePage() {
         </div>
       </section>
 
-      {/* 3. EXPERT MENTORS SECTION (With Functional Button) */}
+      {/* 3. EXPERT MENTORS SECTION */}
       <section id="mentors" className="py-24 bg-gray-50">
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
@@ -122,7 +123,6 @@ function HomePage() {
                     <p className="text-blue-600 font-medium mb-1">{mentor.college}</p>
                     <p className="text-gray-500 text-sm mb-4">{mentor.role}</p>
                     
-                    {/* 👇 असली बटन (Real Button) 👇 */}
                     <button 
                       onClick={() => handleBookSession(mentor.name)}
                       className="w-full bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700 transition active:scale-95"
