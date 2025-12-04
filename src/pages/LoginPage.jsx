@@ -1,18 +1,17 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { auth, provider } from '../firebaseConfig'; // <--- Import Firebase
+import { Link } from 'react-router-dom'; // Note: We don't need useNavigate here anymore
+import { auth, provider } from '../firebaseConfig';
 import { signInWithPopup } from 'firebase/auth';
 import toast from 'react-hot-toast';
 
 function LoginPage() {
   const [formData, setFormData] = useState({ email: '', password: '' });
-  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // --- 1. Normal Login Logic ---
+  // --- 1. Email/Password Login ---
   const handleSubmit = async (e) => {
     e.preventDefault();
     const loadingToast = toast.loading("Logging in...");
@@ -28,13 +27,14 @@ function LoginPage() {
       toast.dismiss(loadingToast);
 
       if (data.success) {
-  localStorage.setItem('token', data.token);
-  localStorage.setItem('userData', JSON.stringify(data.user));
-  toast.success("Welcome back!");
-  
-  // 👇 Navigate हटाकर यह लिखें (ताकि पेज रिफ्रेश हो और Header अपडेट हो)
-  window.location.href = "/"; 
-} else {
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('userData', JSON.stringify(data.user));
+        
+        toast.success("Welcome back!");
+        
+        // 👇 जादूई लाइन: यह होमपेज पर ले जाएगी और Header अपडेट कर देगी
+        window.location.href = "/"; 
+      } else {
         toast.error(data.message);
       }
     } catch (error) {
@@ -43,13 +43,12 @@ function LoginPage() {
     }
   };
 
-  // --- 2. Google Login Logic (New) ---
+  // --- 2. Google Login ---
   const handleGoogleLogin = async () => {
     try {
       const result = await signInWithPopup(auth, provider);
-      const user = result.user; // Google से यूजर का डेटा मिला
+      const user = result.user;
       
-      // अब इस डेटा को अपने Backend को भेजो
       const response = await fetch('https://navigreat-backend-98.onrender.com/api/google-login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -62,13 +61,13 @@ function LoginPage() {
       const data = await response.json();
 
       if (data.success) {
-  localStorage.setItem('token', data.token);
-  localStorage.setItem('userData', JSON.stringify(data.user));
-  toast.success("Google Login Successful!");
-  
-  // 👇 Navigate हटाकर यह लिखें
-  window.location.href = "/";
-}
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('userData', JSON.stringify(data.user));
+        toast.success("Google Login Successful!");
+        
+        // 👇 जादूई लाइन: होमपेज पर ले जाएगी और रिफ्रेश करेगी
+        window.location.href = "/";
+      }
     } catch (error) {
       console.error(error);
       toast.error("Google Login Failed");
@@ -92,7 +91,6 @@ function LoginPage() {
           <hr className="border-gray-300" />
         </div>
 
-        {/* Google Button */}
         <button 
           onClick={handleGoogleLogin}
           className="mt-6 w-full border border-gray-300 bg-white text-gray-700 p-3 rounded-lg font-bold hover:bg-gray-50 flex items-center justify-center gap-3 transition"
