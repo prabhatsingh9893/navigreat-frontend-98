@@ -1,16 +1,22 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-// Node.js path utility ko import karo
 import path from 'path'; 
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
-  // YEH SECTION ADD KARO
+
+  // 1. Yeh tumhara Alias wala code (Shortcuts ke liye)
   resolve: {
     alias: {
-      // '@/' ab hamesha 'src/' folder ko point karega
       "@": path.resolve(__dirname, "./src"),
+    },
+  },
+
+  // 2. YEH NAYA PART HAI (Google Login Error fix karne ke liye)
+  server: {
+    headers: {
+      "Cross-Origin-Opener-Policy": "same-origin-allow-popups",
     },
   },
 });

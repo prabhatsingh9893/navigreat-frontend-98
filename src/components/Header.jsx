@@ -1,67 +1,71 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Menu, X } from 'lucide-react';
 
 function Header() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [user, setUser] = useState(null); // User state
+  const [user, setUser] = useState(null);
   const navigate = useNavigate();
 
-  // Check Login Status everytime Header loads
+  // 1. Check if user is logged in (when page loads)
   useEffect(() => {
-    const storedData = localStorage.getItem('userData');
-    if (storedData) {
-      setUser(JSON.parse(storedData)); // Data को सही से पढ़ो
+    const storedUser = localStorage.getItem('userData');
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
     }
   }, []);
 
+  // 2. Logout Function
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('userData');
     setUser(null);
-    alert("Logged out successfully!");
-    navigate('/login');
-    window.location.reload(); // Logout के बाद रिफ्रेश करो
+    // Optional: Redirect to home or login page
+    navigate('/login'); 
   };
 
   return (
-    <header className="fixed w-full bg-white z-50 shadow-sm top-0">
-      <nav className="container mx-auto px-6 py-4">
-        <div className="flex justify-between items-center">
-          <Link to="/" className="flex items-center">
-            <span className="text-2xl font-bold text-gray-800">EduMentor<span className="text-blue-600">Connect</span></span>
-          </Link>
+    <header className="bg-white shadow-md">
+      <div className="container mx-auto px-6 py-4 flex justify-between items-center">
+        
+        {/* Logo */}
+        <Link to="/" className="text-2xl font-bold text-blue-600">
+          NaviGreat
+        </Link>
 
-          <div className="hidden md:flex items-center space-x-8">
-            <Link to="/" className="text-gray-600 hover:text-blue-600 font-medium">Home</Link>
-            <Link to="/mentors" className="text-gray-600 hover:text-blue-600 font-medium">Mentors</Link>
-            <Link to="/contact" className="text-gray-600 hover:text-blue-600 font-medium">Contact</Link>
-
-            {/* 👇 Login Check Logic Updated 👇 */}
-            {user ? (
-              <div className="flex items-center gap-4">
-                <Link to="/dashboard" className="text-blue-600 font-bold hover:underline">
-                  Hi, {user.username}
-                </Link>
-                <button onClick={handleLogout} className="bg-red-500 text-white px-5 py-2 rounded-lg font-medium hover:bg-red-600 transition">
-                  Logout
-                </button>
-              </div>
-            ) : (
-              <div className="flex gap-4">
-                <Link to="/login" className="text-gray-600 hover:text-blue-600 font-medium py-2">Login</Link>
-                <Link to="/signup" className="bg-blue-600 text-white px-5 py-2 rounded-lg font-medium hover:bg-blue-700 transition">Sign Up</Link>
-              </div>
-            )}
-          </div>
-
-          <div className="md:hidden">
-            <button onClick={() => setIsOpen(!isOpen)} className="text-gray-600 focus:outline-none">
-              {isOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
-          </div>
-        </div>
-      </nav>
+        {/* Navigation Links */}
+        <nav className="hidden md:flex items-center gap-8">
+          <Link to="/" className="text-gray-600 hover:text-blue-600 font-medium">Home</Link>
+          <Link to="/mentors" className="text-gray-600 hover:text-blue-600 font-medium">Find Mentors</Link>
+          <Link to="/contact" className="text-gray-600 hover:text-blue-600 font-medium">Contact</Link>
+          
+          {/* 👇 Dynamic Login/Logout Section 👇 */}
+          {user ? (
+            <div className="flex items-center gap-4 ml-4">
+              {/* Show User Name */}
+              <span className="text-gray-800 font-semibold bg-gray-100 px-3 py-1 rounded-full">
+                👤 {user.username ? user.username.split(" ")[0] : "User"}
+              </span>
+              
+              {/* Logout Button */}
+              <button 
+                onClick={handleLogout}
+                className="text-sm bg-red-50 text-red-600 border border-red-200 px-4 py-2 rounded-lg hover:bg-red-600 hover:text-white transition"
+              >
+                Logout
+              </button>
+            </div>
+          ) : (
+            <div className="flex items-center gap-3 ml-4">
+              {/* Show Login/Signup Buttons */}
+              <Link to="/login" className="px-4 py-2 text-blue-600 border border-blue-600 rounded-lg hover:bg-blue-50 transition font-medium">
+                Login
+              </Link>
+              <Link to="/signup" className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-medium shadow-lg shadow-blue-500/30">
+                Sign Up
+              </Link>
+            </div>
+          )}
+        </nav>
+      </div>
     </header>
   );
 }
