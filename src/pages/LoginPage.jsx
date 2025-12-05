@@ -1,61 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { auth, provider } from '../firebaseConfig';
-// 👇 Change: Import these specifically for Redirect method
-import { signInWithRedirect, getRedirectResult } from 'firebase/auth'; 
+import { signInWithPopup } from 'firebase/auth'; // ✅ Sirf Popup import kiya
 import toast from 'react-hot-toast';
 
 function LoginPage() {
   const [formData, setFormData] = useState({ email: '', password: '' });
 
-  // --- 🆕 1. Handle Google Redirect Result ---
-  // This runs automatically when the user comes BACK from Google
-  useEffect(() => {
-    const checkGoogleLogin = async () => {
-      try {
-        const result = await getRedirectResult(auth);
-        if (result) {
-          const loadingToast = toast.loading("Finishing Google Login...");
-          const user = result.user;
-
-          // Call your Backend API
-          const response = await fetch('https://navigreat-backend-98.onrender.com/api/google-login', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              username: user.displayName,
-              email: user.email,
-            }),
-          });
-
-          const data = await response.json();
-          toast.dismiss(loadingToast);
-
-          if (data.success) {
-            localStorage.setItem('token', data.token);
-            localStorage.setItem('userData', JSON.stringify(data.user));
-            toast.success("Google Login Successful!");
-            
-            // 👇 Jadui Line: Refresh and go home
-            window.location.href = "/";
-          } else {
-            toast.error("Login Failed: " + data.message);
-          }
-        }
-      } catch (error) {
-        console.error("Redirect Error:", error);
-        toast.error("Something went wrong with Google Login");
-      }
-    };
-
-    checkGoogleLogin();
-  }, []);
+  // ❌ useEffect ki zaroorat nahi hai Popup mein (Redirect result check nahi karna padta)
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // --- 2. Email/Password Login (Unchanged) ---
+  // --- 1. Email/Password Login ---
   const handleSubmit = async (e) => {
     e.preventDefault();
     const loadingToast = toast.loading("Logging in...");
@@ -84,11 +42,44 @@ function LoginPage() {
     }
   };
 
-  // --- 3. Trigger Google Login ---
-  const handleGoogleLogin = () => {
-    // 👇 Simpler: Just redirect. No await needed here.
-    // The logic continues in the useEffect above after the page reloads.
-    signInWithRedirect(auth, provider);
+  // --- 2. Google Login (POPUP Method) ---
+  const handleGoogleLogin = async () => {
+    try {
+      // Step A: Firebase Popup Open
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+      
+      console.log("Firebase User:", user); // Debugging ke liye
+
+      // Step B: Send to Backend
+      const loadingToast = toast.loading("Verifying with Backend...");
+      
+      const response = await fetch('https://navigreat-backend-98.onrender.com/api/google-login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          username: user.displayName,
+          email: user.email,
+        }),
+      });
+
+      const data = await response.json();
+      toast.dismiss(loadingToast);
+
+      if (data.success) {
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('userData', JSON.stringify(data.user));
+        toast.success("Google Login Successful!");
+        window.location.href = "/"; // Redirect to Home
+      } else {
+        toast.error("Backend Error: " + data.message);
+      }
+
+    } catch (error) {
+      console.error("Google Login Error:", error);
+      // Agar Firebase me domain allow nahi hai, to yahan Error dikhega
+      toast.error("Login Failed: " + error.message);
+    }
   };
 
   return (
