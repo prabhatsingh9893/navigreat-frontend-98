@@ -9,14 +9,12 @@ import SignupPage from './pages/SignupPage.jsx'; // <--- New
 import MentorsPage from './pages/MentorsPage.jsx';
 import MentorSignupPage from './pages/MentorSignupPage.jsx';
 import DashboardPage from './pages/DashboardPage.jsx';
-import About from './components/About'; // ऊपर import करें
 function App() {
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
       <main className="flex-grow">
         <Routes>
-          <Route path="/about" element={<About />} />
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/become-mentor" element={<MentorSignupPage />} />
           <Route path="/" element={<HomePage />} />
