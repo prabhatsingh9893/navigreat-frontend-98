@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 
 function SignupPage() {
-  // 1. role: 'student' add kiya hai (Default value)
   const [formData, setFormData] = useState({ 
     username: '', 
     email: '', 
@@ -19,34 +18,53 @@ function SignupPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('https://navigreat-backend-98.onrender.com/api/register', {
+      // ---------------------------------------------------------
+      // STEP 1: Register (Account banana)
+      // ---------------------------------------------------------
+      const registerRes = await fetch('https://navigreat-backend-98.onrender.com/api/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       });
       
-      const data = await response.json();
-      
-      // Error check karne ke liye console me print karein
-      console.log("Server Response:", data); 
+      const registerData = await registerRes.json();
 
-      if (response.ok) {
-        // CASE 1: Agar Backend Token bhejta hai (Direct Login)
-        if (data.token) {
-            localStorage.setItem('token', data.token);
-            localStorage.setItem('userData', JSON.stringify(data.user || data));
-            alert("✅ Account Created & Logged In!");
-            window.location.href = '/'; // Seedha Home Page par
-        } 
-        // CASE 2: Agar sirf account banta hai par token nahi aata
-        else {
-            alert("✅ Account Created! Please Login.");
-            navigate('/login');
-        }
-      } else {
-        // Agar koi error aata hai (jaise Email already exists)
-        alert("❌ Signup Failed: " + (data.message || JSON.stringify(data)));
+      if (!registerRes.ok) {
+        // Agar account nahi bana (Ex: Email exists)
+        alert("❌ Signup Failed: " + (registerData.message || "Error occurred"));
+        return;
       }
+
+      // ---------------------------------------------------------
+      // STEP 2: Auto Login (Turant Login karna)
+      // ---------------------------------------------------------
+      // Jaise hi account bana, hum turant login API call kar denge
+      const loginRes = await fetch('https://navigreat-backend-98.onrender.com/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: formData.email,       // Wahi email jo abhi bhara
+          password: formData.password  // Wahi password jo abhi bhara
+        }),
+      });
+
+      const loginData = await loginRes.json();
+
+      if (loginRes.ok) {
+        // Login Success! Data save karein
+        localStorage.setItem('token', loginData.token);
+        localStorage.setItem('userData', JSON.stringify(loginData.user || loginData.result)); // Check backend key
+        
+        alert("✅ Account Created & Welcome!");
+        
+        // STEP 3: Redirect to Home Page
+        window.location.href = '/'; 
+      } else {
+        // Agar account ban gaya par login fail hua
+        alert("⚠️ Account created, but auto-login failed. Please login manually.");
+        navigate('/login');
+      }
+
     } catch (error) {
       console.error("Error:", error);
       alert("❌ Something went wrong. Check console.");
@@ -86,7 +104,6 @@ function SignupPage() {
             className="w-full border p-3 rounded-lg" 
           />
 
-          {/* 👇 NEW: Role Selection Dropdown (Isse Error 400 hat jana chahiye) 👇 */}
           <select 
             name="role" 
             onChange={handleChange} 
@@ -97,7 +114,7 @@ function SignupPage() {
           </select>
 
           <button type="submit" className="w-full bg-blue-600 text-white p-3 rounded-lg font-bold hover:bg-blue-700 transition">
-            Sign Up & Login
+            Sign Up
           </button>
         </form>
 
