@@ -34,7 +34,7 @@ function Header() {
         {/* Navigation Links */}
         <nav className="hidden md:flex items-center gap-8">
           <Link to="/" className="text-gray-600 hover:text-blue-600 font-medium">Home</Link>
-          <Link to="/mentors" className="text-gray-600 hover:text-blue-600 font-medium">Find Mentors</Link>
+          <Link to="/about" className="text-gray-600 hover:text-blue-600 font-medium">about</Link>
           <Link to="/contact" className="text-gray-600 hover:text-blue-600 font-medium">Contact</Link>
           
           {/* 👇 Dynamic Login/Logout Section 👇 */}
