@@ -1,17 +1,61 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom'; // Note: We don't need useNavigate here anymore
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { auth, provider } from '../firebaseConfig';
-import { signInWithPopup } from 'firebase/auth';
+// 👇 Change: Import these specifically for Redirect method
+import { signInWithRedirect, getRedirectResult } from 'firebase/auth'; 
 import toast from 'react-hot-toast';
 
 function LoginPage() {
   const [formData, setFormData] = useState({ email: '', password: '' });
 
+  // --- 🆕 1. Handle Google Redirect Result ---
+  // This runs automatically when the user comes BACK from Google
+  useEffect(() => {
+    const checkGoogleLogin = async () => {
+      try {
+        const result = await getRedirectResult(auth);
+        if (result) {
+          const loadingToast = toast.loading("Finishing Google Login...");
+          const user = result.user;
+
+          // Call your Backend API
+          const response = await fetch('https://navigreat-backend-98.onrender.com/api/google-login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              username: user.displayName,
+              email: user.email,
+            }),
+          });
+
+          const data = await response.json();
+          toast.dismiss(loadingToast);
+
+          if (data.success) {
+            localStorage.setItem('token', data.token);
+            localStorage.setItem('userData', JSON.stringify(data.user));
+            toast.success("Google Login Successful!");
+            
+            // 👇 Jadui Line: Refresh and go home
+            window.location.href = "/";
+          } else {
+            toast.error("Login Failed: " + data.message);
+          }
+        }
+      } catch (error) {
+        console.error("Redirect Error:", error);
+        toast.error("Something went wrong with Google Login");
+      }
+    };
+
+    checkGoogleLogin();
+  }, []);
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // --- 1. Email/Password Login ---
+  // --- 2. Email/Password Login (Unchanged) ---
   const handleSubmit = async (e) => {
     e.preventDefault();
     const loadingToast = toast.loading("Logging in...");
@@ -29,10 +73,7 @@ function LoginPage() {
       if (data.success) {
         localStorage.setItem('token', data.token);
         localStorage.setItem('userData', JSON.stringify(data.user));
-        
         toast.success("Welcome back!");
-        
-        // 👇 जादूई लाइन: यह होमपेज पर ले जाएगी और Header अपडेट कर देगी
         window.location.href = "/"; 
       } else {
         toast.error(data.message);
@@ -43,35 +84,11 @@ function LoginPage() {
     }
   };
 
-  // --- 2. Google Login ---
-  const handleGoogleLogin = async () => {
-    try {
-      const result = await signInWithPopup(auth, provider);
-      const user = result.user;
-      
-      const response = await fetch('https://navigreat-backend-98.onrender.com/api/google-login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          username: user.displayName,
-          email: user.email,
-        }),
-      });
-
-      const data = await response.json();
-
-      if (data.success) {
-        localStorage.setItem('token', data.token);
-        localStorage.setItem('userData', JSON.stringify(data.user));
-        toast.success("Google Login Successful!");
-        
-        // 👇 जादूई लाइन: होमपेज पर ले जाएगी और रिफ्रेश करेगी
-        window.location.href = "/";
-      }
-    } catch (error) {
-      console.error(error);
-      toast.error("Google Login Failed");
-    }
+  // --- 3. Trigger Google Login ---
+  const handleGoogleLogin = () => {
+    // 👇 Simpler: Just redirect. No await needed here.
+    // The logic continues in the useEffect above after the page reloads.
+    signInWithRedirect(auth, provider);
   };
 
   return (
