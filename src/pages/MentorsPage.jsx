@@ -4,19 +4,31 @@ import { Search, MapPin, BookOpen } from 'lucide-react';
 function MentorsPage() {
   const [mentors, setMentors] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [loading, setLoading] = useState(true);
 
   // 1. Fetch Mentors from Backend
   useEffect(() => {
     fetch('https://navigreat-backend-98.onrender.com/api/mentors')
       .then(res => res.json())
-      .then(data => setMentors(data))
-      .catch(err => console.error("Error:", err));
+      .then(data => {
+        // ✅ FIX 1: Backend se "mentors" array nikalna zaroori hai
+        if (data.success) {
+          setMentors(data.mentors);
+        } else {
+          console.error("Failed to fetch");
+        }
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error("Error:", err);
+        setLoading(false);
+      });
   }, []);
 
-  // 2. Filter Logic (Search by Name or College)
+  // 2. Filter Logic (Safe Filter)
   const filteredMentors = mentors.filter(mentor => 
-    mentor.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    mentor.college.toLowerCase().includes(searchTerm.toLowerCase())
+    (mentor.username || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (mentor.college || "").toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -32,7 +44,7 @@ function MentorsPage() {
             <Search className="absolute left-4 top-3.5 text-gray-400" size={20} />
             <input 
               type="text" 
-              placeholder="Search by name or college (e.g. IIT Bombay)..." 
+              placeholder="Search by name or college..." 
               className="w-full pl-12 pr-4 py-3 rounded-full border border-gray-300 focus:outline-none focus:border-blue-500 shadow-sm"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -41,35 +53,60 @@ function MentorsPage() {
         </div>
 
         {/* Mentors Grid */}
-        <div className="grid md:grid-cols-3 gap-8">
-          {filteredMentors.length > 0 ? (
-            filteredMentors.map((mentor) => (
-              <div key={mentor.id} className="bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-xl transition group">
-                <div className="relative">
-                  <img src={mentor.image} className="w-full h-56 object-cover group-hover:scale-105 transition duration-300" alt={mentor.name}/>
-                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
-                    <h3 className="text-white font-bold text-xl">{mentor.name}</h3>
+        {loading ? (
+          <div className="text-center py-20 text-blue-600 font-bold">Loading Mentors...</div>
+        ) : (
+          <div className="grid md:grid-cols-3 gap-8">
+            {filteredMentors.length > 0 ? (
+              filteredMentors.map((mentor) => (
+                // ✅ FIX 2: Use _id instead of id
+                <div key={mentor._id} className="bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-xl transition group border border-gray-100">
+                  
+                  {/* Card Header / Image */}
+                  <div className="relative h-48 bg-blue-50 flex items-center justify-center overflow-hidden">
+                    {/* ✅ FIX 3: Agar image nahi hai to Auto-Avatar dikhao */}
+                    <img 
+                      src={mentor.image || `https://ui-avatars.com/api/?name=${mentor.username}&background=0D8ABC&color=fff&size=200`} 
+                      className="w-full h-full object-cover group-hover:scale-105 transition duration-300" 
+                      alt={mentor.username}
+                      onError={(e) => { e.target.onerror = null; e.target.src = "https://via.placeholder.com/200?text=Mentor"; }} // Fallback
+                    />
+                    
+                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4">
+                      {/* ✅ FIX 4: Use username instead of name */}
+                      <h3 className="text-white font-bold text-xl">{mentor.username}</h3>
+                    </div>
+                  </div>
+
+                  <div className="p-6">
+                    <div className="flex items-center gap-2 text-blue-600 font-medium mb-2">
+                      <MapPin size={16}/> 
+                      {mentor.college || "College Not Updated"}
+                    </div>
+                    
+                    <div className="flex items-center gap-2 text-gray-500 text-sm mb-4">
+                      <BookOpen size={16}/> 
+                      {mentor.branch || "Mentor"}
+                    </div>
+
+                    {/* Bio (Optional) */}
+                    <p className="text-gray-500 text-sm mb-4 line-clamp-2 h-10">
+                      {mentor.about || "Ready to guide you to your dream college."}
+                    </p>
+
+                    <button className="w-full bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 transition">
+                      View Profile
+                    </button>
                   </div>
                 </div>
-                <div className="p-6">
-                  <div className="flex items-center gap-2 text-blue-600 font-medium mb-2">
-                    <MapPin size={16}/> {mentor.college}
-                  </div>
-                  <div className="flex items-center gap-2 text-gray-600 text-sm mb-4">
-                    <BookOpen size={16}/> {mentor.role}
-                  </div>
-                  <button className="w-full bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 transition">
-                    View Profile
-                  </button>
-                </div>
+              ))
+            ) : (
+              <div className="col-span-3 text-center py-10 bg-white rounded-xl shadow-sm">
+                <p className="text-gray-500 text-lg">No mentors found matching "{searchTerm}" 😕</p>
               </div>
-            ))
-          ) : (
-            <div className="col-span-3 text-center text-gray-500 py-10">
-              No mentors found matching "{searchTerm}"
-            </div>
-          )}
-        </div>
+            )}
+          </div>
+        )}
 
       </div>
     </div>
