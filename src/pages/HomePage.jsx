@@ -1,25 +1,39 @@
 import React, { useEffect, useState } from 'react';
-import { Users, BookOpen, Award, ChevronDown, MapPin } from 'lucide-react';
+import { ChevronDown, MapPin, BookOpen } from 'lucide-react'; // Icons
 import { Link, useNavigate } from 'react-router-dom';
-import toast from 'react-hot-toast';
+import toast from 'react-hot-toast'; // Toast notifications
 
 function HomePage() {
-  const [mentors, setMentors] = useState([]);
+  const [mentors, setMentors] = useState([]); 
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  // 1. Fetch Mentors Data
+  // 1. Fetch Mentors Data (Safe Logic)
   useEffect(() => {
     fetch('https://navigreat-backend-98.onrender.com/api/mentors')
       .then(response => response.json())
-      .then(data => setMentors(data))
-      .catch(error => console.error('Error fetching mentors:', error));
+      .then(data => {
+        // Data format checking
+        if (data.success && Array.isArray(data.mentors)) {
+          setMentors(data.mentors);
+        } else if (Array.isArray(data)) {
+          setMentors(data);
+        } else {
+          setMentors([]); 
+        }
+        setLoading(false);
+      })
+      .catch(error => {
+        console.error('Error fetching mentors:', error);
+        setMentors([]);
+        setLoading(false);
+      });
   }, []);
 
   // 2. Book Session Logic
   const handleBookSession = async (mentorName) => {
     const userData = localStorage.getItem('userData'); 
     
-    // Check Login
     if (!userData) {
       toast.error("🔒 Please Login first!");
       navigate('/login');
@@ -45,13 +59,26 @@ function HomePage() {
       if (result.success) {
         toast.success(`Session booked with ${mentorName}!`);
       } else {
-        toast.error("Booking Failed.");
+        toast.error(result.message || "Booking Failed.");
       }
     } catch (error) {
       toast.dismiss(loadingToast);
       toast.error("Server Error!");
     }
   };
+
+  // 3. Skeleton Loader Component
+  const MentorSkeleton = () => (
+    <div className="bg-white rounded-2xl shadow-md overflow-hidden border border-gray-100 animate-pulse">
+      <div className="h-56 bg-gray-200"></div>
+      <div className="p-6">
+        <div className="h-6 bg-gray-200 rounded w-3/4 mb-4"></div>
+        <div className="h-4 bg-gray-200 rounded w-1/2 mb-2"></div>
+        <div className="h-4 bg-gray-200 rounded w-1/3 mb-6"></div>
+        <div className="h-10 bg-gray-200 rounded"></div>
+      </div>
+    </div>
+  );
 
   return (
     <div className="pt-16">
@@ -104,28 +131,49 @@ function HomePage() {
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-gray-900">Expert Mentors</h2>
-            <p className="text-gray-600 mt-4 text-lg">Learn from the best minds (Data fetched from Backend)</p>
+            <p className="text-gray-600 mt-4 text-lg">Learn from the best minds</p>
           </div>
           
           <div className="grid md:grid-cols-3 gap-8">
-            {mentors.length === 0 ? (
-              <div className="col-span-3 text-center py-10">
-                <p className="text-xl text-gray-500 animate-pulse">Loading Mentors...</p>
+            {loading ? (
+              // Loading Skeletons (Better UI)
+              [1, 2, 3].map((n) => <MentorSkeleton key={n} />)
+            ) : (!mentors || mentors.length === 0) ? (
+              <div className="col-span-3 text-center py-12 bg-white rounded-xl shadow-sm border border-dashed border-gray-300">
+                <p className="text-gray-500 text-lg">No mentors available at the moment. 😕</p>
               </div>
             ) : (
               mentors.map((mentor) => (
-                <div key={mentor.id} className="bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-xl transition group">
-                  <div className="relative">
-                    <img src={mentor.image} className="w-full h-56 object-cover" alt={mentor.name}/>
+                <div key={mentor._id || mentor.id} className="bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-xl transition group border border-gray-100 flex flex-col">
+                  
+                  {/* Image Area */}
+                  <div className="relative h-56 bg-blue-50 overflow-hidden">
+                    <img 
+                      src={mentor.image || `https://ui-avatars.com/api/?name=${mentor.username || "User"}&background=0D8ABC&color=fff`} 
+                      className="w-full h-full object-cover group-hover:scale-105 transition duration-500" 
+                      alt={mentor.username || "Mentor"}
+                      onError={(e) => { e.target.onerror = null; e.target.src = "https://via.placeholder.com/400x300?text=Mentor"; }}
+                    />
+                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4">
+                        <h3 className="text-white font-bold text-xl truncate">{mentor.username || mentor.name}</h3>
+                    </div>
                   </div>
-                  <div className="p-6">
-                    <h3 className="font-bold text-xl text-gray-800">{mentor.name}</h3>
-                    <p className="text-blue-600 font-medium mb-1">{mentor.college}</p>
-                    <p className="text-gray-500 text-sm mb-4">{mentor.role}</p>
+
+                  {/* Content Area */}
+                  <div className="p-6 flex flex-col flex-grow">
+                    <div className="flex items-center gap-2 text-blue-600 font-medium mb-2">
+                         <MapPin size={18} />
+                         <span className="truncate">{mentor.college || "Unknown College"}</span>
+                    </div>
+                    
+                    <div className="flex items-center gap-2 text-gray-500 text-sm mb-6">
+                        <BookOpen size={18} />
+                        <span className="truncate">{mentor.role || mentor.branch || "Mentor"}</span>
+                    </div>
                     
                     <button 
-                      onClick={() => handleBookSession(mentor.name)}
-                      className="w-full bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700 transition active:scale-95"
+                      onClick={() => handleBookSession(mentor.username || mentor.name)}
+                      className="mt-auto w-full bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700 transition shadow-lg shadow-blue-500/30 active:scale-95"
                     >
                       Book Session
                     </button>
@@ -136,7 +184,7 @@ function HomePage() {
           </div>
 
           <div className="text-center mt-12">
-            <Link to="/mentors" className="bg-white border-2 border-blue-600 text-blue-600 px-8 py-3 rounded-lg font-bold hover:bg-blue-50 transition">
+            <Link to="/mentors" className="bg-white border-2 border-blue-600 text-blue-600 px-8 py-3 rounded-lg font-bold hover:bg-blue-50 transition inline-block">
                 View All Mentors
             </Link>
           </div>
@@ -151,10 +199,10 @@ function HomePage() {
           </div>
           <div className="space-y-4">
             {["How do I find the right mentor?", "What is the cost?", "Are mentors verified?", "Can I become a mentor?"].map((q, index) => (
-              <div key={index} className="border border-gray-200 rounded-xl p-6 hover:border-blue-400 cursor-pointer transition bg-gray-50">
+              <div key={index} className="border border-gray-200 rounded-xl p-6 hover:border-blue-400 cursor-pointer transition bg-gray-50 group">
                 <div className="flex justify-between items-center">
-                  <span className="font-semibold text-lg text-gray-800">{q}</span>
-                  <ChevronDown className="text-gray-400"/>
+                  <span className="font-semibold text-lg text-gray-800 group-hover:text-blue-600 transition">{q}</span>
+                  <ChevronDown className="text-gray-400 group-hover:text-blue-600 transition"/>
                 </div>
               </div>
             ))}
