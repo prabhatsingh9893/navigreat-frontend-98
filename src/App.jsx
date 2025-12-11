@@ -1,5 +1,7 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
+import { Toaster } from 'react-hot-toast'; // 👉 1. IMPORT ADDED
+
 import Header from './components/Header.jsx';
 import Footer from './components/Footer.jsx';
 import HomePage from './pages/HomePage.jsx';
@@ -9,11 +11,15 @@ import SignupPage from './pages/SignupPage.jsx';
 import MentorsPage from './pages/MentorsPage.jsx';
 import MentorSignupPage from './pages/MentorSignupPage.jsx';
 import DashboardPage from './pages/DashboardPage.jsx';
-import MentorProfile from './pages/MentorProfile.jsx'; // 👈 IMPORT THIS
+import MentorProfile from './pages/MentorProfile.jsx'; 
 
 function App() {
   return (
     <div className="flex flex-col min-h-screen">
+      
+      {/* 👉 2. TOASTER COMPONENT ADDED HERE */}
+      <Toaster position="top-center" reverseOrder={false} />
+
       <Header />
       <main className="flex-grow">
         <Routes>
@@ -27,7 +33,7 @@ function App() {
           <Route path="/become-mentor" element={<MentorSignupPage />} />
           <Route path="/dashboard" element={<DashboardPage />} />
           
-          {/* 👇 NEW ROUTE FOR PROFILE DETAILS */}
+          {/* NEW ROUTE FOR PROFILE DETAILS */}
           <Route path="/mentor/:id" element={<MentorProfile />} />
         </Routes>
       </main>
