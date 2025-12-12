@@ -1,19 +1,21 @@
 import React, { useEffect, useState } from 'react';
-import { ChevronDown, MapPin, BookOpen } from 'lucide-react'; // Icons
+import { MapPin, BookOpen } from 'lucide-react'; 
 import { Link, useNavigate } from 'react-router-dom';
-import toast from 'react-hot-toast'; // Toast notifications
+import toast from 'react-hot-toast'; 
+
+// 👇 1. IMPORT FAQ SECTION
+import FAQSection from '../components/FAQSection'; 
 
 function HomePage() {
   const [mentors, setMentors] = useState([]); 
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  // 1. Fetch Mentors Data (Safe Logic)
+  // --- 1. FETCH MENTORS ---
   useEffect(() => {
     fetch('https://navigreat-backend-98.onrender.com/api/mentors')
       .then(response => response.json())
       .then(data => {
-        // Data format checking
         if (data.success && Array.isArray(data.mentors)) {
           setMentors(data.mentors);
         } else if (Array.isArray(data)) {
@@ -30,7 +32,7 @@ function HomePage() {
       });
   }, []);
 
-  // 2. Book Session Logic
+  // --- 2. BOOK SESSION ---
   const handleBookSession = async (mentorName) => {
     const userData = localStorage.getItem('userData'); 
     
@@ -67,7 +69,7 @@ function HomePage() {
     }
   };
 
-  // 3. Skeleton Loader Component
+  // --- 3. SKELETON LOADER ---
   const MentorSkeleton = () => (
     <div className="bg-white rounded-2xl shadow-md overflow-hidden border border-gray-100 animate-pulse">
       <div className="h-56 bg-gray-200"></div>
@@ -136,7 +138,6 @@ function HomePage() {
           
           <div className="grid md:grid-cols-3 gap-8">
             {loading ? (
-              // Loading Skeletons (Better UI)
               [1, 2, 3].map((n) => <MentorSkeleton key={n} />)
             ) : (!mentors || mentors.length === 0) ? (
               <div className="col-span-3 text-center py-12 bg-white rounded-xl shadow-sm border border-dashed border-gray-300">
@@ -162,8 +163,8 @@ function HomePage() {
                   {/* Content Area */}
                   <div className="p-6 flex flex-col flex-grow">
                     <div className="flex items-center gap-2 text-blue-600 font-medium mb-2">
-                         <MapPin size={18} />
-                         <span className="truncate">{mentor.college || "Unknown College"}</span>
+                          <MapPin size={18} />
+                          <span className="truncate">{mentor.college || "Unknown College"}</span>
                     </div>
                     
                     <div className="flex items-center gap-2 text-gray-500 text-sm mb-6">
@@ -191,24 +192,8 @@ function HomePage() {
         </div>
       </section>
 
-      {/* 4. FAQ SECTION */}
-      <section id="faq" className="py-24 bg-white">
-        <div className="container mx-auto px-6 max-w-4xl">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">FAQ</h2>
-          </div>
-          <div className="space-y-4">
-            {["How do I find the right mentor?", "What is the cost?", "Are mentors verified?", "Can I become a mentor?"].map((q, index) => (
-              <div key={index} className="border border-gray-200 rounded-xl p-6 hover:border-blue-400 cursor-pointer transition bg-gray-50 group">
-                <div className="flex justify-between items-center">
-                  <span className="font-semibold text-lg text-gray-800 group-hover:text-blue-600 transition">{q}</span>
-                  <ChevronDown className="text-gray-400 group-hover:text-blue-600 transition"/>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* 4. ✅ ACTIVE FAQ SECTION ADDED HERE */}
+      <FAQSection />
 
     </div>
   );
