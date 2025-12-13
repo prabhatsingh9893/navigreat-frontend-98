@@ -11,7 +11,7 @@ const DashboardPage = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(true);
   
-  // Profile Data
+  // Profile Data (Student & Mentor dono ke liye)
   const [profile, setProfile] = useState({
     username: '',
     college: '',
@@ -20,11 +20,11 @@ const DashboardPage = () => {
     image: '' 
   });
 
-  // Lectures Data
+  // Lectures Data (Sirf Mentor ke liye)
   const [lecture, setLecture] = useState({ title: '', url: '' });
   const [myLectures, setMyLectures] = useState([]);
 
-  // --- 1. INITIAL LOAD (UPDATED FOR DATA PERSISTENCE) ---
+  // --- 1. INITIAL LOAD ---
   useEffect(() => {
     const storedUser = localStorage.getItem('userData');
     if (!storedUser) {
@@ -43,29 +43,28 @@ const DashboardPage = () => {
         image: parsedUser.image || ''
     });
 
-    // Agar Mentor hai, to SERVER se TAJAA DATA mangao
-    if (parsedUser.role === 'mentor') {
-        
-        // A. Profile Data Fetch (Taaki College/Branch gayab na ho)
-        fetch(`https://navigreat-backend-98.onrender.com/api/mentors/${parsedUser.id}`)
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) {
-                    const freshData = data.mentor || data.user;
-                    setProfile({
-                        username: freshData.username || parsedUser.username,
-                        college: freshData.college || '',
-                        branch: freshData.branch || '',
-                        about: freshData.about || '',
-                        image: freshData.image || parsedUser.image || ''
-                    });
-                    // LocalStorage update karo
-                    localStorage.setItem('userData', JSON.stringify({ ...parsedUser, ...freshData }));
-                }
-            })
-            .catch(err => console.error("Profile fetch error:", err));
+    // ✅ FIX: Ab STUDENT ho ya MENTOR, sabka latest data server se mangao
+    // (Note: Backend route '/api/mentors/:id' User model ko hi fetch karta hai, so it works for students too)
+    fetch(`https://navigreat-backend-98.onrender.com/api/mentors/${parsedUser.id}`)
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                const freshData = data.mentor || data.user;
+                setProfile({
+                    username: freshData.username || parsedUser.username,
+                    college: freshData.college || '',
+                    branch: freshData.branch || '',
+                    about: freshData.about || '',
+                    image: freshData.image || parsedUser.image || ''
+                });
+                // LocalStorage update karo
+                localStorage.setItem('userData', JSON.stringify({ ...parsedUser, ...freshData }));
+            }
+        })
+        .catch(err => console.error("Profile fetch error:", err));
 
-        // B. Lectures Fetch
+    // Agar Mentor hai, to LECTURES bhi mangao
+    if (parsedUser.role === 'mentor') {
         fetch(`https://navigreat-backend-98.onrender.com/api/lectures/${parsedUser.id}`)
             .then(res => res.json())
             .then(data => { if(data.success) setMyLectures(data.lectures); })
@@ -96,10 +95,11 @@ const DashboardPage = () => {
     setProfile({ ...profile, [e.target.name]: e.target.value });
   };
 
-  // --- 3. SAVE PROFILE ---
+  // --- 3. SAVE PROFILE (For Student & Mentor) ---
   const handleSaveProfile = async () => {
     const loadingToast = toast.loading("Saving Changes...");
     try {
+        // Backend route same rahega (it updates User model)
         const response = await fetch(`https://navigreat-backend-98.onrender.com/api/mentors/${user.id}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
@@ -126,7 +126,7 @@ const DashboardPage = () => {
     }
   };
 
-  // --- 4. ADD LECTURE ---
+  // --- 4. ADD LECTURE (Only Mentor) ---
   const handleAddLecture = async (e) => {
     e.preventDefault();
     if (!lecture.title || !lecture.url) return;
@@ -156,28 +156,19 @@ const DashboardPage = () => {
     }
   };
 
-  // --- 5. DELETE LECTURE (New Feature) ---
+  // --- 5. DELETE LECTURE ---
   const handleDeleteLecture = async (lectureId) => {
       if(!window.confirm("Are you sure you want to delete this lecture?")) return;
-      
       const loadingToast = toast.loading("Deleting...");
       try {
-          const res = await fetch(`https://navigreat-backend-98.onrender.com/api/lectures/${lectureId}`, {
-              method: 'DELETE'
-          });
+          const res = await fetch(`https://navigreat-backend-98.onrender.com/api/lectures/${lectureId}`, { method: 'DELETE' });
           const data = await res.json();
           toast.dismiss(loadingToast);
-
           if (data.success) {
               setMyLectures(myLectures.filter(l => l._id !== lectureId));
               toast.success("Deleted successfully");
-          } else {
-              toast.error("Failed to delete");
-          }
-      } catch (err) {
-          toast.dismiss(loadingToast);
-          toast.error("Error deleting lecture");
-      }
+          } else { toast.error("Failed to delete"); }
+      } catch (err) { toast.dismiss(loadingToast); toast.error("Error deleting lecture"); }
   };
 
   const handleLogout = () => {
@@ -192,7 +183,7 @@ const DashboardPage = () => {
     <div className="min-h-screen bg-gray-50 pt-24 pb-12 px-4">
       <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
         
-        {/* ================= LEFT COLUMN: PROFILE CARD ================= */}
+        {/* ================= LEFT COLUMN: PROFILE CARD (Editable for Everyone) ================= */}
         <div className="lg:col-span-1 space-y-6">
           <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 text-center relative">
             
@@ -203,6 +194,7 @@ const DashboardPage = () => {
                     alt="Profile" 
                     className="w-full h-full rounded-full object-cover border-4 border-blue-50 shadow-sm" 
                 />
+                {/* ✅ Camera Icon for Everyone in Edit Mode */}
                 {isEditing && (
                     <label className="absolute bottom-0 right-0 bg-blue-600 p-2.5 rounded-full text-white cursor-pointer hover:bg-blue-700 shadow-md transition transform hover:scale-110">
                         <Camera size={18} />
@@ -228,58 +220,55 @@ const DashboardPage = () => {
                 {user.role} {user.role === 'mentor' && <CheckCircle size={16} />}
             </p>
 
-            {/* MENTOR DETAILS FORM */}
-            {user.role === 'mentor' && (
-                <div className="space-y-4 text-left bg-gray-50 p-4 rounded-xl">
-                    <div>
-                        <label className="text-xs font-bold text-gray-400 uppercase tracking-wide">College</label>
-                        {isEditing ? (
-                            <input name="college" value={profile.college} onChange={handleProfileChange} className="w-full border p-2 rounded-lg mt-1 bg-white" placeholder="Ex: IIT Delhi" />
-                        ) : (
-                            <p className="font-semibold text-gray-700">{user.college || "Not Added"}</p>
-                        )}
-                    </div>
-                    <div>
-                        <label className="text-xs font-bold text-gray-400 uppercase tracking-wide">Branch</label>
-                        {isEditing ? (
-                            <input name="branch" value={profile.branch} onChange={handleProfileChange} className="w-full border p-2 rounded-lg mt-1 bg-white" placeholder="Ex: CSE" />
-                        ) : (
-                            <p className="font-semibold text-gray-700">{user.branch || "Not Added"}</p>
-                        )}
-                    </div>
-                    <div>
-                        <label className="text-xs font-bold text-gray-400 uppercase tracking-wide">About Me</label>
-                        {isEditing ? (
-                            <textarea name="about" value={profile.about} onChange={handleProfileChange} className="w-full border p-2 rounded-lg mt-1 h-24 bg-white" placeholder="Write a short bio..." />
-                        ) : (
-                            <p className="text-sm text-gray-600 leading-relaxed">{user.about || "No bio added yet."}</p>
-                        )}
-                    </div>
+            {/* ✅ DETAILS FORM (Visible for Students too now) */}
+            <div className="space-y-4 text-left bg-gray-50 p-4 rounded-xl">
+                <div>
+                    <label className="text-xs font-bold text-gray-400 uppercase tracking-wide">College</label>
+                    {isEditing ? (
+                        <input name="college" value={profile.college} onChange={handleProfileChange} className="w-full border p-2 rounded-lg mt-1 bg-white" placeholder="Ex: IIT Delhi" />
+                    ) : (
+                        <p className="font-semibold text-gray-700">{user.college || "Not Added"}</p>
+                    )}
                 </div>
-            )}
+                <div>
+                    <label className="text-xs font-bold text-gray-400 uppercase tracking-wide">Branch</label>
+                    {isEditing ? (
+                        <input name="branch" value={profile.branch} onChange={handleProfileChange} className="w-full border p-2 rounded-lg mt-1 bg-white" placeholder="Ex: CSE" />
+                    ) : (
+                        <p className="font-semibold text-gray-700">{user.branch || "Not Added"}</p>
+                    )}
+                </div>
+                <div>
+                    <label className="text-xs font-bold text-gray-400 uppercase tracking-wide">About Me</label>
+                    {isEditing ? (
+                        <textarea name="about" value={profile.about} onChange={handleProfileChange} className="w-full border p-2 rounded-lg mt-1 h-24 bg-white" placeholder="Write a short bio..." />
+                    ) : (
+                        <p className="text-sm text-gray-600 leading-relaxed">{user.about || "No bio added yet."}</p>
+                    )}
+                </div>
+            </div>
             
             {/* ACTION BUTTONS */}
             <div className="mt-6 space-y-3">
-                {user.role === 'mentor' && (
-                    <>
-                        {isEditing ? (
-                            <button onClick={handleSaveProfile} className="w-full bg-green-600 text-white py-2.5 rounded-xl flex justify-center items-center gap-2 hover:bg-green-700 transition font-bold shadow-md">
-                                <Save size={18} /> Save Changes
-                            </button>
-                        ) : (
-                            <button onClick={() => setIsEditing(true)} className="w-full bg-blue-600 text-white py-2.5 rounded-xl flex justify-center items-center gap-2 hover:bg-blue-700 transition font-bold shadow-md">
-                                <Edit2 size={18} /> Edit Profile
-                            </button>
-                        )}
+                {/* ✅ Edit/Save Button for Everyone */}
+                {isEditing ? (
+                    <button onClick={handleSaveProfile} className="w-full bg-green-600 text-white py-2.5 rounded-xl flex justify-center items-center gap-2 hover:bg-green-700 transition font-bold shadow-md">
+                        <Save size={18} /> Save Changes
+                    </button>
+                ) : (
+                    <button onClick={() => setIsEditing(true)} className="w-full bg-blue-600 text-white py-2.5 rounded-xl flex justify-center items-center gap-2 hover:bg-blue-700 transition font-bold shadow-md">
+                        <Edit2 size={18} /> Edit Profile
+                    </button>
+                )}
 
-                        {/* ✅ NEW: View Public Profile Button */}
-                        <button 
-                            onClick={() => navigate(`/mentor/${user.id}`)} 
-                            className="w-full bg-white border border-gray-200 text-gray-700 py-2.5 rounded-xl flex justify-center items-center gap-2 hover:bg-gray-50 transition font-medium shadow-sm"
-                        >
-                            <Eye size={18} /> View Public Profile
-                        </button>
-                    </>
+                {/* View Public Profile (Only for Mentor) */}
+                {user.role === 'mentor' && (
+                    <button 
+                        onClick={() => navigate(`/mentor/${user.id}`)} 
+                        className="w-full bg-white border border-gray-200 text-gray-700 py-2.5 rounded-xl flex justify-center items-center gap-2 hover:bg-gray-50 transition font-medium shadow-sm"
+                    >
+                        <Eye size={18} /> View Public Profile
+                    </button>
                 )}
 
                 <button onClick={handleLogout} className="w-full border border-red-200 text-red-500 py-2.5 rounded-xl flex justify-center items-center gap-2 hover:bg-red-50 transition font-medium">
@@ -292,7 +281,7 @@ const DashboardPage = () => {
         {/* ================= RIGHT COLUMN: CONTENT ================= */}
         <div className="lg:col-span-2 space-y-6">
            
-           {/* --- MENTOR VIEW --- */}
+           {/* --- MENTOR VIEW: UPLOAD & LECTURES --- */}
            {user.role === 'mentor' ? (
             <>
               {/* Upload Card */}
@@ -325,7 +314,7 @@ const DashboardPage = () => {
                 </form>
               </div>
 
-              {/* Lecture List - FIXED with DELETE */}
+              {/* Lecture List */}
               <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
                   <div className="flex items-center gap-3 mb-6">
                       <div className="bg-purple-100 p-3 rounded-full text-purple-600">
@@ -354,12 +343,7 @@ const DashboardPage = () => {
                                           </a>
                                       </div>
                                   </div>
-                                  {/* ✅ NEW: Delete Button */}
-                                  <button 
-                                    onClick={() => handleDeleteLecture(lec._id)}
-                                    className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition"
-                                    title="Delete Lecture"
-                                  >
+                                  <button onClick={() => handleDeleteLecture(lec._id)} className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition" title="Delete Lecture">
                                     <Trash2 size={18} />
                                   </button>
                               </div>
@@ -369,15 +353,15 @@ const DashboardPage = () => {
               </div>
             </>
            ) : (
-            // --- STUDENT VIEW ---
+            // --- STUDENT VIEW (Ab yahan bhi profile edit kar payenge left side se) ---
             <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 text-center py-20">
                 <div className="bg-green-100 w-16 h-16 mx-auto rounded-full flex items-center justify-center text-green-600 mb-4">
                     <User size={32} />
                 </div>
-                <h3 className="text-2xl font-bold text-gray-800">Welcome Student!</h3>
-                <p className="text-gray-500 mt-2">Find a mentor to start your journey.</p>
+                <h3 className="text-2xl font-bold text-gray-800">Welcome, {user.username}!</h3>
+                <p className="text-gray-500 mt-2">Update your profile on the left or find a mentor below.</p>
                 <button 
-                    onClick={() => navigate('/find-mentor')} 
+                    onClick={() => navigate('/mentors')} 
                     className="mt-6 bg-blue-600 text-white px-6 py-3 rounded-xl font-bold hover:bg-blue-700 transition shadow-md"
                 >
                     Find Mentors
