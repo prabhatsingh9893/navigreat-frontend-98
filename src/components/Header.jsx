@@ -3,7 +3,11 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Menu, X, LogOut, LayoutDashboard, ChevronDown, User } from 'lucide-react';
 
 // 👇 1. Import your new Logo here
-import logo from '../assets/logo.png'; 
+<img
+  src="/logo.png"  // ✅ ऐसे लिखें (Slash / जरुरी है)
+  alt="NaviGreat Logo"
+  className="h-10 w-auto..."
+/>
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
