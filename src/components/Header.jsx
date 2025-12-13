@@ -2,6 +2,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Menu, X, LogOut, LayoutDashboard, ChevronDown, User } from 'lucide-react';
 
+// 👇 1. Import your new Logo here
+import logo from '../assets/logo.png'; 
+
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -43,18 +46,24 @@ const Header = () => {
     <header className="fixed w-full bg-white/90 backdrop-blur-md shadow-sm z-50 border-b border-gray-100">
       <div className="container mx-auto px-6 py-3 flex justify-between items-center">
         
-        {/* Logo */}
-        <Link to="/" className="text-2xl font-bold text-blue-600 flex items-center gap-2">
-          🚀 EduMentor
+        {/* 👇 2. UPDATED LOGO SECTION */}
+        <Link to="/" className="flex items-center gap-3 group">
+          {/* Image Logo */}
+          <img 
+            src={logo} 
+            alt="NaviGreat Logo" 
+            className="h-10 w-auto object-contain group-hover:scale-110 transition duration-300" 
+          />
+          {/* Brand Name with Gradient */}
+          <span className="text-2xl font-extrabold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+            NaviGreat
+          </span>
         </Link>
 
         {/* Desktop Menu */}
         <nav className="hidden md:flex items-center space-x-8">
           <Link to="/" className="text-gray-600 hover:text-blue-600 font-medium">Home</Link>
-          
-          {/* ✅ CHANGE 1: 'Find Mentors' hata kar 'About' kar diya */}
           <Link to="/about" className="text-gray-600 hover:text-blue-600 font-medium">About</Link>
-          
           <Link to="/contact" className="text-gray-600 hover:text-blue-600 font-medium">Contact</Link>
           
           {/* User Dropdown Section */}
@@ -136,10 +145,7 @@ const Header = () => {
         <div className="md:hidden bg-white border-t p-4 absolute w-full shadow-xl">
           <div className="flex flex-col space-y-4">
             <Link to="/" className="text-gray-600 font-medium" onClick={() => setIsOpen(false)}>Home</Link>
-            
-            {/* ✅ CHANGE 2: Mobile Menu me bhi 'About' kar diya */}
             <Link to="/about" className="text-gray-600 font-medium" onClick={() => setIsOpen(false)}>About</Link>
-            
             <Link to="/contact" className="text-gray-600 font-medium" onClick={() => setIsOpen(false)}>Contact</Link>
 
             {user ? (
