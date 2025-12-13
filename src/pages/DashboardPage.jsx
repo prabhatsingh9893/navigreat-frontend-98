@@ -1,30 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { User, LogOut, Edit2, CheckCircle, UploadCloud, Save, Camera, BookOpen, Video, Trash2, ExternalLink, Eye } from 'lucide-react';
+import { User, LogOut, Edit2, CheckCircle, UploadCloud, Save, Camera, Video, Trash2, ExternalLink, Eye, FileText, Link as LinkIcon, BarChart3, Users, Star } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 const DashboardPage = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
-  
-  // --- STATES ---
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(true);
   
-  // Profile Data (Student & Mentor dono ke liye)
+  // Profile Data
   const [profile, setProfile] = useState({
-    username: '',
-    college: '',
-    branch: '',
-    about: '',
-    image: '' 
+    username: '', college: '', branch: '', about: '', image: '' 
   });
 
-  // Lectures Data (Sirf Mentor ke liye)
+  // Lectures Data
   const [lecture, setLecture] = useState({ title: '', url: '' });
   const [myLectures, setMyLectures] = useState([]);
 
-  // --- 1. INITIAL LOAD ---
+  // --- INITIAL LOAD ---
   useEffect(() => {
     const storedUser = localStorage.getItem('userData');
     if (!storedUser) {
@@ -34,7 +28,6 @@ const DashboardPage = () => {
     const parsedUser = JSON.parse(storedUser);
     setUser(parsedUser);
     
-    // Default values set karo
     setProfile({
         username: parsedUser.username || '',
         college: parsedUser.college || '',
@@ -43,8 +36,7 @@ const DashboardPage = () => {
         image: parsedUser.image || ''
     });
 
-    // ✅ FIX: Ab STUDENT ho ya MENTOR, sabka latest data server se mangao
-    // (Note: Backend route '/api/mentors/:id' User model ko hi fetch karta hai, so it works for students too)
+    // Fetch Latest User Data
     fetch(`https://navigreat-backend-98.onrender.com/api/mentors/${parsedUser.id}`)
         .then(res => res.json())
         .then(data => {
@@ -57,13 +49,12 @@ const DashboardPage = () => {
                     about: freshData.about || '',
                     image: freshData.image || parsedUser.image || ''
                 });
-                // LocalStorage update karo
                 localStorage.setItem('userData', JSON.stringify({ ...parsedUser, ...freshData }));
             }
         })
         .catch(err => console.error("Profile fetch error:", err));
 
-    // Agar Mentor hai, to LECTURES bhi mangao
+    // Fetch Lectures (Only for Mentor)
     if (parsedUser.role === 'mentor') {
         fetch(`https://navigreat-backend-98.onrender.com/api/lectures/${parsedUser.id}`)
             .then(res => res.json())
@@ -75,7 +66,7 @@ const DashboardPage = () => {
     }
   }, [navigate]);
 
-  // --- 2. IMAGE UPLOAD LOGIC ---
+  // --- HANDLERS ---
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -85,21 +76,13 @@ const DashboardPage = () => {
         }
         const reader = new FileReader();
         reader.readAsDataURL(file);
-        reader.onloadend = () => {
-            setProfile({ ...profile, image: reader.result });
-        };
+        reader.onloadend = () => { setProfile({ ...profile, image: reader.result }); };
     }
   };
 
-  const handleProfileChange = (e) => {
-    setProfile({ ...profile, [e.target.name]: e.target.value });
-  };
-
-  // --- 3. SAVE PROFILE (For Student & Mentor) ---
   const handleSaveProfile = async () => {
     const loadingToast = toast.loading("Saving Changes...");
     try {
-        // Backend route same rahega (it updates User model)
         const response = await fetch(`https://navigreat-backend-98.onrender.com/api/mentors/${user.id}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
@@ -109,66 +92,45 @@ const DashboardPage = () => {
         toast.dismiss(loadingToast);
 
         if (data.success) {
-            toast.success("Profile Updated Successfully!");
+            toast.success("Profile Updated!");
             setIsEditing(false);
-            
-            const updatedDetails = data.mentor || data.user || profile;
-            const updatedUser = { ...user, ...updatedDetails };
-            
+            const updatedUser = { ...user, ...(data.mentor || data.user || profile) };
             localStorage.setItem('userData', JSON.stringify(updatedUser));
             setUser(updatedUser);
-        } else {
-            toast.error(data.message || "Failed to update");
-        }
-    } catch (error) {
-        toast.dismiss(loadingToast);
-        toast.error("Server Error (Check image size)");
-    }
+        } else { toast.error(data.message || "Failed to update"); }
+    } catch (error) { toast.dismiss(loadingToast); toast.error("Server Error"); }
   };
 
-  // --- 4. ADD LECTURE (Only Mentor) ---
   const handleAddLecture = async (e) => {
     e.preventDefault();
     if (!lecture.title || !lecture.url) return;
-    
-    const loadingToast = toast.loading("Uploading Lecture...");
+    const loadingToast = toast.loading("Uploading...");
     try {
         const res = await fetch('https://navigreat-backend-98.onrender.com/api/lectures', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                mentorId: user.id,
-                title: lecture.title,
-                url: lecture.url
-            })
+            body: JSON.stringify({ mentorId: user.id, title: lecture.title, url: lecture.url })
         });
         const data = await res.json();
         toast.dismiss(loadingToast);
-        
         if(data.success) {
             toast.success("Lecture Added!");
             setMyLectures([...myLectures, data.lecture]); 
             setLecture({ title: '', url: '' });
         }
-    } catch (error) { 
-        toast.dismiss(loadingToast); 
-        toast.error("Failed to add lecture");
-    }
+    } catch (error) { toast.dismiss(loadingToast); toast.error("Failed to add lecture"); }
   };
 
-  // --- 5. DELETE LECTURE ---
   const handleDeleteLecture = async (lectureId) => {
-      if(!window.confirm("Are you sure you want to delete this lecture?")) return;
-      const loadingToast = toast.loading("Deleting...");
+      if(!window.confirm("Delete this lecture?")) return;
       try {
           const res = await fetch(`https://navigreat-backend-98.onrender.com/api/lectures/${lectureId}`, { method: 'DELETE' });
           const data = await res.json();
-          toast.dismiss(loadingToast);
           if (data.success) {
               setMyLectures(myLectures.filter(l => l._id !== lectureId));
-              toast.success("Deleted successfully");
-          } else { toast.error("Failed to delete"); }
-      } catch (err) { toast.dismiss(loadingToast); toast.error("Error deleting lecture"); }
+              toast.success("Deleted!");
+          }
+      } catch (err) { toast.error("Error deleting"); }
   };
 
   const handleLogout = () => {
@@ -177,175 +139,143 @@ const DashboardPage = () => {
       navigate('/login');
   };
 
-  if (loading || !user) return <div className="text-center pt-24 font-bold text-gray-500">Loading Dashboard...</div>;
+  if (loading || !user) return <div className="flex justify-center items-center h-screen text-blue-600 font-bold">Loading Dashboard...</div>;
 
   return (
     <div className="min-h-screen bg-gray-50 pt-24 pb-12 px-4">
       <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
         
-        {/* ================= LEFT COLUMN: PROFILE CARD (Editable for Everyone) ================= */}
+        {/* ================= LEFT: PRO PROFILE CARD ================= */}
         <div className="lg:col-span-1 space-y-6">
-          <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 text-center relative">
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden relative">
             
-            {/* 📸 IMAGE SECTION */}
-            <div className="relative w-32 h-32 mx-auto mb-4 group">
-                <img 
-                    src={profile.image || user.image || `https://ui-avatars.com/api/?name=${user.username}&background=0D8ABC&color=fff`} 
-                    alt="Profile" 
-                    className="w-full h-full rounded-full object-cover border-4 border-blue-50 shadow-sm" 
-                />
-                {/* ✅ Camera Icon for Everyone in Edit Mode */}
-                {isEditing && (
-                    <label className="absolute bottom-0 right-0 bg-blue-600 p-2.5 rounded-full text-white cursor-pointer hover:bg-blue-700 shadow-md transition transform hover:scale-110">
-                        <Camera size={18} />
-                        <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
-                    </label>
-                )}
-            </div>
+            {/* 🎨 Cover Background */}
+            <div className="h-24 bg-gradient-to-r from-blue-600 to-purple-600"></div>
 
-            {/* NAME & ROLE */}
-            {isEditing ? (
-                <input 
-                    name="username" 
-                    value={profile.username} 
-                    onChange={handleProfileChange} 
-                    className="text-center border-b-2 border-blue-200 p-1 rounded w-full font-bold text-xl mb-1 focus:outline-none focus:border-blue-600"
-                    placeholder="Your Name"
-                />
-            ) : (
-                <h2 className="text-2xl font-bold text-gray-800">{user.username}</h2>
-            )}
-            
-            <p className="text-blue-600 font-medium capitalize flex justify-center items-center gap-1 mb-6">
-                {user.role} {user.role === 'mentor' && <CheckCircle size={16} />}
-            </p>
+            <div className="text-center px-6 pb-6 relative">
+                {/* 📸 Image */}
+                <div className="relative w-28 h-28 mx-auto -mt-14 mb-4 group">
+                    <img 
+                        src={profile.image || user.image || `https://ui-avatars.com/api/?name=${user.username}&background=0D8ABC&color=fff`} 
+                        alt="Profile" 
+                        className="w-full h-full rounded-full object-cover border-4 border-white shadow-md bg-white" 
+                    />
+                    {isEditing && (
+                        <label className="absolute bottom-0 right-0 bg-blue-600 p-2 rounded-full text-white cursor-pointer hover:bg-blue-700 shadow-lg transition hover:scale-110">
+                            <Camera size={16} />
+                            <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
+                        </label>
+                    )}
+                </div>
 
-            {/* ✅ DETAILS FORM (Visible for Students too now) */}
-            <div className="space-y-4 text-left bg-gray-50 p-4 rounded-xl">
-                <div>
-                    <label className="text-xs font-bold text-gray-400 uppercase tracking-wide">College</label>
-                    {isEditing ? (
-                        <input name="college" value={profile.college} onChange={handleProfileChange} className="w-full border p-2 rounded-lg mt-1 bg-white" placeholder="Ex: IIT Delhi" />
-                    ) : (
-                        <p className="font-semibold text-gray-700">{user.college || "Not Added"}</p>
-                    )}
-                </div>
-                <div>
-                    <label className="text-xs font-bold text-gray-400 uppercase tracking-wide">Branch</label>
-                    {isEditing ? (
-                        <input name="branch" value={profile.branch} onChange={handleProfileChange} className="w-full border p-2 rounded-lg mt-1 bg-white" placeholder="Ex: CSE" />
-                    ) : (
-                        <p className="font-semibold text-gray-700">{user.branch || "Not Added"}</p>
-                    )}
-                </div>
-                <div>
-                    <label className="text-xs font-bold text-gray-400 uppercase tracking-wide">About Me</label>
-                    {isEditing ? (
-                        <textarea name="about" value={profile.about} onChange={handleProfileChange} className="w-full border p-2 rounded-lg mt-1 h-24 bg-white" placeholder="Write a short bio..." />
-                    ) : (
-                        <p className="text-sm text-gray-600 leading-relaxed">{user.about || "No bio added yet."}</p>
-                    )}
-                </div>
-            </div>
-            
-            {/* ACTION BUTTONS */}
-            <div className="mt-6 space-y-3">
-                {/* ✅ Edit/Save Button for Everyone */}
+                {/* Name & Role */}
                 {isEditing ? (
-                    <button onClick={handleSaveProfile} className="w-full bg-green-600 text-white py-2.5 rounded-xl flex justify-center items-center gap-2 hover:bg-green-700 transition font-bold shadow-md">
-                        <Save size={18} /> Save Changes
-                    </button>
+                    <input name="username" value={profile.username} onChange={(e) => setProfile({...profile, username: e.target.value})} className="text-center border-b-2 border-blue-200 p-1 w-full font-bold text-xl mb-1 focus:outline-none" placeholder="Name"/>
                 ) : (
-                    <button onClick={() => setIsEditing(true)} className="w-full bg-blue-600 text-white py-2.5 rounded-xl flex justify-center items-center gap-2 hover:bg-blue-700 transition font-bold shadow-md">
-                        <Edit2 size={18} /> Edit Profile
-                    </button>
+                    <h2 className="text-2xl font-bold text-gray-800 capitalize">{user.username}</h2>
                 )}
+                
+                <p className="text-blue-600 font-medium capitalize flex justify-center items-center gap-1 mb-6">
+                    {user.role} {user.role === 'mentor' && <CheckCircle size={16} />}
+                </p>
 
-                {/* View Public Profile (Only for Mentor) */}
-                {user.role === 'mentor' && (
-                    <button 
-                        onClick={() => navigate(`/mentor/${user.id}`)} 
-                        className="w-full bg-white border border-gray-200 text-gray-700 py-2.5 rounded-xl flex justify-center items-center gap-2 hover:bg-gray-50 transition font-medium shadow-sm"
-                    >
-                        <Eye size={18} /> View Public Profile
-                    </button>
-                )}
+                {/* Details */}
+                <div className="space-y-4 text-left bg-gray-50 p-4 rounded-xl mb-6">
+                    <div>
+                        <label className="text-xs font-bold text-gray-400 uppercase">College</label>
+                        {isEditing ? <input name="college" value={profile.college} onChange={(e) => setProfile({...profile, college: e.target.value})} className="w-full border p-2 rounded mt-1 text-sm" placeholder="IIT/NIT Name" /> : <p className="font-semibold text-gray-700">{user.college || "Not Added"}</p>}
+                    </div>
+                    <div>
+                        <label className="text-xs font-bold text-gray-400 uppercase">Branch</label>
+                        {isEditing ? <input name="branch" value={profile.branch} onChange={(e) => setProfile({...profile, branch: e.target.value})} className="w-full border p-2 rounded mt-1 text-sm" placeholder="CSE/ECE" /> : <p className="font-semibold text-gray-700">{user.branch || "Not Added"}</p>}
+                    </div>
+                </div>
 
-                <button onClick={handleLogout} className="w-full border border-red-200 text-red-500 py-2.5 rounded-xl flex justify-center items-center gap-2 hover:bg-red-50 transition font-medium">
-                    <LogOut size={18} /> Logout
-                </button>
+                {/* Buttons */}
+                <div className="space-y-3">
+                    {isEditing ? (
+                        <button onClick={handleSaveProfile} className="w-full bg-green-600 text-white py-2.5 rounded-xl flex justify-center items-center gap-2 hover:bg-green-700 font-bold shadow-md"><Save size={18} /> Save</button>
+                    ) : (
+                        <button onClick={() => setIsEditing(true)} className="w-full bg-white border border-blue-600 text-blue-600 py-2.5 rounded-xl flex justify-center items-center gap-2 hover:bg-blue-50 font-bold transition"><Edit2 size={18} /> Edit Profile</button>
+                    )}
+                    {user.role === 'mentor' && <button onClick={() => navigate(`/mentor/${user.id}`)} className="w-full bg-gray-100 text-gray-700 py-2.5 rounded-xl flex justify-center gap-2 hover:bg-gray-200 font-medium"><Eye size={18} /> Public View</button>}
+                    <button onClick={handleLogout} className="w-full text-red-500 py-2 rounded-xl flex justify-center gap-2 hover:bg-red-50 font-medium"><LogOut size={18} /> Logout</button>
+                </div>
             </div>
           </div>
         </div>
 
-        {/* ================= RIGHT COLUMN: CONTENT ================= */}
+        {/* ================= RIGHT: CONTENT ================= */}
         <div className="lg:col-span-2 space-y-6">
            
-           {/* --- MENTOR VIEW: UPLOAD & LECTURES --- */}
            {user.role === 'mentor' ? (
             <>
-              {/* Upload Card */}
+              {/* 📊 1. NEW STATS SECTION */}
+              <div className="grid grid-cols-3 gap-4">
+                  <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex items-center gap-3">
+                      <div className="bg-blue-100 p-3 rounded-lg text-blue-600"><BarChart3 size={24} /></div>
+                      <div><p className="text-gray-500 text-xs font-bold uppercase">Lectures</p><h4 className="text-xl font-bold">{myLectures.length}</h4></div>
+                  </div>
+                  <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex items-center gap-3">
+                      <div className="bg-purple-100 p-3 rounded-lg text-purple-600"><Users size={24} /></div>
+                      <div><p className="text-gray-500 text-xs font-bold uppercase">Students</p><h4 className="text-xl font-bold">128</h4></div>
+                  </div>
+                  <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex items-center gap-3">
+                      <div className="bg-yellow-100 p-3 rounded-lg text-yellow-600"><Star size={24} /></div>
+                      <div><p className="text-gray-500 text-xs font-bold uppercase">Rating</p><h4 className="text-xl font-bold">4.9</h4></div>
+                  </div>
+              </div>
+
+              {/* 📤 2. UPLOAD CARD (Improved) */}
               <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
                 <div className="flex items-center gap-3 mb-6">
-                    <div className="bg-blue-100 p-3 rounded-full text-blue-600">
-                        <UploadCloud size={24} />
-                    </div>
+                    <div className="bg-blue-50 p-2 rounded-lg text-blue-600"><UploadCloud size={24} /></div>
                     <h3 className="text-xl font-bold text-gray-800">Add New Resource</h3>
                 </div>
                 
                 <form onSubmit={handleAddLecture} className="grid md:grid-cols-2 gap-4">
-                  <input 
-                    placeholder="Lecture Title (e.g. DSA Roadmap)" 
-                    value={lecture.title} 
-                    onChange={(e) => setLecture({...lecture, title: e.target.value})} 
-                    className="border p-3 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition" 
-                    required 
-                  />
-                  <input 
-                    placeholder="YouTube Video URL" 
-                    value={lecture.url} 
-                    onChange={(e) => setLecture({...lecture, url: e.target.value})} 
-                    className="border p-3 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition" 
-                    required 
-                  />
-                  <button type="submit" className="md:col-span-2 bg-gray-900 text-white py-3 rounded-xl font-bold hover:bg-black transition shadow-lg">
+                  {/* Icon Inputs */}
+                  <div className="relative">
+                      <FileText className="absolute left-3 top-3.5 text-gray-400" size={18} />
+                      <input placeholder="Lecture Title" value={lecture.title} onChange={(e) => setLecture({...lecture, title: e.target.value})} className="w-full pl-10 border p-3 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none" required />
+                  </div>
+                  <div className="relative">
+                      <LinkIcon className="absolute left-3 top-3.5 text-gray-400" size={18} />
+                      <input placeholder="YouTube URL" value={lecture.url} onChange={(e) => setLecture({...lecture, url: e.target.value})} className="w-full pl-10 border p-3 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none" required />
+                  </div>
+                  
+                  {/* Gradient Button */}
+                  <button type="submit" className="md:col-span-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3 rounded-xl font-bold hover:shadow-lg hover:opacity-90 transition transform active:scale-95">
                     Upload Lecture
                   </button>
                 </form>
               </div>
 
-              {/* Lecture List */}
+              {/* 📚 3. LECTURE LIST (Better Empty State) */}
               <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
                   <div className="flex items-center gap-3 mb-6">
-                      <div className="bg-purple-100 p-3 rounded-full text-purple-600">
-                          <Video size={24} />
-                      </div>
+                      <div className="bg-purple-50 p-2 rounded-lg text-purple-600"><Video size={24} /></div>
                       <h3 className="text-xl font-bold text-gray-800">My Lectures</h3>
                   </div>
 
                   {myLectures.length === 0 ? (
-                      <div className="text-center py-10 text-gray-400">
-                          <BookOpen size={48} className="mx-auto mb-3 opacity-20" />
-                          <p>No lectures uploaded yet.</p>
+                      <div className="text-center py-12 bg-gray-50 rounded-xl border border-dashed border-gray-200">
+                          <img src="https://cdn-icons-png.flaticon.com/512/7486/7486744.png" alt="Empty" className="w-24 h-24 mx-auto mb-4 opacity-50 grayscale" />
+                          <p className="text-gray-500 font-medium">No lectures uploaded yet.</p>
+                          <p className="text-gray-400 text-sm">Start sharing your knowledge!</p>
                       </div>
                   ) : (
-                      <div className="grid gap-4">
+                      <div className="space-y-3">
                           {myLectures.map((lec) => (
-                              <div key={lec._id} className="flex justify-between items-center p-4 border rounded-xl hover:bg-gray-50 transition">
+                              <div key={lec._id} className="flex justify-between items-center p-4 border rounded-xl hover:bg-gray-50 transition group">
                                   <div className="flex items-center gap-4">
-                                      <div className="bg-red-100 text-red-600 p-2 rounded-lg">
-                                          <Video size={20} />
-                                      </div>
+                                      <div className="bg-red-100 text-red-600 p-2.5 rounded-lg group-hover:bg-red-600 group-hover:text-white transition"><Video size={20} /></div>
                                       <div>
                                           <h4 className="font-bold text-gray-800">{lec.title}</h4>
-                                          <a href={lec.url} target="_blank" rel="noreferrer" className="text-sm text-blue-500 hover:underline flex items-center gap-1">
-                                              Watch Video <ExternalLink size={12}/>
-                                          </a>
+                                          <a href={lec.url} target="_blank" rel="noreferrer" className="text-xs text-blue-500 hover:underline flex items-center gap-1">Watch Video <ExternalLink size={10}/></a>
                                       </div>
                                   </div>
-                                  <button onClick={() => handleDeleteLecture(lec._id)} className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition" title="Delete Lecture">
-                                    <Trash2 size={18} />
-                                  </button>
+                                  <button onClick={() => handleDeleteLecture(lec._id)} className="p-2 text-gray-300 hover:text-red-500 hover:bg-red-50 rounded-lg transition"><Trash2 size={18} /></button>
                               </div>
                           ))}
                       </div>
@@ -353,19 +283,17 @@ const DashboardPage = () => {
               </div>
             </>
            ) : (
-            // --- STUDENT VIEW (Ab yahan bhi profile edit kar payenge left side se) ---
-            <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 text-center py-20">
-                <div className="bg-green-100 w-16 h-16 mx-auto rounded-full flex items-center justify-center text-green-600 mb-4">
-                    <User size={32} />
+            // STUDENT WELCOME
+            <div className="bg-white p-12 rounded-2xl shadow-sm border border-gray-100 text-center">
+                <div className="bg-green-100 w-20 h-20 mx-auto rounded-full flex items-center justify-center text-green-600 mb-6">
+                    <User size={40} />
                 </div>
-                <h3 className="text-2xl font-bold text-gray-800">Welcome, {user.username}!</h3>
-                <p className="text-gray-500 mt-2">Update your profile on the left or find a mentor below.</p>
-                <button 
-                    onClick={() => navigate('/mentors')} 
-                    className="mt-6 bg-blue-600 text-white px-6 py-3 rounded-xl font-bold hover:bg-blue-700 transition shadow-md"
-                >
-                    Find Mentors
-                </button>
+                <h3 className="text-3xl font-bold text-gray-800 capitalize">Welcome, {user.username}!</h3>
+                <p className="text-gray-500 mt-2 text-lg">Your learning journey starts here.</p>
+                <div className="mt-8 flex justify-center gap-4">
+                    <button onClick={() => navigate('/mentors')} className="bg-blue-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-blue-700 shadow-lg hover:shadow-xl transition">Find Mentors</button>
+                    <button onClick={() => setIsEditing(true)} className="bg-gray-100 text-gray-700 px-8 py-3 rounded-xl font-bold hover:bg-gray-200 transition">Update Profile</button>
+                </div>
             </div>
            )}
         </div>
