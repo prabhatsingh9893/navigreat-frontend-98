@@ -1,67 +1,101 @@
 import React, { useEffect } from 'react';
-import { ZoomMtg } from "@zoom/meetingsdk";
-import { Video, Mic, MonitorUp, Users, AlertCircle } from "lucide-react";
+import { ZoomMtg } from '@zoomus/websdk';
+import { useLocation, useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 
-// ✅ NOTE: Humne CSS import hata diya hai kyunki index.html me CDN laga diya hai.
-// Ab woh "Red Error" nahi aayega.
+// ✅ Zoom CSS (Zaruri hai)
+import '@zoomus/websdk/dist/css/bootstrap.css';
+import '@zoomus/websdk/dist/css/react-select.css';
 
-const LiveSession = () => {
+// --- CONFIGURATION ---
+// ⚠️ Yahan apni Asli Zoom Keys daalein (Marketplace > Build App > Meeting SDK)
+const SDK_KEY = "YOUR_CLIENT_ID_HERE"; 
+const SDK_SECRET = "YOUR_CLIENT_SECRET_HERE";
+
+const SessionPage = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // 1. Data Receive kar rahe hain (Profile Page se)
+  const meetingNumber = location.state?.meetingNumber;
+  const passWord = location.state?.passWord;
 
   useEffect(() => {
-    // 1. Zoom SDK Basic Setup
+    // Agar Meeting ID nahi mili (Direct link open kiya), to wapas bhej do
+    if (!meetingNumber) {
+        toast.error("No meeting details found. Join via Mentor Profile.");
+        navigate('/dashboard');
+        return;
+    }
+
+    // Zoom Setup
     ZoomMtg.setZoomJLib('https://source.zoom.us/2.18.0/lib', '/av');
     ZoomMtg.preLoadWasm();
     ZoomMtg.prepareWebSDK();
-  }, []);
 
-  const startMeeting = () => {
-    // Yahan hum baad mein backend se signature layenge
-    console.log("Meeting Start Button Clicked!");
-    alert("Backend connect hone ke baad meeting start hogi!");
+    initiateMeeting();
+  }, [meetingNumber, navigate]);
+
+  const initiateMeeting = () => {
+    // Generate Signature (Testing ke liye client-side)
+    ZoomMtg.generateSDKSignature({
+      meetingNumber: meetingNumber,
+      sdkKey: SDK_KEY,
+      sdkSecret: SDK_SECRET,
+      role: 0, // 0 = Student (Participant), 1 = Host
+      success: function (res) {
+        startMeeting(res.result);
+      },
+      error: function (err) {
+        console.log(err);
+        toast.error("Signature Error");
+      }
+    });
+  };
+
+  const startMeeting = (signature) => {
+    const zoomRoot = document.getElementById('zmmtg-root');
+    if (zoomRoot) zoomRoot.style.display = 'block';
+
+    ZoomMtg.init({
+      leaveUrl: window.location.origin + '/dashboard',
+      success: (success) => {
+        ZoomMtg.join({
+          signature: signature,
+          meetingNumber: meetingNumber, // ✅ Ab ye Dynamic ID lega
+          passWord: passWord,           // ✅ Ab ye Dynamic Password lega
+          userName: "Student",          // Future me: user.username
+          sdkKey: SDK_KEY,
+          userEmail: "",                // Optional
+          success: (res) => {
+            console.log("Joined Successfully");
+          },
+          error: (err) => {
+            console.log(err);
+            toast.error(err.method || "Join Failed");
+          },
+        });
+      },
+      error: (err) => {
+        console.log(err);
+        toast.error("Zoom Init Failed");
+      },
+    });
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white p-6 flex flex-col items-center">
-      
-      {/* Header */}
-      <div className="w-full max-w-6xl flex justify-between items-center mb-6">
-        <div>
-          <h1 className="text-2xl font-bold">Mentorship Live Session</h1>
-          <p className="text-gray-400 text-sm">Session ID: 882-123-456</p>
-        </div>
-        <div className="bg-red-600 px-3 py-1 rounded-full text-xs font-bold animate-pulse flex items-center gap-2">
-          <div className="w-2 h-2 bg-white rounded-full"></div>
-          LIVE
-        </div>
-      </div>
-
-      {/* Video Placeholder Area */}
-      <div className="w-full max-w-6xl h-[500px] bg-gray-800 rounded-xl border border-gray-700 flex flex-col items-center justify-center relative overflow-hidden shadow-2xl">
+    <div className="bg-black h-screen w-screen flex items-center justify-center text-white">
+        {/* Jab tak Zoom load nahi hota, ye dikhega */}
         <div className="text-center">
-          <Users className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-          <h2 className="text-xl font-semibold text-gray-300">Ready to Connect?</h2>
-          <p className="text-gray-500 mt-2">Click the button below to join the class.</p>
+            <h2 className="text-2xl font-bold animate-pulse mb-2">Connecting to Class...</h2>
+            <p className="text-gray-400">Please wait while we set up the secure room.</p>
+            <p className="text-xs text-gray-600 mt-4">Meeting ID: {meetingNumber}</p>
         </div>
-      </div>
 
-      {/* Controls */}
-      <div className="mt-8 flex gap-6 bg-gray-800 px-8 py-4 rounded-full border border-gray-700 shadow-lg">
-        <button onClick={startMeeting} className="p-4 rounded-full bg-blue-600 hover:bg-blue-700 transition text-white font-bold flex items-center gap-2">
-          <Video className="w-6 h-6" />
-          Join Meeting
-        </button>
-        
-        <button className="p-3 rounded-full bg-gray-700 hover:bg-gray-600 transition text-white">
-          <Mic className="w-6 h-6" />
-        </button>
-
-        <button className="p-3 rounded-full bg-gray-700 hover:bg-gray-600 transition text-white">
-          <MonitorUp className="w-6 h-6" />
-        </button>
-      </div>
-
+        {/* Zoom SDK Container (Iska ID mat badalna) */}
+        <div id="zmmtg-root" className="hidden"></div> 
     </div>
   );
 };
 
-export default LiveSession;
+export default SessionPage;
