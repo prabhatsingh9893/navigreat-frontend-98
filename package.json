@@ -12,8 +12,11 @@
   },
   "dependencies": {
     "@react-oauth/google": "^0.12.2",
+    "@zoom/meetingsdk": "^5.0.0",
+    "dotenv": "^17.2.3",
     "firebase": "^12.6.0",
     "framer-motion": "^12.23.24",
+    "jsrsasign": "^11.1.0",
     "jwt-decode": "^4.0.0",
     "lucide-react": "^0.555.0",
     "react": "^19.1.1",
@@ -23,8 +26,8 @@
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^5.0.4",
-    "autoprefixer": "^10.4.17",
-    "postcss": "^8.4.33",
-    "tailwindcss": "^3.4.1"
+    "autoprefixer": "^10.4.23",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^3.4.17"
   }
 }

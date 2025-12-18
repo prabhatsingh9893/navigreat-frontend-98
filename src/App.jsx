@@ -15,7 +15,7 @@ import MentorProfile from './pages/MentorProfile.jsx';
 
 function App() {
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="w-full max-w-full overflow-x-hidden min-h-screen">
       
       {/* 👉 2. TOASTER COMPONENT ADDED HERE */}
       <Toaster position="top-center" reverseOrder={false} />
