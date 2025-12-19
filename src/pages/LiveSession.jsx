@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { ZoomMtg } from '@zoomus/websdk';
+import * as ZoomSDK from '@zoom/meetingsdk';
+const ZoomMtg = ZoomSDK.ZoomMtg || ZoomSDK.default || window.ZoomMtg;
+
 import { useLocation, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { API_BASE_URL } from '../config';
 import Loader from '../components/Loader';
 
 // ✅ Zoom CSS
-import '@zoomus/websdk/dist/css/bootstrap.css';
-import '@zoomus/websdk/dist/css/react-select.css';
+import '@zoom/meetingsdk/dist/ui/zoom-meetingsdk.css';
 
 const SessionPage = () => {
   const navigate = useNavigate();
@@ -32,7 +33,7 @@ const SessionPage = () => {
     }
 
     // Zoom Setup
-    ZoomMtg.setZoomJLib('https://source.zoom.us/2.18.0/lib', '/av');
+    ZoomMtg.setZoomJSLib('https://source.zoom.us/5.0.0/lib', '/av');
     ZoomMtg.preLoadWasm();
     ZoomMtg.prepareWebSDK();
 

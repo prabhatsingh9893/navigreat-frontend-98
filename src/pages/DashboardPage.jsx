@@ -34,7 +34,26 @@ const DashboardPage = () => {
         duration: "60" // Default 1 hour
     });
 
-    // ... (Modals State) ...
+    // Modals State
+    const [isEditing, setIsEditing] = useState(false);
+    const [isZoomModal, setIsZoomModal] = useState(false);
+
+    const [editForm, setEditForm] = useState({});
+    const [newLecture, setNewLecture] = useState({ title: "", url: "" });
+
+    // --- HELPER: Get YouTube ID safely ---
+    const getYouTubeID = (url) => {
+        if (!url) return null;
+        const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+        const match = url.match(regExp);
+        return (match && match[2].length === 11) ? match[2] : null;
+    };
+
+    // --- HELPER: Copy to Clipboard ---
+    const copyToClipboard = (text) => {
+        navigator.clipboard.writeText(text);
+        toast.success("Copied to clipboard!");
+    };
 
     // --- 1. INITIAL FETCH ---
     useEffect(() => {
