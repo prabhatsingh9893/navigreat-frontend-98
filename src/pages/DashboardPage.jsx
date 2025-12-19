@@ -18,6 +18,7 @@ const DashboardPage = () => {
 
     // User Data
     const [user, setUser] = useState(null);
+    const [sessions, setSessions] = useState([]); // ✅ NEW: Sessions List
     const [profile, setProfile] = useState({
         username: "", role: "Mentor", about: "", college: "", branch: "", image: "",
         meetingId: "", passcode: "",
@@ -33,26 +34,7 @@ const DashboardPage = () => {
         duration: "60" // Default 1 hour
     });
 
-    // Modals State
-    const [isEditing, setIsEditing] = useState(false);
-    const [isZoomModal, setIsZoomModal] = useState(false);
-
-    const [editForm, setEditForm] = useState({});
-    const [newLecture, setNewLecture] = useState({ title: "", url: "" });
-
-    // --- HELPER: Get YouTube ID safely ---
-    const getYouTubeID = (url) => {
-        if (!url) return null;
-        const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
-        const match = url.match(regExp);
-        return (match && match[2].length === 11) ? match[2] : null;
-    };
-
-    // --- HELPER: Copy to Clipboard ---
-    const copyToClipboard = (text) => {
-        navigator.clipboard.writeText(text);
-        toast.success("Copied to clipboard!");
-    };
+    // ... (Modals State) ...
 
     // --- 1. INITIAL FETCH ---
     useEffect(() => {
@@ -67,51 +49,34 @@ const DashboardPage = () => {
 
                 setUser(parsedUser);
 
-                // Fix: Ensure we have a valid ID (handle _id from Mongo)
                 const userId = parsedUser.id || parsedUser._id;
-                if (!userId) {
-                    console.error("Invalid User ID");
-                    localStorage.removeItem('userData');
-                    navigate('/login');
-                    return;
-                }
+                if (!userId) { localStorage.removeItem('userData'); navigate('/login'); return; }
 
-                // Parallel Fetching
-                const [mentorRes, lectureRes] = await Promise.all([
+                // Parallel Fetching (Added Sessions)
+                const [mentorRes, lectureRes, sessionRes] = await Promise.all([
                     fetch(`${API_BASE_URL}/mentors/${userId}`),
-                    fetch(`${API_BASE_URL}/lectures/${userId}`)
+                    fetch(`${API_BASE_URL}/lectures/${userId}`),
+                    fetch(`${API_BASE_URL}/sessions/${userId}`) // ✅ Fetch Sessions
                 ]);
 
-                // DEBUGGING: Log raw response if error occurs
-                const parseResponse = async (res, name) => {
-                    const text = await res.text();
-                    try {
-                        return JSON.parse(text);
-                    } catch (e) {
-                        console.error(`❌ Non-JSON response from ${name}:`, text.substring(0, 100)); // Log first 100 chars
-                        throw new Error(`Server returned HTML instead of JSON for ${name}. Check Backend URL.`);
-                    }
-                };
+                const parseResponse = async (res) => res.ok ? res.json() : null;
 
-                const mentorData = await parseResponse(mentorRes, "Mentors API");
-                const lectureData = await parseResponse(lectureRes, "Lectures API");
+                const mentorData = await parseResponse(mentorRes);
+                const lectureData = await parseResponse(lectureRes);
+                const sessionData = await parseResponse(sessionRes);
 
-                if (mentorData.success) {
+                if (mentorData && mentorData.success) {
                     const m = mentorData.mentor || mentorData.user;
-                    setProfile(prev => ({
-                        ...prev,
-                        username: m.username || "",
-                        about: m.about || "",
-                        college: m.college || "",
-                        branch: m.branch || "",
-                        image: m.image || "",
-                        meetingId: m.meetingId || "",
-                        passcode: m.passcode || ""
-                    }));
+                    setProfile(prev => ({ ...prev, ...m }));
                 }
 
-                if (lectureData.success) {
-                    setLectures(lectureData.lectures);
+                if (lectureData && lectureData.success) setLectures(lectureData.lectures);
+
+                // ✅ Set Sessions
+                if (sessionData && sessionData.success) {
+                    // Sort by date/time
+                    const sorted = sessionData.sessions.sort((a, b) => new Date(a.startTime) - new Date(b.startTime));
+                    setSessions(sorted);
                 }
 
             } catch (error) {
@@ -124,6 +89,24 @@ const DashboardPage = () => {
 
         fetchData();
     }, [navigate]);
+
+    // ... (helper functions) ...
+
+    const handleStartSession = (session) => {
+        if (!profile.meetingId || !profile.passcode) {
+            toast.error("Please setup Zoom Meeting ID in profile first!");
+            return;
+        }
+        // Navigate to LiveSession as HOST (Role 1)
+        navigate('/session', {
+            state: {
+                meetingNumber: profile.meetingId,
+                passWord: profile.passcode,
+                role: 1, // ✅ HOST ROLE
+                username: profile.username
+            }
+        });
+    };
 
     // --- 2. SAVE HANDLERS ---
 
@@ -430,6 +413,32 @@ const DashboardPage = () => {
                                 <Plus size={18} /> Schedule Now
                             </button>
                         </div>
+
+                        {/* ✅ UPCOMING SESSIONS LIST */}
+                        {sessions.length > 0 && (
+                            <div className="mt-6 border-t pt-4">
+                                <h4 className="text-sm font-bold text-gray-500 uppercase mb-3 text-center">Your Scheduled Classes</h4>
+                                <div className="space-y-3 max-h-60 overflow-y-auto custom-scrollbar">
+                                    {sessions.map(s => (
+                                        <div key={s._id} className="bg-blue-50 border border-blue-100 p-3 rounded-lg flex justify-between items-center group hover:bg-white hover:shadow-md transition">
+                                            <div>
+                                                <div className="font-bold text-gray-800 text-sm">{s.title}</div>
+                                                <div className="text-xs text-blue-600 font-medium">
+                                                    {new Date(s.startTime).toLocaleDateString()} • {new Date(s.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                                </div>
+                                            </div>
+                                            <button
+                                                onClick={() => handleStartSession(s)}
+                                                className="bg-green-500 text-white p-2 rounded-lg hover:bg-green-600 transition shadow-sm"
+                                                title="Start Meeting as Host"
+                                            >
+                                                <Video size={16} />
+                                            </button>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
                     </div>
 
                     {/* Add Lecture Card */}

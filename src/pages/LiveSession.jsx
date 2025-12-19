@@ -17,9 +17,11 @@ const SessionPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // 1. Data Receive kar rahe hain (Profile Page se)
+  // 1. Data Receive kar rahe hain (Profile/Dashboard se)
   const meetingNumber = location.state?.meetingNumber;
   const passWord = location.state?.passWord;
+  const role = location.state?.role || 0; // 0 = Student (Default), 1 = Host (Mentor)
+  const username = location.state?.username || "Student"; // Display Name
 
   useEffect(() => {
     // Agar Meeting ID nahi mili (Direct link open kiya), to wapas bhej do
@@ -44,7 +46,7 @@ const SessionPage = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           meetingNumber: meetingNumber,
-          role: 0 // Student
+          role: role // ✅ Dynamic Role (0 or 1)
         })
       });
 
@@ -72,7 +74,7 @@ const SessionPage = () => {
           signature: signature,
           meetingNumber: meetingNumber,
           passWord: passWord,
-          userName: "Student",
+          userName: username, // ✅ Real Name
           sdkKey: sdkKey, // ✅ Dynamic SDK Key from backend
           userEmail: "",
           success: (res) => {
