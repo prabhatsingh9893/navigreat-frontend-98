@@ -1,32 +1,32 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ZoomMtg } from '@zoomus/websdk';
 import { useLocation, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { API_BASE_URL } from '../config';
+import Loader from '../components/Loader';
 
-// ✅ Zoom CSS (Zaruri hai)
+// ✅ Zoom CSS
 import '@zoomus/websdk/dist/css/bootstrap.css';
 import '@zoomus/websdk/dist/css/react-select.css';
-
-// --- CONFIGURATION ---
-// ⚠️ Yahan apni Asli Zoom Keys daalein (Marketplace > Build App > Meeting SDK)
-const SDK_KEY = "YOUR_CLIENT_ID_HERE";
-const SDK_SECRET = "YOUR_CLIENT_SECRET_HERE";
 
 const SessionPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const [loading, setLoading] = useState(true);
 
   // 1. Data Receive kar rahe hain (Profile/Dashboard se)
-  const meetingNumber = location.state?.meetingNumber;
-  const passWord = location.state?.passWord;
   const role = location.state?.role || 0; // 0 = Student (Default), 1 = Host (Mentor)
-  const username = location.state?.username || "Student"; // Display Name
+  const username = location.state?.username || "Student";
+
+  // ✅ Sanitization: Remove spaces/dashes from ID
+  const rawMeetingNumber = location.state?.meetingNumber || "";
+  const meetingNumber = rawMeetingNumber.replace(/[^0-9]/g, '');
+  const passWord = location.state?.passWord || "";
 
   useEffect(() => {
     // Agar Meeting ID nahi mili (Direct link open kiya), to wapas bhej do
     if (!meetingNumber) {
-      toast.error("No meeting details found. Join via Mentor Profile.");
+      toast.error("No meeting details found. Join via Dashboard or Profile.");
       navigate('/dashboard');
       return;
     }
@@ -46,7 +46,7 @@ const SessionPage = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           meetingNumber: meetingNumber,
-          role: role // ✅ Dynamic Role (0 or 1)
+          role: role
         })
       });
 
@@ -56,26 +56,30 @@ const SessionPage = () => {
         startMeeting(data.signature, data.sdkKey);
       } else {
         toast.error("Signature generation failed");
+        navigate('/dashboard');
       }
     } catch (error) {
       console.error(error);
       toast.error("Network error: Could not connect to Zoom Server");
+      navigate('/dashboard');
     }
   };
 
   const startMeeting = (signature, sdkKey) => {
     const zoomRoot = document.getElementById('zmmtg-root');
     if (zoomRoot) zoomRoot.style.display = 'block';
+    setLoading(false);
 
     ZoomMtg.init({
       leaveUrl: window.location.origin + '/dashboard',
+      isSupportAV: true,
       success: (success) => {
         ZoomMtg.join({
           signature: signature,
           meetingNumber: meetingNumber,
           passWord: passWord,
-          userName: username, // ✅ Real Name
-          sdkKey: sdkKey, // ✅ Dynamic SDK Key from backend
+          userName: username,
+          sdkKey: sdkKey,
           userEmail: "",
           success: (res) => {
             console.log("Joined Successfully");
@@ -94,16 +98,16 @@ const SessionPage = () => {
   };
 
   return (
-    <div className="bg-black h-screen w-screen flex items-center justify-center text-white">
-      {/* Jab tak Zoom load nahi hota, ye dikhega */}
-      <div className="text-center">
-        <h2 className="text-2xl font-bold animate-pulse mb-2">Connecting to Class...</h2>
-        <p className="text-gray-400">Please wait while we set up the secure room.</p>
-        <p className="text-xs text-gray-600 mt-4">Meeting ID: {meetingNumber}</p>
-      </div>
+    <div className="bg-black h-screen w-screen relative overflow-hidden">
+      {/* Custom Loader */}
+      {loading && (
+        <div className="absolute inset-0 z-50 bg-black flex items-center justify-center">
+          <Loader text="Securing Classroom..." />
+        </div>
+      )}
 
-      {/* Zoom SDK Container (Iska ID mat badalna) */}
-      <div id="zmmtg-root" className="hidden"></div>
+      {/* Zoom SDK Container */}
+      <div id="zmmtg-root" className="w-full h-full"></div>
     </div>
   );
 };
