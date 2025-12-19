@@ -11,12 +11,14 @@ import SignupPage from './pages/SignupPage.jsx';
 import MentorsPage from './pages/MentorsPage.jsx';
 import MentorSignupPage from './pages/MentorSignupPage.jsx';
 import DashboardPage from './pages/DashboardPage.jsx';
-import MentorProfile from './pages/MentorProfile.jsx'; 
+import MentorProfile from './pages/MentorProfile.jsx';
+
+import LiveSession from './pages/LiveSession.jsx';
 
 function App() {
   return (
     <div className="w-full max-w-full overflow-x-hidden min-h-screen">
-      
+
       {/* 👉 2. TOASTER COMPONENT ADDED HERE */}
       <Toaster position="top-center" reverseOrder={false} />
 
@@ -27,14 +29,17 @@ function App() {
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
-          
+
           {/* Mentor Related Routes */}
           <Route path="/mentors" element={<MentorsPage />} />
           <Route path="/become-mentor" element={<MentorSignupPage />} />
           <Route path="/dashboard" element={<DashboardPage />} />
-          
+
           {/* NEW ROUTE FOR PROFILE DETAILS */}
           <Route path="/mentor/:id" element={<MentorProfile />} />
+
+          {/* ✅ ZOOM LIVE SESSION ROUTE */}
+          <Route path="/session" element={<LiveSession />} />
         </Routes>
       </main>
       <Footer />
