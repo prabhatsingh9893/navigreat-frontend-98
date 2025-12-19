@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { API_BASE_URL } from '../config';
 
 function SignupPage() {
-  const [formData, setFormData] = useState({ 
-    username: '', 
-    email: '', 
+  const [formData, setFormData] = useState({
+    username: '',
+    email: '',
     password: '',
-    role: 'student' 
+    role: 'student'
   });
-  
+
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -19,48 +20,42 @@ function SignupPage() {
     e.preventDefault();
     try {
       // ---------------------------------------------------------
-      // STEP 1: Register (Account banana)
+      // STEP 1: Register
       // ---------------------------------------------------------
-      const registerRes = await fetch('https://navigreat-backend-98.onrender.com/api/register', {
+      const registerRes = await fetch(`${API_BASE_URL}/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       });
-      
+
       const registerData = await registerRes.json();
 
       if (!registerRes.ok) {
-        // Agar account nahi bana (Ex: Email exists)
         alert("❌ Signup Failed: " + (registerData.message || "Error occurred"));
         return;
       }
 
       // ---------------------------------------------------------
-      // STEP 2: Auto Login (Turant Login karna)
+      // STEP 2: Auto Login
       // ---------------------------------------------------------
-      // Jaise hi account bana, hum turant login API call kar denge
-      const loginRes = await fetch('https://navigreat-backend-98.onrender.com/api/login', {
+      const loginRes = await fetch(`${API_BASE_URL}/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          email: formData.email,       // Wahi email jo abhi bhara
-          password: formData.password  // Wahi password jo abhi bhara
+          email: formData.email,
+          password: formData.password
         }),
       });
 
       const loginData = await loginRes.json();
 
       if (loginRes.ok) {
-        // Login Success! Data save karein
         localStorage.setItem('token', loginData.token);
-        localStorage.setItem('userData', JSON.stringify(loginData.user || loginData.result)); // Check backend key
-        
+        localStorage.setItem('userData', JSON.stringify(loginData.user || loginData.result));
+
         alert("✅ Account Created & Welcome!");
-        
-        // STEP 3: Redirect to Home Page
-        window.location.href = '/'; 
+        window.location.href = '/';
       } else {
-        // Agar account ban gaya par login fail hua
         alert("⚠️ Account created, but auto-login failed. Please login manually.");
         navigate('/login');
       }
@@ -75,38 +70,38 @@ function SignupPage() {
     <div className="pt-32 pb-20 bg-gray-50 min-h-screen flex justify-center items-center">
       <div className="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md">
         <h2 className="text-3xl font-bold text-gray-900 mb-6 text-center">Create Account</h2>
-        
+
         <form onSubmit={handleSubmit} className="space-y-4">
-          <input 
-            type="text" 
-            name="username" 
-            onChange={handleChange} 
-            placeholder="Full Name" 
-            required 
-            className="w-full border p-3 rounded-lg" 
-          />
-          
-          <input 
-            type="email" 
-            name="email" 
-            onChange={handleChange} 
-            placeholder="Email Address" 
-            required 
-            className="w-full border p-3 rounded-lg" 
-          />
-          
-          <input 
-            type="password" 
-            name="password" 
-            onChange={handleChange} 
-            placeholder="Password (min 6 chars)" 
-            required 
-            className="w-full border p-3 rounded-lg" 
+          <input
+            type="text"
+            name="username"
+            onChange={handleChange}
+            placeholder="Full Name"
+            required
+            className="w-full border p-3 rounded-lg"
           />
 
-          <select 
-            name="role" 
-            onChange={handleChange} 
+          <input
+            type="email"
+            name="email"
+            onChange={handleChange}
+            placeholder="Email Address"
+            required
+            className="w-full border p-3 rounded-lg"
+          />
+
+          <input
+            type="password"
+            name="password"
+            onChange={handleChange}
+            placeholder="Password (min 6 chars)"
+            required
+            className="w-full border p-3 rounded-lg"
+          />
+
+          <select
+            name="role"
+            onChange={handleChange}
             className="w-full border p-3 rounded-lg bg-white"
           >
             <option value="student">I am a Student</option>

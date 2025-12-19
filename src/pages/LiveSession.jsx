@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { ZoomMtg } from '@zoomus/websdk';
 import { useLocation, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
+import { API_BASE_URL } from '../config';
 
 // ✅ Zoom CSS (Zaruri hai)
 import '@zoomus/websdk/dist/css/bootstrap.css';
@@ -38,7 +39,7 @@ const SessionPage = () => {
 
   const initiateMeeting = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/generate-signature', {
+      const response = await fetch(`${API_BASE_URL}/generate-signature`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

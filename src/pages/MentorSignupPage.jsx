@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { toast } from 'react-hot-toast'; // Agar toast install nahi hai to alert use karega
+import { API_BASE_URL } from '../config';
 
 function MentorSignupPage() {
   const navigate = useNavigate();
-  
-  const [formData, setFormData] = useState({ 
-    username: '', 
-    email: '', 
+
+  const [formData, setFormData] = useState({
+    username: '',
+    email: '',
     password: '',
-    college: '', // Extra field
-    branch: '',  // Extra field
-    role: 'mentor' // 🔒 FIXED: Role hamesha 'mentor' rahega
+    college: '',
+    branch: '',
+    role: 'mentor'
   });
 
   const handleChange = (e) => {
@@ -20,34 +20,30 @@ function MentorSignupPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    // Simple Validation
-    if(!formData.college || !formData.branch) {
+
+    if (!formData.college || !formData.branch) {
       alert("Please fill College and Branch details to become a mentor.");
       return;
     }
 
     try {
-      // 1. Register API Call
-      const response = await fetch('https://navigreat-backend-98.onrender.com/api/register', {
+      const response = await fetch(`${API_BASE_URL}/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData), // Isme role: 'mentor' ja raha hai
+        body: JSON.stringify(formData),
       });
-      
+
       const data = await response.json();
 
       if (response.ok) {
-        // Success!
         alert("🎉 Welcome Mentor! Your profile is created.");
-        
-        // Auto Login Logic (Optional)
-        if(data.token) {
-            localStorage.setItem('token', data.token);
-            localStorage.setItem('userData', JSON.stringify(data.user));
-            window.location.href = '/dashboard'; // Dashboard par bhejo
+
+        if (data.token) {
+          localStorage.setItem('token', data.token);
+          localStorage.setItem('userData', JSON.stringify(data.user));
+          window.location.href = '/dashboard';
         } else {
-            navigate('/login');
+          navigate('/login');
         }
       } else {
         alert("❌ Registration Failed: " + (data.message || "Error"));
@@ -72,8 +68,7 @@ function MentorSignupPage() {
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
           <form className="space-y-6" onSubmit={handleSubmit}>
-            
-            {/* Name */}
+
             <div>
               <label className="block text-sm font-medium text-gray-700">Full Name</label>
               <div className="mt-1">
@@ -81,7 +76,6 @@ function MentorSignupPage() {
               </div>
             </div>
 
-            {/* Email */}
             <div>
               <label className="block text-sm font-medium text-gray-700">Email address</label>
               <div className="mt-1">
@@ -89,7 +83,6 @@ function MentorSignupPage() {
               </div>
             </div>
 
-            {/* College (New Field) */}
             <div>
               <label className="block text-sm font-medium text-gray-700">College / University</label>
               <div className="mt-1">
@@ -97,15 +90,13 @@ function MentorSignupPage() {
               </div>
             </div>
 
-             {/* Branch (New Field) */}
-             <div>
+            <div>
               <label className="block text-sm font-medium text-gray-700">Branch / Specialization</label>
               <div className="mt-1">
                 <input name="branch" type="text" placeholder="e.g. Computer Science" required onChange={handleChange} className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" />
               </div>
             </div>
 
-            {/* Password */}
             <div>
               <label className="block text-sm font-medium text-gray-700">Password</label>
               <div className="mt-1">
