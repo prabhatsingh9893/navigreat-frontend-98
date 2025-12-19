@@ -5,6 +5,7 @@ import {
     Briefcase, Calendar, Clock, Star, Radio
 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { API_BASE_URL } from '../config';
 
 const MentorProfile = () => {
     const { id } = useParams();
@@ -24,7 +25,7 @@ const MentorProfile = () => {
                 if (!id) return;
 
                 // A. Fetch Mentor Profile
-                const mRes = await fetch(`http://localhost:5000/api/mentors/${id}`);
+                const mRes = await fetch(`${API_BASE_URL}/mentors/${id}`);
 
                 // Check if mentor request failed
                 if (!mRes.ok) {
@@ -38,7 +39,7 @@ const MentorProfile = () => {
 
                 // B. ✅ FETCH REAL SESSIONS (SAFE CHECK ADDED)
                 try {
-                    const sRes = await fetch(`http://localhost:5000/api/sessions/${id}`);
+                    const sRes = await fetch(`${API_BASE_URL}/sessions/${id}`);
 
                     // 🛑 SAFETY CHECK: Only parse JSON if status is OK (200-299)
                     if (sRes.ok) {

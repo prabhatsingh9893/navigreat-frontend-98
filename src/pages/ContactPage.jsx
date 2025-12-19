@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Mail, Phone, MapPin } from 'lucide-react';
+import { API_BASE_URL } from '../config';
 
 function ContactPage() {
   const [formData, setFormData] = useState({
@@ -14,22 +15,22 @@ function ContactPage() {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); // <--- THIS IS KEY: It stops the page from reloading!
-    console.log("Button Clicked! Sending data..."); 
+    e.preventDefault();
+    console.log("Button Clicked! Sending data...");
 
     try {
       // Connect to your Backend
-      const response = await fetch('https://navigreat-backend-98.onrender.com/api/contact', {
+      const response = await fetch(`${API_BASE_URL}/contact`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       });
 
       const result = await response.json();
-      
+
       if (result.success) {
         alert("✅ Message Sent Successfully!");
-        setFormData({ name: '', email: '', subject: '', message: '' }); // Clear the form
+        setFormData({ name: '', email: '', subject: '', message: '' });
       } else {
         alert("❌ Failed to send.");
       }
@@ -49,15 +50,14 @@ function ContactPage() {
         <div className="grid md:grid-cols-2 gap-16 max-w-6xl mx-auto">
           <div>
             <h2 className="text-3xl font-bold text-gray-900 mb-8">Send us a message</h2>
-            
-            {/* The onSubmit here triggers the handleSubmit function */}
+
             <form onSubmit={handleSubmit} className="space-y-6">
-              
+
               <div>
                 <label className="block text-gray-700 mb-2 font-medium">Name</label>
-                <input 
-                  type="text" 
-                  name="name"  // <--- This was missing in your screenshot!
+                <input
+                  type="text"
+                  name="name"
                   value={formData.name}
                   onChange={handleChange}
                   required
@@ -68,9 +68,9 @@ function ContactPage() {
 
               <div>
                 <label className="block text-gray-700 mb-2 font-medium">Email</label>
-                <input 
-                  type="email" 
-                  name="email" // <--- This was missing!
+                <input
+                  type="email"
+                  name="email"
                   value={formData.email}
                   onChange={handleChange}
                   required
@@ -81,8 +81,8 @@ function ContactPage() {
 
               <div>
                 <label className="block text-gray-700 mb-2 font-medium">Message</label>
-                <textarea 
-                  name="message" // <--- This was missing!
+                <textarea
+                  name="message"
                   value={formData.message}
                   onChange={handleChange}
                   rows="5"
@@ -98,11 +98,10 @@ function ContactPage() {
             </form>
           </div>
 
-          {/* Right Side Info */}
           <div className="flex flex-col gap-8">
-             <div className="flex items-center gap-4"><Mail className="text-blue-600"/> support@edumentor.com</div>
-             <div className="flex items-center gap-4"><Phone className="text-blue-600"/> +91 98765 43210</div>
-             <div className="flex items-center gap-4"><MapPin className="text-blue-600"/> Bhopal, India</div>
+            <div className="flex items-center gap-4"><Mail className="text-blue-600" /> support@edumentor.com</div>
+            <div className="flex items-center gap-4"><Phone className="text-blue-600" /> +91 98765 43210</div>
+            <div className="flex items-center gap-4"><MapPin className="text-blue-600" /> Bhopal, India</div>
           </div>
         </div>
       </div>

@@ -9,7 +9,7 @@ import {
 import toast from 'react-hot-toast';
 
 // API URL Constant
-const API_BASE_URL = "http://localhost:5000/api";
+import { API_BASE_URL } from '../config';
 
 const DashboardPage = () => {
     const navigate = useNavigate();

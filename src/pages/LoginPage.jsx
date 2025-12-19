@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { auth, provider } from '../firebaseConfig';
-import { signInWithPopup } from 'firebase/auth'; // ✅ Sirf Popup import kiya
+import { signInWithPopup } from 'firebase/auth';
 import toast from 'react-hot-toast';
+import { API_BASE_URL } from '../config';
 
 function LoginPage() {
   const [formData, setFormData] = useState({ email: '', password: '' });
-
-  // ❌ useEffect ki zaroorat nahi hai Popup mein (Redirect result check nahi karna padta)
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -17,22 +16,22 @@ function LoginPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const loadingToast = toast.loading("Logging in...");
-    
+
     try {
-      const response = await fetch('https://navigreat-backend-98.onrender.com/api/login', {
+      const response = await fetch(`${API_BASE_URL}/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       });
       const data = await response.json();
-      
+
       toast.dismiss(loadingToast);
 
       if (data.success) {
         localStorage.setItem('token', data.token);
         localStorage.setItem('userData', JSON.stringify(data.user));
         toast.success("Welcome back!");
-        window.location.href = "/"; 
+        window.location.href = "/";
       } else {
         toast.error(data.message);
       }
@@ -48,13 +47,13 @@ function LoginPage() {
       // Step A: Firebase Popup Open
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
-      
-      console.log("Firebase User:", user); // Debugging ke liye
+
+      console.log("Firebase User:", user);
 
       // Step B: Send to Backend
       const loadingToast = toast.loading("Verifying with Backend...");
-      
-      const response = await fetch('https://navigreat-backend-98.onrender.com/api/google-login', {
+
+      const response = await fetch(`${API_BASE_URL}/google-login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -70,14 +69,13 @@ function LoginPage() {
         localStorage.setItem('token', data.token);
         localStorage.setItem('userData', JSON.stringify(data.user));
         toast.success("Google Login Successful!");
-        window.location.href = "/"; // Redirect to Home
+        window.location.href = "/";
       } else {
         toast.error("Backend Error: " + data.message);
       }
 
     } catch (error) {
       console.error("Google Login Error:", error);
-      // Agar Firebase me domain allow nahi hai, to yahan Error dikhega
       toast.error("Login Failed: " + error.message);
     }
   };
@@ -86,7 +84,7 @@ function LoginPage() {
     <div className="pt-32 pb-20 bg-gray-50 min-h-screen flex justify-center items-center">
       <div className="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md">
         <h2 className="text-3xl font-bold text-gray-900 mb-6 text-center">Welcome Back</h2>
-        
+
         <form onSubmit={handleSubmit} className="space-y-4">
           <input type="email" name="email" onChange={handleChange} placeholder="Email Address" required className="w-full border p-3 rounded-lg" />
           <input type="password" name="password" onChange={handleChange} placeholder="Password" required className="w-full border p-3 rounded-lg" />
@@ -99,11 +97,11 @@ function LoginPage() {
           <hr className="border-gray-300" />
         </div>
 
-        <button 
+        <button
           onClick={handleGoogleLogin}
           className="mt-6 w-full border border-gray-300 bg-white text-gray-700 p-3 rounded-lg font-bold hover:bg-gray-50 flex items-center justify-center gap-3 transition"
         >
-          <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" className="w-6 h-6"/>
+          <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" className="w-6 h-6" />
           Continue with Google
         </button>
 
