@@ -9,7 +9,7 @@ import '@zoomus/websdk/dist/css/react-select.css';
 
 // --- CONFIGURATION ---
 // ⚠️ Yahan apni Asli Zoom Keys daalein (Marketplace > Build App > Meeting SDK)
-const SDK_KEY = "YOUR_CLIENT_ID_HERE"; 
+const SDK_KEY = "YOUR_CLIENT_ID_HERE";
 const SDK_SECRET = "YOUR_CLIENT_SECRET_HERE";
 
 const SessionPage = () => {
@@ -23,9 +23,9 @@ const SessionPage = () => {
   useEffect(() => {
     // Agar Meeting ID nahi mili (Direct link open kiya), to wapas bhej do
     if (!meetingNumber) {
-        toast.error("No meeting details found. Join via Mentor Profile.");
-        navigate('/dashboard');
-        return;
+      toast.error("No meeting details found. Join via Mentor Profile.");
+      navigate('/dashboard');
+      return;
     }
 
     // Zoom Setup
@@ -36,24 +36,31 @@ const SessionPage = () => {
     initiateMeeting();
   }, [meetingNumber, navigate]);
 
-  const initiateMeeting = () => {
-    // Generate Signature (Testing ke liye client-side)
-    ZoomMtg.generateSDKSignature({
-      meetingNumber: meetingNumber,
-      sdkKey: SDK_KEY,
-      sdkSecret: SDK_SECRET,
-      role: 0, // 0 = Student (Participant), 1 = Host
-      success: function (res) {
-        startMeeting(res.result);
-      },
-      error: function (err) {
-        console.log(err);
-        toast.error("Signature Error");
+  const initiateMeeting = async () => {
+    try {
+      const response = await fetch('http://localhost:5000/api/generate-signature', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          meetingNumber: meetingNumber,
+          role: 0 // Student
+        })
+      });
+
+      const data = await response.json();
+
+      if (data.signature) {
+        startMeeting(data.signature, data.sdkKey);
+      } else {
+        toast.error("Signature generation failed");
       }
-    });
+    } catch (error) {
+      console.error(error);
+      toast.error("Network error: Could not connect to Zoom Server");
+    }
   };
 
-  const startMeeting = (signature) => {
+  const startMeeting = (signature, sdkKey) => {
     const zoomRoot = document.getElementById('zmmtg-root');
     if (zoomRoot) zoomRoot.style.display = 'block';
 
@@ -62,11 +69,11 @@ const SessionPage = () => {
       success: (success) => {
         ZoomMtg.join({
           signature: signature,
-          meetingNumber: meetingNumber, // ✅ Ab ye Dynamic ID lega
-          passWord: passWord,           // ✅ Ab ye Dynamic Password lega
-          userName: "Student",          // Future me: user.username
-          sdkKey: SDK_KEY,
-          userEmail: "",                // Optional
+          meetingNumber: meetingNumber,
+          passWord: passWord,
+          userName: "Student",
+          sdkKey: sdkKey, // ✅ Dynamic SDK Key from backend
+          userEmail: "",
           success: (res) => {
             console.log("Joined Successfully");
           },
@@ -85,15 +92,15 @@ const SessionPage = () => {
 
   return (
     <div className="bg-black h-screen w-screen flex items-center justify-center text-white">
-        {/* Jab tak Zoom load nahi hota, ye dikhega */}
-        <div className="text-center">
-            <h2 className="text-2xl font-bold animate-pulse mb-2">Connecting to Class...</h2>
-            <p className="text-gray-400">Please wait while we set up the secure room.</p>
-            <p className="text-xs text-gray-600 mt-4">Meeting ID: {meetingNumber}</p>
-        </div>
+      {/* Jab tak Zoom load nahi hota, ye dikhega */}
+      <div className="text-center">
+        <h2 className="text-2xl font-bold animate-pulse mb-2">Connecting to Class...</h2>
+        <p className="text-gray-400">Please wait while we set up the secure room.</p>
+        <p className="text-xs text-gray-600 mt-4">Meeting ID: {meetingNumber}</p>
+      </div>
 
-        {/* Zoom SDK Container (Iska ID mat badalna) */}
-        <div id="zmmtg-root" className="hidden"></div> 
+      {/* Zoom SDK Container (Iska ID mat badalna) */}
+      <div id="zmmtg-root" className="hidden"></div>
     </div>
   );
 };
