@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast'; // 👉 1. IMPORT ADDED
 
 import Header from './components/Header.jsx';
 import Footer from './components/Footer.jsx';
 import HomePage from './pages/HomePage.jsx';
+import AboutPage from './pages/AboutPage.jsx';
 import ContactPage from './pages/ContactPage.jsx';
 import LoginPage from './pages/LoginPage.jsx';
 import SignupPage from './pages/SignupPage.jsx';
@@ -12,8 +13,10 @@ import MentorsPage from './pages/MentorsPage.jsx';
 import MentorSignupPage from './pages/MentorSignupPage.jsx';
 import DashboardPage from './pages/DashboardPage.jsx';
 import MentorProfile from './pages/MentorProfile.jsx';
+import Loader from './components/Loader';
 
-import LiveSession from './pages/LiveSession.jsx';
+// ✅ LAZY LOAD LIVE SESSION TO PREVENT CSS POLLUTION
+const LiveSession = React.lazy(() => import('./pages/LiveSession.jsx'));
 
 function App() {
   return (
@@ -26,6 +29,7 @@ function App() {
       <main className="flex-grow">
         <Routes>
           <Route path="/" element={<HomePage />} />
+          <Route path="/about" element={<AboutPage />} />
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
@@ -38,8 +42,15 @@ function App() {
           {/* NEW ROUTE FOR PROFILE DETAILS */}
           <Route path="/mentor/:id" element={<MentorProfile />} />
 
-          {/* ✅ ZOOM LIVE SESSION ROUTE */}
-          <Route path="/session" element={<LiveSession />} />
+          {/* ✅ ZOOM LIVE SESSION ROUTE WITH SUSPENSE */}
+          <Route
+            path="/session"
+            element={
+              <Suspense fallback={<div className="h-screen flex items-center justify-center"><Loader text="Loading Session..." /></div>}>
+                <LiveSession />
+              </Suspense>
+            }
+          />
         </Routes>
       </main>
       <Footer />
