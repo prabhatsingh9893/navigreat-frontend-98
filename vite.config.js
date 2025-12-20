@@ -10,6 +10,10 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  // 👇 Ye sabse zaruri setting hai Zoom Error fix karne ke liye
+  optimizeDeps: {
+    include: ['@zoom/meetingsdk']
+  },
   server: {
     headers: {
       "Cross-Origin-Embedder-Policy": "require-corp",
