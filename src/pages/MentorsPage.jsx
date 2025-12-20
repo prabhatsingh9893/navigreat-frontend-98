@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Search, MapPin, BookOpen, User, Frown } from 'lucide-react'; // Frown icon add kiya empty state ke liye
 import { useNavigate } from 'react-router-dom';
 import { API_BASE_URL } from '../config';
+import Avatar from '../components/Avatar'; // ✅ Import Avatar
 
 function MentorsPage() {
   const [mentors, setMentors] = useState([]);
@@ -91,11 +92,12 @@ function MentorsPage() {
                 {/* Card Image with Gradient Overlay */}
                 <div className="relative h-52 bg-gray-100 overflow-hidden">
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10"></div>
-                  <img
-                    src={mentor.image || `https://ui-avatars.com/api/?name=${mentor.username}&background=0D8ABC&color=fff&size=200`}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                    alt={mentor.username}
-                    onError={(e) => { e.target.onerror = null; e.target.src = "https://via.placeholder.com/200?text=Mentor"; }}
+                  <Avatar
+                    src={mentor.image}
+                    name={mentor.username}
+                    size="w-full h-full"
+                    fontSize="text-6xl"
+                    className="rounded-none group-hover:scale-110 transition-transform duration-500"
                   />
                   <div className="absolute bottom-4 left-4 z-20 text-white">
                     <h3 className="font-bold text-xl leading-tight">{mentor.username}</h3>

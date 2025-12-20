@@ -12,20 +12,25 @@
   },
   "dependencies": {
     "@react-oauth/google": "^0.12.2",
-    "@zoom/meetingsdk": "^5.0.0",
+    "@zoom/meetingsdk": "3.1.6",
     "dotenv": "^17.2.3",
     "firebase": "^12.6.0",
     "framer-motion": "^12.23.24",
     "jsrsasign": "^11.1.0",
     "jwt-decode": "^4.0.0",
+    "lodash": "^4.17.21",
     "lucide-react": "^0.555.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-hot-toast": "^2.6.0",
-    "react-router-dom": "^7.9.4"
+    "react-redux": "^9.2.0",
+    "react-router-dom": "^7.9.4",
+    "redux": "^5.0.1",
+    "redux-thunk": "^3.1.0",
+    "vite": "^7.3.0"
   },
   "devDependencies": {
-    "@vitejs/plugin-react": "^5.0.4",
+    "@vitejs/plugin-react": "^5.1.2",
     "autoprefixer": "^10.4.23",
     "postcss": "^8.5.6",
     "tailwindcss": "^3.4.17"

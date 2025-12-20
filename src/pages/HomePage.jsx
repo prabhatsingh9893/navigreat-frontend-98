@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import FAQSection from '../components/FAQSection';
 import { API_BASE_URL } from '../config';
+import Avatar from '../components/Avatar'; // ✅ Import Avatar
 
 // --- ANIMATED COUNTER ---
 const Counter = ({ end, duration }) => {
@@ -155,11 +156,12 @@ function HomePage() {
                   <div key={mentor._id} className="group bg-white rounded-3xl p-4 shadow-sm hover:shadow-xl transition duration-300 border border-gray-100 flex flex-col">
                     {/* Image */}
                     <div className="relative h-64 rounded-2xl overflow-hidden mb-4">
-                      <img
-                        src={mentor.image || `https://ui-avatars.com/api/?name=${mentor.username}&background=random`}
-                        className="w-full h-full object-cover group-hover:scale-110 transition duration-500"
-                        alt={mentor.username}
-                        onError={(e) => { e.target.onerror = null; e.target.src = "https://via.placeholder.com/400x300?text=Mentor"; }}
+                      <Avatar
+                        src={mentor.image}
+                        name={mentor.username}
+                        size="w-full h-full"
+                        fontSize="text-4xl"
+                        className="rounded-None"
                       />
                       <div className="absolute top-3 right-3 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-xs font-bold text-gray-800 flex items-center gap-1 shadow-sm">
                         <CheckCircle size={12} className="text-blue-500" /> Verified

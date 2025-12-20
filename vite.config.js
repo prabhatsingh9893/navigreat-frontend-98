@@ -12,12 +12,8 @@ export default defineConfig({
   },
   server: {
     headers: {
-      // ✅ FIX: Login के लिए इसे 'unsafe-none' करना सबसे सुरक्षित है।
-      // 'same-origin' हटाना पड़ेगा क्योंकि वो Popup को ब्लॉक करता है।
-      "Cross-Origin-Embedder-Policy": "unsafe-none",
-      
-      // 👇 यह लाइन या तो हटा दें या 'unsafe-none' कर दें
-      // "Cross-Origin-Opener-Policy": "same-origin", 
+      "Cross-Origin-Embedder-Policy": "require-corp",
+      "Cross-Origin-Opener-Policy": "same-origin",
     },
   },
 });

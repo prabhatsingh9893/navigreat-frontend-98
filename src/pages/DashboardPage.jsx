@@ -7,6 +7,7 @@ import {
     Settings, Copy, Loader2, Calendar
 } from "lucide-react";
 import toast from 'react-hot-toast';
+import Avatar from '../components/Avatar'; // ✅ Import Avatar Component
 
 // API URL Constant
 import { API_BASE_URL } from '../config';
@@ -145,7 +146,10 @@ const DashboardPage = () => {
         try {
             const res = await fetch(`${API_BASE_URL}/sessions`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                },
                 body: JSON.stringify({
                     mentorId: user.id,
                     title: schedule.topic,
@@ -197,7 +201,10 @@ const DashboardPage = () => {
     const updateBackend = async (dataToUpdate) => {
         await fetch(`${API_BASE_URL}/mentors/${user.id}`, {
             method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            },
             body: JSON.stringify(dataToUpdate)
         });
     };
@@ -220,7 +227,10 @@ const DashboardPage = () => {
         try {
             const res = await fetch(`${API_BASE_URL}/lectures`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                },
                 body: JSON.stringify({ mentorId: user.id, title: newLecture.title, url: newLecture.url })
             });
             const data = await res.json();
@@ -236,7 +246,10 @@ const DashboardPage = () => {
     const handleDeleteLecture = async (id) => {
         if (!window.confirm("Delete this lecture?")) return;
         try {
-            await fetch(`${API_BASE_URL}/lectures/${id}`, { method: 'DELETE' });
+            await fetch(`${API_BASE_URL}/lectures/${id}`, {
+                method: 'DELETE',
+                headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+            });
             setLectures(lectures.filter(l => l._id !== id));
             toast.success("Lecture Removed");
         } catch (error) { toast.error("Failed to delete"); }
@@ -263,7 +276,12 @@ const DashboardPage = () => {
 
                         <div className="flex justify-center mb-6">
                             <div className="relative w-32 h-32 group">
-                                <img src={editForm.image || profile.image || `https://ui-avatars.com/api/?name=${editForm.username}`} className="w-full h-full rounded-full object-cover border-4 border-gray-100 shadow-md" alt="Preview" />
+                                <Avatar
+                                    src={editForm.image || profile.image}
+                                    name={editForm.username}
+                                    size="w-32 h-32"
+                                    fontSize="text-4xl"
+                                />
                                 <label className="absolute bottom-0 right-0 bg-blue-600 p-2.5 rounded-full text-white cursor-pointer hover:bg-blue-700 shadow-lg transition hover:scale-110">
                                     <Camera size={18} /><input type="file" accept="image/*" className="hidden" onChange={handleImageUpload} />
                                 </label>
@@ -318,7 +336,13 @@ const DashboardPage = () => {
             <div className="max-w-7xl mx-auto px-4 -mt-28 relative z-10">
                 <div className="flex flex-col sm:flex-row items-end gap-8 mb-8">
                     <div className="relative group">
-                        <img src={profile.image || `https://ui-avatars.com/api/?name=${profile.username}&size=200`} className="w-44 h-44 rounded-full border-[6px] border-white shadow-2xl bg-white object-cover" alt="Profile" />
+                        <Avatar
+                            src={profile.image}
+                            name={profile.username}
+                            size="w-44 h-44"
+                            fontSize="text-6xl"
+                            className="bg-white"
+                        />
                         <div className="absolute bottom-4 right-4 bg-blue-600 text-white p-1.5 rounded-full border-4 border-white"><BadgeCheck size={20} /></div>
                     </div>
 
