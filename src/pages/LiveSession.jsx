@@ -44,26 +44,19 @@ const SessionPage = () => {
 
     // D. Cleanup (Restore Page State)
     return () => {
-      // 1. Leave Meeting
-      ZoomMtg.leaveMeeting({});
-
-      // 2. Refresh Page to clear Zoom's Global CSS (Bootstrap) pollution
-      // This is necessary because Zoom injects styles that shrink the website.
-      if (window.location.pathname === '/session') {
-        window.location.href = '/dashboard';
+      try {
+        // 1. Leave Meeting (Attempt to close cleanly)
+        ZoomMtg.leaveMeeting({});
+      } catch (e) {
+        console.warn("Zoom leave failed:", e);
       }
 
-      // 3. Force Cleanup if SPA navigation happens
-      document.body.style.overflow = "auto";
-      document.body.style.height = "auto";
-      document.documentElement.style.overflow = "auto";
-
-      const zoomRoot = document.getElementById('zmmtg-root');
-      if (zoomRoot) zoomRoot.style.display = 'none';
-
-      // 4. Reset Viewport (Zoom changes this to disable scaling)
+      // 2. Clear Zoom Styles & Reset Viewport
       const viewport = document.querySelector('meta[name="viewport"]');
       if (viewport) viewport.content = "width=device-width, initial-scale=1.0";
+
+      // 3. Force Reload to Dashboard (Nuclear Option to clear CSS)
+      window.location.href = '/dashboard';
     };
   }, [meetingNumber, passWord, navigate]);
 
