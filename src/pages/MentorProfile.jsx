@@ -172,9 +172,26 @@ const MentorProfile = () => {
                                         <Radio size={20} className="relative inline-flex" /> JOIN LIVE CLASS
                                     </button>
                                 ) : (
-                                    <button onClick={handleBookSession} className="w-full bg-slate-900 text-white py-3.5 rounded-xl font-bold hover:bg-black transition shadow-lg flex items-center justify-center gap-2">
-                                        <Zap size={18} className="text-yellow-400" /> Book Priority Session
-                                    </button>
+                                    <>
+                                        {/* ✅ Show Next Class Time if available */}
+                                        {sessions.filter(s => new Date(s.startTime) > new Date()).sort((a, b) => new Date(a.startTime) - new Date(b.startTime))[0] ? (
+                                            <div className="w-full bg-blue-50 border border-blue-200 text-blue-800 py-3.5 rounded-xl font-bold flex flex-col items-center justify-center gap-1 shadow-sm">
+                                                <div className="flex items-center gap-2 text-xs uppercase tracking-widest opacity-70">
+                                                    <Calendar size={14} /> Next Live Class
+                                                </div>
+                                                <div className="text-xl">
+                                                    {new Date(sessions.filter(s => new Date(s.startTime) > new Date()).sort((a, b) => new Date(a.startTime) - new Date(b.startTime))[0].startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                                    <span className="text-sm ml-1 font-normal text-blue-600">
+                                                        ({new Date(sessions.filter(s => new Date(s.startTime) > new Date()).sort((a, b) => new Date(a.startTime) - new Date(b.startTime))[0].startTime).toLocaleDateString([], { month: 'short', day: 'numeric' })})
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        ) : (
+                                            <button onClick={handleBookSession} className="w-full bg-slate-900 text-white py-3.5 rounded-xl font-bold hover:bg-black transition shadow-lg flex items-center justify-center gap-2">
+                                                <Zap size={18} className="text-yellow-400" /> Book Priority Session
+                                            </button>
+                                        )}
+                                    </>
                                 )}
                                 <button className="w-full border border-slate-200 text-slate-700 py-3.5 rounded-xl font-bold hover:bg-slate-50 transition flex items-center justify-center gap-2">
                                     <MessageSquare size={18} /> Chat with Mentor

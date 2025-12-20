@@ -6,7 +6,9 @@ import Loader from '../components/Loader';
 
 // ✅ Zoom SDK Imports
 import { ZoomMtg } from '@zoom/meetingsdk';
-import '@zoom/meetingsdk/dist/ui/zoom-meetingsdk.css';
+// Version 3.1.6 uses these CSS files instead of the unified zoom-meetingsdk.css
+import '@zoom/meetingsdk/dist/css/bootstrap.css';
+import '@zoom/meetingsdk/dist/css/react-select.css';
 
 const SessionPage = () => {
   const navigate = useNavigate();
@@ -31,25 +33,37 @@ const SessionPage = () => {
     }
 
     // B. Zoom Library Settings (Updated Version 3.1.6)
-    ZoomMtg.setZoomJSLib('https://source.zoom.us/3.1.6/lib', '/av');
+    // Use local assets from public/lib to match installed version 3.1.6
+    // This avoids ChunkLoadError and tp.min.js issues from CDN mismatches.
+    ZoomMtg.setZoomJSLib(window.location.origin + '/lib', '/av');
     ZoomMtg.preLoadWasm();
     ZoomMtg.prepareWebSDK();
 
     // C. Start Process
     initiateMeeting();
 
-    // D. Cleanup (Jab User wapas jaye)
+    // D. Cleanup (Restore Page State)
     return () => {
-      // Zoom meeting leave logic
+      // 1. Leave Meeting
       ZoomMtg.leaveMeeting({});
 
-      // 🔥 CRITICAL FIX: Restore Scrolling for Dashboard
+      // 2. Refresh Page to clear Zoom's Global CSS (Bootstrap) pollution
+      // This is necessary because Zoom injects styles that shrink the website.
+      if (window.location.pathname === '/session') {
+        window.location.href = '/dashboard';
+      }
+
+      // 3. Force Cleanup if SPA navigation happens
       document.body.style.overflow = "auto";
       document.body.style.height = "auto";
       document.documentElement.style.overflow = "auto";
 
       const zoomRoot = document.getElementById('zmmtg-root');
       if (zoomRoot) zoomRoot.style.display = 'none';
+
+      // 4. Reset Viewport (Zoom changes this to disable scaling)
+      const viewport = document.querySelector('meta[name="viewport"]');
+      if (viewport) viewport.content = "width=device-width, initial-scale=1.0";
     };
   }, [meetingNumber, passWord, navigate]);
 
@@ -57,7 +71,9 @@ const SessionPage = () => {
   const initiateMeeting = async () => {
     try {
       // Backend request to get signature
-      const response = await fetch(`${API_BASE_URL}/generate-signature`, {
+      const signatureUrl = `${API_BASE_URL}/generate-signature`;
+      console.log("🚀 Fetching Signature from:", signatureUrl); // DEBUG LOG
+      const response = await fetch(signatureUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -103,11 +119,18 @@ const SessionPage = () => {
           sdkKey: import.meta.env.VITE_ZOOM_CLIENT_ID, // ✅ Client ID from .env
           userEmail: "",
           success: (res) => {
-            console.log("✅ Joined Meeting Successfully");
+            console.log("✅ Joined Meeting Successfully", res);
           },
           error: (err) => {
-            console.error(err);
-            toast.error(err.method || "Could not join meeting");
+            console.error("❌ JOIN ERROR:", err);
+            const key = import.meta.env.VITE_ZOOM_CLIENT_ID;
+            console.log("Debug Params:", { meetingNumber, role });
+            console.log("Key Details:", {
+              val: key,
+              len: key?.length,
+              type: typeof key
+            });
+            toast.error(err.result || "Could not join meeting");
             setLoading(false);
           },
         });
