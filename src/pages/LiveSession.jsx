@@ -112,7 +112,9 @@ const LiveSession = () => {
           sdkKey: import.meta.env.VITE_ZOOM_CLIENT_ID,
           userEmail: "",
           tk: "",
-          success: (res) => console.log("Joined Meeting Successfully"),
+          success: (res) => {
+            console.log("Joined Meeting Successfully");
+          },
           error: (err) => {
             console.error(err);
             toast.error(err.message || "Join Failed");
