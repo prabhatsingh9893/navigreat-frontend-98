@@ -327,7 +327,7 @@ const DashboardPage = () => {
 
             {/* --- HEADER --- */}
             <div className="h-64 bg-gradient-to-br from-blue-700 via-blue-800 to-indigo-900 relative shadow-lg">
-                <div className="absolute top-0 left-0 w-full h-full opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
+                <div className="absolute top-0 left-0 w-full h-full opacity-10 bg-[url('/src/assets/cubes.png')]"></div>
                 <button onClick={() => { localStorage.removeItem('userData'); navigate('/login'); }} className="absolute top-6 right-6 bg-white/10 backdrop-blur-md text-white px-4 py-2 rounded-full text-sm font-bold hover:bg-white/20 flex items-center gap-2 border border-white/20 transition z-20">
                     <LogOut size={16} /> Logout
                 </button>
