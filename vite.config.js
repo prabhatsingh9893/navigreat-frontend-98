@@ -11,9 +11,9 @@ export default defineConfig({
     },
   },
   // 👇 Ye sabse zaruri setting hai Zoom Error fix karne ke liye
-  optimizeDeps: {
-    include: ['@zoom/meetingsdk']
-  },
+  //   optimizeDeps: {
+  //     include: ['@zoom/meetingsdk']
+  //   },
   server: {
     headers: {
       "Cross-Origin-Embedder-Policy": "require-corp",
