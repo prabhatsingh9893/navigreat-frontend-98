@@ -88,6 +88,7 @@ const DashboardPage = () => {
                 if (mentorData && mentorData.success) {
                     const m = mentorData.mentor || mentorData.user;
                     setProfile(prev => ({ ...prev, ...m }));
+                    setEditForm(prev => ({ ...prev, ...m })); // ✅ Initialize editForm with saved data
                 }
 
                 if (lectureData && lectureData.success) setLectures(lectureData.lectures);
