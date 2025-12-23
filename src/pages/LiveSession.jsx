@@ -75,7 +75,10 @@ const LiveSession = () => {
       console.log("🚀 Fetching Signature...");
       const response = await fetch(`${API_BASE_URL}/generate-signature`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}` // ✅ Secure Auth
+        },
         body: JSON.stringify({ meetingNumber, role })
       });
 

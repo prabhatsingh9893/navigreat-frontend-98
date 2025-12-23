@@ -3,22 +3,21 @@ import react from '@vitejs/plugin-react';
 import path from 'path';
 
 // https://vitejs.dev/config/
-export default defineConfig({
-  base: '/navigreat-/',
+export default defineConfig(({ command }) => ({
+  // Base path varies: root for dev, repo name for GitHub Pages production
+  base: command === 'build' ? '/navigreat-/' : '/',
   plugins: [react()],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
     },
   },
-  // 👇 Ye sabse zaruri setting hai Zoom Error fix karne ke liye
-  //   optimizeDeps: {
-  //     include: ['@zoom/meetingsdk']
-  //   },
   server: {
     headers: {
-      "Cross-Origin-Embedder-Policy": "require-corp",
-      "Cross-Origin-Opener-Policy": "same-origin",
+      // ⚠️ Headers relaxed to ensure Google Login Popup works correctly.
+      // Uncomment strictly if SharedArrayBuffer (Zoom Gallery View) is mandatory.
+      // "Cross-Origin-Embedder-Policy": "require-corp",
+      // "Cross-Origin-Opener-Policy": "same-origin",
     },
   },
-});
+}));
