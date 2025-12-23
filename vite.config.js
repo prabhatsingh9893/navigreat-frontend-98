@@ -4,8 +4,9 @@ import path from 'path';
 
 // https://vitejs.dev/config/
 export default defineConfig(({ command }) => ({
-  // Base path varies: root for dev, repo name for GitHub Pages production
-  base: command === 'build' ? '/navigreat-/' : '/',
+  // ✅ FIX: Naam bilkul sahi hona chahiye (SLASH ke sath)
+  base: command === 'build' ? '/navigreat/' : '/',
+
   plugins: [react()],
   resolve: {
     alias: {
@@ -14,8 +15,7 @@ export default defineConfig(({ command }) => ({
   },
   server: {
     headers: {
-      // ⚠️ Headers relaxed to ensure Google Login Popup works correctly.
-      // Uncomment strictly if SharedArrayBuffer (Zoom Gallery View) is mandatory.
+      // ⚠️ Inhe abhi commented hi rahne dein (Google Login ke liye ye zaruri hai)
       // "Cross-Origin-Embedder-Policy": "require-corp",
       // "Cross-Origin-Opener-Policy": "same-origin",
     },
