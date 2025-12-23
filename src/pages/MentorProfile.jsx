@@ -113,7 +113,42 @@ const MentorProfile = () => {
 
 
     // --- HANDLERS ---
-    const handleBookSession = async () => { toast.success("Booking feature coming soon!"); };
+    const handleBookSession = async () => {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            toast.error("Please login to book a session!");
+            navigate('/login');
+            return;
+        }
+
+        const confirmBooking = window.confirm(`Book a session with ${mentor.username}?`);
+        if (!confirmBooking) return;
+
+        try {
+            const res = await fetch(`${API_BASE_URL}/book`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    mentorId: mentor._id || mentor.id,
+                    mentorName: mentor.username,
+                    message: "I am interested in mentorship."
+                })
+            });
+
+            const data = await res.json();
+            if (res.ok) {
+                toast.success(data.message || "Booking request sent!");
+            } else {
+                toast.error(data.message || "Booking failed");
+            }
+        } catch (err) {
+            console.error(err);
+            toast.error("Network Error");
+        }
+    };
 
     const handleJoinClass = () => {
         if (mentor?.meetingId && mentor?.passcode) {

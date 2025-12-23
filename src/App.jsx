@@ -13,6 +13,7 @@ import MentorsPage from './pages/MentorsPage.jsx';
 import MentorSignupPage from './pages/MentorSignupPage.jsx';
 import DashboardPage from './pages/DashboardPage.jsx';
 import MentorProfile from './pages/MentorProfile.jsx';
+import AdminMessagesPage from './pages/AdminMessagesPage.jsx';
 import Loader from './components/Loader';
 
 // ✅ LAZY LOAD LIVE SESSION TO PREVENT CSS POLLUTION
@@ -41,6 +42,9 @@ function App() {
 
           {/* NEW ROUTE FOR PROFILE DETAILS */}
           <Route path="/mentor/:id" element={<MentorProfile />} />
+
+          {/* ADMIN */}
+          <Route path="/admin/messages" element={<AdminMessagesPage />} />
 
           {/* ✅ ZOOM LIVE SESSION ROUTE WITH SUSPENSE */}
           <Route

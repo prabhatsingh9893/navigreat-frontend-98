@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Menu, X, LogOut, LayoutDashboard, ChevronDown, User } from 'lucide-react';
+import { Menu, X, LogOut, LayoutDashboard, ChevronDown, User, Mail } from 'lucide-react';
 import Avatar from '../components/Avatar'; // ✅ Import Avatar
 
 // 👇 1. Import your new Logo here
-import logo from '../assets/logo.png';
+// 👇 1. Import your new Logo here
+import logo from '../assets/navigreat-feather-logo.png';
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -53,12 +54,8 @@ const Header = () => {
           <img
             src={logo}
             alt="NaviGreat Logo"
-            className="h-10 w-auto object-contain group-hover:scale-110 transition duration-300"
+            className="h-16 w-auto object-contain group-hover:scale-105 transition duration-300 mix-blend-multiply brightness-110 contrast-125"
           />
-          {/* Brand Name with Gradient */}
-          <span className="text-2xl font-extrabold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-            NaviGreat
-          </span>
         </Link>
 
         {/* Desktop Menu */}
@@ -112,6 +109,16 @@ const Header = () => {
                     >
                       <User size={18} />
                       <span className="font-medium">Edit Profile</span>
+                    </Link>
+
+                    {/* ADMIN LINK (Visible to all for testing, restrict later) */}
+                    <Link
+                      to="/admin/messages"
+                      onClick={() => setIsDropdownOpen(false)}
+                      className="flex items-center gap-3 px-4 py-2.5 text-gray-700 hover:bg-purple-50 hover:text-purple-600 rounded-lg transition group"
+                    >
+                      <Mail size={18} />
+                      <span className="font-medium">Messages</span>
                     </Link>
                   </div>
                   <div className="p-2 border-t border-gray-50">
