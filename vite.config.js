@@ -20,4 +20,4 @@ export default defineConfig(({ command }) => ({
       // "Cross-Origin-Opener-Policy": "same-origin",
     },
   },
-}));
+}));// vercel update check
