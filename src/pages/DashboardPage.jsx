@@ -162,7 +162,7 @@ const DashboardPage = () => {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
                 },
                 body: JSON.stringify({
-                    mentorId: user.id,
+                    mentorId: user._id,
                     title: schedule.topic,
                     startTime: startDateTime,
                     endTime: endDateTime
@@ -210,7 +210,7 @@ const DashboardPage = () => {
     };
 
     const updateBackend = async (dataToUpdate) => {
-        await fetch(`${API_BASE_URL}/mentors/${user.id}`, {
+        await fetch(`${API_BASE_URL}/mentors/${user._id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -242,7 +242,7 @@ const DashboardPage = () => {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
                 },
-                body: JSON.stringify({ mentorId: user.id, title: newLecture.title, url: newLecture.url })
+                body: JSON.stringify({ mentorId: user._id, title: newLecture.title, url: newLecture.url })
             });
             const data = await res.json();
             if (data.success) {
