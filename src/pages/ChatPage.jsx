@@ -97,14 +97,16 @@ const ChatPage = () => {
     }, [targetUserId]);
 
     // 4. Utils
-    const fetchContacts = async (role) => {
-        if (role === 'student') {
-            const res = await fetch(`${API_BASE_URL}/mentors`);
+    const fetchContacts = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            const res = await fetch(`${API_BASE_URL}/contacts`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
             const data = await res.json();
-            if (data.success) setContactList(data.mentors);
-        } else {
-            // For Mentors, technically we should fetch 'booked students'. 
-            // Skipping for MVP.
+            if (data.success) setContactList(data.contacts);
+        } catch (error) {
+            console.error("Error fetching contacts:", error);
         }
     };
 
