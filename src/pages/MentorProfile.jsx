@@ -275,13 +275,13 @@ const MentorProfile = () => {
                                     <div className="border border-blue-100 bg-blue-50/30 rounded-2xl p-5">
                                         <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-3 flex items-center gap-2"><Calendar size={16} /> Upcoming Schedule</h3>
 
-                                        {sessions.length === 0 ? (
+                                        {sessions.filter(s => new Date(s.endTime) > new Date()).length === 0 ? (
                                             <p className="text-gray-400 text-center italic py-4">
                                                 No upcoming sessions found for this mentor.
                                             </p>
                                         ) : (
                                             <div className="space-y-3">
-                                                {sessions.map((session) => {
+                                                {sessions.filter(s => new Date(s.endTime) > new Date()).map((session) => {
                                                     const now = new Date();
                                                     const start = new Date(session.startTime);
                                                     const end = new Date(session.endTime);
