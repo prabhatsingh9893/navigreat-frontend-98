@@ -156,12 +156,28 @@ const ChatPage = () => {
                             onClick={() => navigate(`/chat/${contact._id}`)}
                             className={`p-4 flex items-center gap-3 cursor-pointer hover:bg-blue-50 transition border-b border-gray-50 ${targetUserId === contact._id ? 'bg-blue-50 border-blue-200' : ''}`}
                         >
-                            <div className="w-10 h-10 rounded-full bg-gray-200 overflow-hidden">
-                                <img src={contact.image || `https://api.dicebear.com/7.x/initials/svg?seed=${contact.username}`} alt="avatar" />
+                            <div className="w-12 h-12 rounded-full bg-gray-200 overflow-hidden flex-shrink-0">
+                                <img src={contact.image || `https://api.dicebear.com/7.x/initials/svg?seed=${contact.username}`} alt="avatar" className="w-full h-full object-cover" />
                             </div>
-                            <div>
-                                <h3 className="font-bold text-gray-800">{contact.username}</h3>
-                                <p className="text-xs text-gray-500">{contact.college}</p>
+                            <div className="flex-1 min-w-0">
+                                <div className="flex justify-between items-baseline mb-0.5">
+                                    <h3 className="font-bold text-gray-800 text-sm truncate">{contact.username}</h3>
+                                    {contact.lastMessageTime && (
+                                        <span className="text-[10px] text-gray-400 flex-shrink-0">
+                                            {new Date(contact.lastMessageTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                        </span>
+                                    )}
+                                </div>
+                                <div className="flex justify-between items-center">
+                                    <p className="text-xs text-gray-500 truncate max-w-[120px]">
+                                        {contact.lastMessage || (contact.college ? contact.college : "Tap to chat")}
+                                    </p>
+                                    {contact.unreadCount > 0 && (
+                                        <span className="bg-green-500 text-white text-[10px] font-bold h-5 min-w-[20px] px-1 flex items-center justify-center rounded-full shadow-sm">
+                                            {contact.unreadCount}
+                                        </span>
+                                    )}
+                                </div>
                             </div>
                         </div>
                     ))}
