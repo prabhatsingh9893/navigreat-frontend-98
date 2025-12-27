@@ -76,11 +76,45 @@ const ChatPage = () => {
     // 3. Socket Listeners
     useEffect(() => {
         const handleReceiveMessage = (msg) => {
-            // Only append if it belongs to current conversation
-            if (msg.sender === targetUserId || msg.receiver === targetUserId) {
+            const isCurrentChat = (msg.sender === targetUserId || msg.receiver === targetUserId);
+            const isMe = (msg.sender === currentUser?._id || msg.sender === currentUser?.id);
+
+            // A. Update Messages Area (if open)
+            if (isCurrentChat) {
                 setMessages((prev) => [...prev, msg]);
                 scrollToBottom();
+                // If it's the current chat and I received it, assume read immediately in UI? 
+                // Or let the next fetch handle it. For now, we don't increment badge if open.
             }
+
+            // B. Update Sidebar (Move to Top + Badge)
+            setContactList(prev => {
+                const newList = [...prev];
+                const index = newList.findIndex(c => c._id === msg.sender || c._id === msg.receiver);
+
+                if (index !== -1) {
+                    const contact = newList[index];
+                    const updatedContact = {
+                        ...contact,
+                        lastMessage: msg.content,
+                        lastMessageTime: msg.timestamp,
+                        // Increment badge if: 1. I am NOT sender AND 2. It is NOT the current open chat
+                        unreadCount: (!isMe && targetUserId !== contact._id)
+                            ? (contact.unreadCount || 0) + 1
+                            : contact.unreadCount
+                    };
+
+                    // Remove current and move to top
+                    newList.splice(index, 1);
+                    newList.unshift(updatedContact);
+                    return newList;
+                } else {
+                    // If contact not in list (New Conversation), we should ideally fetch it.
+                    // For MVP, trigger a full re-fetch of contacts to be safe.
+                    fetchContacts();
+                    return prev;
+                }
+            });
         };
 
         socket.on("receive_message", handleReceiveMessage);
@@ -94,7 +128,7 @@ const ChatPage = () => {
             socket.off("display_typing");
             socket.off("hide_typing");
         };
-    }, [targetUserId]);
+    }, [targetUserId, currentUser]);
 
     // 4. Utils
     const fetchContacts = async () => {
