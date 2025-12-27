@@ -103,7 +103,7 @@ const LiveSession = () => {
     }
 
     ZoomMtg.init({
-      leaveUrl: window.location.origin + '/dashboard?meeting_ended=true',
+      leaveUrl: window.location.origin + '/dashboard?meeting_ended=true' + (location.state?.mentorId ? `&mentorId=${location.state.mentorId}` : ''),
       isSupportAV: true,
       success: (success) => {
         setLoading(false);

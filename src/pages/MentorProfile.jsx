@@ -170,7 +170,7 @@ const MentorProfile = () => {
 
     const handleJoinClass = () => {
         if (mentor?.meetingId && mentor?.passcode) {
-            navigate('/session', { state: { meetingNumber: mentor.meetingId, passWord: mentor.passcode } });
+            navigate('/session', { state: { meetingNumber: mentor.meetingId, passWord: mentor.passcode, mentorId: mentor._id } });
             toast.success("Joining Live Class...");
         } else {
             toast.error("Meeting details not found.");
