@@ -15,6 +15,8 @@ import DashboardPage from './pages/DashboardPage.jsx';
 import MentorProfile from './pages/MentorProfile.jsx';
 import AdminMessagesPage from './pages/AdminMessagesPage.jsx';
 import ChatPage from './pages/ChatPage.jsx';
+import ForgotPasswordPage from './pages/ForgotPasswordPage.jsx';
+import ResetPasswordPage from './pages/ResetPasswordPage.jsx';
 import Loader from './components/Loader';
 
 // ✅ LAZY LOAD LIVE SESSION TO PREVENT CSS POLLUTION
@@ -35,6 +37,8 @@ function App() {
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
 
           {/* Mentor Related Routes */}
           <Route path="/mentors" element={<MentorsPage />} />
