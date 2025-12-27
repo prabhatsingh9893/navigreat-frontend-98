@@ -111,9 +111,9 @@ const Header = () => {
                       <span className="font-medium">Edit Profile</span>
                     </Link>
 
-                    {/* ADMIN LINK (Visible to all for testing, restrict later) */}
+                    {/* MESSAGES/CHAT LINK */}
                     <Link
-                      to="/admin/messages"
+                      to="/chat"
                       onClick={() => setIsDropdownOpen(false)}
                       className="flex items-center gap-3 px-4 py-2.5 text-gray-700 hover:bg-purple-50 hover:text-purple-600 rounded-lg transition group"
                     >
