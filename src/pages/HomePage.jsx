@@ -177,10 +177,10 @@ function HomePage() {
                       </div>
 
                       <button
-                        onClick={() => handleBookSession(mentor.username)}
+                        onClick={() => navigate(`/mentor/${mentor._id}`)}
                         className="mt-auto w-full bg-gray-900 text-white py-3 rounded-xl font-bold hover:bg-blue-600 transition shadow-lg shadow-gray-200 active:scale-95"
                       >
-                        Book Session
+                        View Profile
                       </button>
                     </div>
                   </div>
