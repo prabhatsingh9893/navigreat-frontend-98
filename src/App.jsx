@@ -13,7 +13,9 @@ import MentorsPage from './pages/MentorsPage.jsx';
 import MentorSignupPage from './pages/MentorSignupPage.jsx';
 import DashboardPage from './pages/DashboardPage.jsx';
 import MentorProfile from './pages/MentorProfile.jsx';
+import MentorProfile from './pages/MentorProfile.jsx';
 import AdminMessagesPage from './pages/AdminMessagesPage.jsx';
+import ChatPage from './pages/ChatPage.jsx';
 import Loader from './components/Loader';
 
 // ✅ LAZY LOAD LIVE SESSION TO PREVENT CSS POLLUTION
@@ -45,6 +47,11 @@ function App() {
 
           {/* ADMIN */}
           <Route path="/admin/messages" element={<AdminMessagesPage />} />
+
+
+          {/* CHAT */}
+          <Route path="/chat" element={<ChatPage />} />
+          <Route path="/chat/:userId" element={<ChatPage />} />
 
           {/* ✅ ZOOM LIVE SESSION ROUTE WITH SUSPENSE */}
           <Route
