@@ -350,7 +350,10 @@ const DashboardPage = () => {
                             <button onClick={() => setIsZoomModal(false)} className="hover:bg-gray-100 p-2 rounded-full"><X /></button>
                         </div>
                         <div className="space-y-4 mb-6">
-                            <div className="bg-blue-50 p-4 rounded-xl text-sm text-blue-700">Enter your <b>Zoom Personal Meeting ID</b>.</div>
+                            <div className="bg-blue-50 p-4 rounded-xl text-sm text-blue-700 space-y-2">
+                                <p>Enter your <b>Zoom Personal Meeting ID</b>.</p>
+                                <p className="font-bold text-red-600">⚠️ Please DISABLE "Waiting Room" in your Zoom Settings so students can join automatically.</p>
+                            </div>
                             <div className="relative">
                                 <input value={editForm.meetingId} onChange={e => setEditForm({ ...editForm, meetingId: e.target.value })} className="w-full border-2 border-gray-200 p-3 rounded-xl focus:border-red-500 outline-none font-mono text-lg pr-10" placeholder="Zoom ID" />
                                 {editForm.meetingId && <button onClick={() => copyToClipboard(editForm.meetingId)} className="absolute right-3 top-3.5 text-gray-400 hover:text-blue-600"><Copy size={18} /></button>}
