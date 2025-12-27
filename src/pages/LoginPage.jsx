@@ -81,7 +81,7 @@ function LoginPage() {
   };
 
   return (
-    <div className="pt-32 pb-20 bg-gray-50 min-h-screen flex justify-center items-center">
+    <div className="pt-24 md:pt-32 pb-20 bg-gray-50 min-h-screen flex justify-center items-center px-4">
       <div className="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md">
         <h2 className="text-3xl font-bold text-gray-900 mb-6 text-center">Welcome Back</h2>
 

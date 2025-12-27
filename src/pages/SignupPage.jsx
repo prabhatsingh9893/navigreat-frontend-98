@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import { API_BASE_URL } from '../config';
 
 function SignupPage() {
@@ -31,7 +32,7 @@ function SignupPage() {
       const registerData = await registerRes.json();
 
       if (!registerRes.ok) {
-        alert("❌ Signup Failed: " + (registerData.message || "Error occurred"));
+        toast.error("Signup Failed: " + (registerData.message || "Error occurred"));
         return;
       }
 
@@ -52,22 +53,21 @@ function SignupPage() {
       if (loginRes.ok) {
         localStorage.setItem('token', loginData.token);
         localStorage.setItem('userData', JSON.stringify(loginData.user || loginData.result));
-
-        alert("✅ Account Created & Welcome!");
+        toast.success("Account Created & Welcome!");
         window.location.href = '/';
       } else {
-        alert("⚠️ Account created, but auto-login failed. Please login manually.");
+        toast.success("Account created, but auto-login failed. Please login manually.");
         navigate('/login');
       }
 
     } catch (error) {
       console.error("Error:", error);
-      alert("❌ Something went wrong. Check console.");
+      toast.error("Something went wrong. Check console.");
     }
   };
 
   return (
-    <div className="pt-32 pb-20 bg-gray-50 min-h-screen flex justify-center items-center">
+    <div className="pt-24 md:pt-32 pb-20 bg-gray-50 min-h-screen flex justify-center items-center px-4">
       <div className="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md">
         <h2 className="text-3xl font-bold text-gray-900 mb-6 text-center">Create Account</h2>
 
