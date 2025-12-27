@@ -32,11 +32,20 @@ const ChatPage = () => {
         setCurrentUser(user);
 
         // Join my own room to receive messages
-        socket.emit("join_room", user._id || user.id);
+        const joinRoom = () => {
+            console.log("Joined Room:", user._id || user.id);
+            socket.emit("join_room", user._id || user.id);
+        };
 
-        // Fetch "Contacts" (For now, just all mentors if I am student, or blank)
+        if (socket.connected) joinRoom();
+        socket.on("connect", joinRoom);
+
+        // Fetch "Contacts"
         fetchContacts(user.role);
 
+        return () => {
+            socket.off("connect", joinRoom);
+        };
     }, [navigate]);
 
     // 2. Fetch Target User Info & Messages
