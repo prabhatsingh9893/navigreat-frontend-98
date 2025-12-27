@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import toast from 'react-hot-toast';
 import Avatar from '../components/Avatar'; // ✅ Import Avatar Component
+import ReviewModal from '../components/ReviewModal'; // ✅ Import ReviewModal
 
 // API URL Constant
 import { API_BASE_URL } from '../config';
@@ -15,6 +16,7 @@ import { API_BASE_URL } from '../config';
 const DashboardPage = () => {
     const navigate = useNavigate();
     const location = useLocation(); // ✅ Location Hook
+    const [reviewMentorId, setReviewMentorId] = useState(null); // Review Modal State
 
     // --- 0. Post-Meeting Check ---
     useEffect(() => {
@@ -22,9 +24,12 @@ const DashboardPage = () => {
         if (params.get('meeting_ended')) {
             toast.success("Meeting Concluded Successfully!", { icon: '✅' });
 
-            // Check role from local storage strictly for this toast logic
+            const mId = params.get('mentorId');
             const u = JSON.parse(localStorage.getItem('userData') || '{}');
-            if (u.role === 'mentor') {
+
+            if (u.role === 'student' && mId) {
+                setReviewMentorId(mId); // Open Review Modal
+            } else if (u.role === 'mentor') {
                 setTimeout(() => {
                     toast("📹 Tip: Upload the session recording to your resources!", { duration: 6000 });
                 }, 1000);
@@ -657,6 +662,14 @@ const DashboardPage = () => {
                     </div>
 
                 </div>
+            )}
+
+            {/* Review Modal */}
+            {reviewMentorId && (
+                <ReviewModal
+                    mentorId={reviewMentorId}
+                    onClose={() => setReviewMentorId(null)}
+                />
             )}
         </div>
     );
