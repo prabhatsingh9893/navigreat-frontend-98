@@ -7,6 +7,13 @@ import {
 import toast from 'react-hot-toast';
 import { API_BASE_URL } from '../config';
 
+const getYouTubeID = (url) => {
+    if (!url) return null;
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+    const match = url.match(regExp);
+    return (match && match[2].length === 11) ? match[2] : null;
+};
+
 const MentorProfile = () => {
     const { id } = useParams();
     const navigate = useNavigate();
@@ -17,6 +24,7 @@ const MentorProfile = () => {
     // ✅ STATE: Live Status & Real Database Sessions
     const [isLiveNow, setIsLiveNow] = useState(false);
     const [sessions, setSessions] = useState([]);
+    const [lectures, setLectures] = useState([]);
 
     // --- 1. FETCH DATA (Mentor + Sessions) - SAFE MODE ---
     useEffect(() => {
@@ -58,6 +66,14 @@ const MentorProfile = () => {
                         console.warn(`Sessions API endpoint not found (Status: ${sRes.status}). Showing empty schedule.`);
                         setSessions([]);
                     }
+
+                    // C. ✅ FETCH LECTURES
+                    const lRes = await fetch(`${API_BASE_URL}/lectures/${id}`);
+                    if (lRes.ok) {
+                        const lData = await lRes.json();
+                        if (lData.success) setLectures(lData.lectures || []);
+                    }
+
                 } catch (sessionErr) {
                     console.error("Error parsing session data:", sessionErr);
                     setSessions([]); // Fallback to empty list
@@ -303,6 +319,44 @@ const MentorProfile = () => {
                                         <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2"><Briefcase size={20} />About Me</h3>
                                         <p className="text-gray-600 leading-8 text-lg whitespace-pre-wrap">{mentor.about || "No bio added yet."}</p>
                                     </div>
+
+                                    {/* RECORDED SESSIONS / YOUTUBE SECTION */}
+                                    {lectures.length > 0 && (
+                                        <div>
+                                            <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2"><Video size={20} /> Recorded Sessions & Demos</h3>
+                                            <div className="grid md:grid-cols-2 gap-4">
+                                                {lectures.map((lecture) => {
+                                                    const videoId = getYouTubeID(lecture.url);
+                                                    return (
+                                                        <div key={lecture._id} className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden group hover:shadow-md transition">
+                                                            {videoId ? (
+                                                                <div className="relative aspect-video bg-black">
+                                                                    <iframe
+                                                                        width="100%"
+                                                                        height="100%"
+                                                                        src={`https://www.youtube.com/embed/${videoId}`}
+                                                                        title={lecture.title}
+                                                                        frameBorder="0"
+                                                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                                                        allowFullScreen
+                                                                        className="absolute inset-0"
+                                                                    ></iframe>
+                                                                </div>
+                                                            ) : (
+                                                                <div className="h-40 bg-gray-100 flex items-center justify-center text-gray-400">
+                                                                    Video Unavailable
+                                                                </div>
+                                                            )}
+                                                            <div className="p-3">
+                                                                <h4 className="font-bold text-gray-800 text-sm line-clamp-2" title={lecture.title}>{lecture.title}</h4>
+                                                                <a href={lecture.url} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-600 mt-2 inline-block hover:underline">Watch on YouTube</a>
+                                                            </div>
+                                                        </div>
+                                                    );
+                                                })}
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
                             ) : (
                                 <div>Resources go here...</div>
