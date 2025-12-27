@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 // Icons
 import {
     Share2, BadgeCheck, Users, Clock, Star, Video, Trash2, Plus,
@@ -14,6 +14,26 @@ import { API_BASE_URL } from '../config';
 
 const DashboardPage = () => {
     const navigate = useNavigate();
+    const location = useLocation(); // ✅ Location Hook
+
+    // --- 0. Post-Meeting Check ---
+    useEffect(() => {
+        const params = new URLSearchParams(location.search);
+        if (params.get('meeting_ended')) {
+            toast.success("Meeting Concluded Successfully!", { icon: '✅' });
+
+            // Check role from local storage strictly for this toast logic
+            const u = JSON.parse(localStorage.getItem('userData') || '{}');
+            if (u.role === 'mentor') {
+                setTimeout(() => {
+                    toast("📹 Tip: Upload the session recording to your resources!", { duration: 6000 });
+                }, 1000);
+            }
+
+            // Clear URL param without reloading
+            navigate('/dashboard', { replace: true });
+        }
+    }, [location]);
     const [loading, setLoading] = useState(true);
     const [uploading, setUploading] = useState(false);
 
