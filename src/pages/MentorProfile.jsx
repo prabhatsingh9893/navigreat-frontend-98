@@ -157,7 +157,8 @@ const MentorProfile = () => {
 
             const data = await res.json();
             if (res.ok) {
-                toast.success(data.message || "Booking request sent!");
+                toast.success(data.message || "Booking request sent! Redirecting to Dashboard...");
+                setTimeout(() => navigate('/dashboard'), 2000);
             } else {
                 toast.error(data.message || "Booking failed");
             }
