@@ -177,7 +177,7 @@ const ChatPage = () => {
 
 
     return (
-        <div className="flex h-screen bg-gray-100 pt-16">
+        <div className="flex h-[100dvh] bg-gray-100 pt-16">
             {/* Sidebar (Contacts) - Hidden on mobile if chatting */}
             <div className={`${targetUserId ? 'hidden md:flex' : 'flex'} w-full md:w-1/3 bg-white border-r border-gray-200 flex-col`}>
                 <div className="p-4 border-b border-gray-100 bg-gray-50">
@@ -203,7 +203,7 @@ const ChatPage = () => {
                                     )}
                                 </div>
                                 <div className="flex justify-between items-center">
-                                    <p className="text-xs text-gray-500 truncate max-w-[120px]">
+                                    <p className="text-xs text-gray-500 truncate">
                                         {contact.lastMessage || (contact.college ? contact.college : "Tap to chat")}
                                     </p>
                                     {contact.unreadCount > 0 && (
