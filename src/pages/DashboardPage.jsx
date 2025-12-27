@@ -606,7 +606,7 @@ const DashboardPage = () => {
 
                                             <div className="mt-3 flex gap-2">
                                                 <button className="flex-1 text-xs font-bold bg-white border border-gray-200 py-2 rounded-lg text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition">Dismiss</button>
-                                                <button className="flex-1 text-xs font-bold bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700 transition shadow-sm shadow-purple-200">Reply</button>
+                                                <button className="flex-1 text-xs font-bold bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700 transition shadow-sm shadow-purple-200" onClick={() => navigate(`/chat/${b.studentId}`)}>Reply</button>
                                             </div>
                                         </div>
                                     ))}
