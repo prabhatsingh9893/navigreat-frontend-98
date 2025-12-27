@@ -100,11 +100,12 @@ const MentorProfile = () => {
                 const start = new Date(session.startTime);
                 const end = new Date(session.endTime);
 
-                // ✅ 30 Minute Buffer Logic
-                const bufferTime = 30 * 60 * 1000;
+                // ✅ 5 Minute Buffer Logic (Actually Live)
+                const startBuffer = 5 * 60 * 1000;
+                const endBuffer = 10 * 60 * 1000;
 
-                const bufferStart = new Date(start.getTime() - bufferTime);
-                const bufferEnd = new Date(end.getTime() + bufferTime);
+                const bufferStart = new Date(start.getTime() - startBuffer);
+                const bufferEnd = new Date(end.getTime() + endBuffer);
 
                 return now >= bufferStart && now <= bufferEnd;
             });
@@ -291,8 +292,9 @@ const MentorProfile = () => {
                                                     const dateString = start.toLocaleDateString([], { month: 'short', day: 'numeric' });
 
                                                     // Check if specifically this session is live
-                                                    const buffer = 30 * 60 * 1000;
-                                                    const isSessionLive = now >= new Date(start.getTime() - buffer) && now <= new Date(end.getTime() + buffer);
+                                                    const startBuffer = 5 * 60 * 1000;
+                                                    const endBuffer = 10 * 60 * 1000;
+                                                    const isSessionLive = now >= new Date(start.getTime() - startBuffer) && now <= new Date(end.getTime() + endBuffer);
 
                                                     return (
                                                         <div key={session._id || session.id} className={`flex justify-between items-center bg-white p-4 rounded-xl border ${isSessionLive ? 'border-red-200 bg-red-50/50' : 'border-gray-100'} shadow-sm`}>
