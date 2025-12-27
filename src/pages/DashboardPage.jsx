@@ -398,10 +398,10 @@ const DashboardPage = () => {
                                 <h3 className="font-bold text-xl text-gray-800 flex items-center gap-2"><Clock size={22} className="text-blue-600" /> My Booking Requests</h3>
                             </div>
                             <div className="p-0">
-                                {bookings.length === 0 ? (
+                                {bookings?.length === 0 ? (
                                     <div className="p-8 text-center text-gray-400">You haven't booked any sessions yet.</div>
                                 ) : (
-                                    bookings.map((b) => (
+                                    bookings?.map((b) => (
                                         <div key={b._id} className="p-6 border-b border-gray-100 hover:bg-gray-50 transition">
                                             <div className="flex justify-between items-start mb-2">
                                                 <div>
@@ -449,7 +449,7 @@ const DashboardPage = () => {
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                             {[
                                 { label: "Students", val: "100+", icon: Users, color: "text-blue-600", bg: "bg-blue-50", border: "border-blue-100" },
-                                { label: "Lectures", val: lectures.length, icon: Video, color: "text-purple-600", bg: "bg-purple-50", border: "border-purple-100" },
+                                { label: "Lectures", val: lectures?.length || 0, icon: Video, color: "text-purple-600", bg: "bg-purple-50", border: "border-purple-100" },
                                 { label: "Rating", val: "4.9", icon: Star, color: "text-amber-500", bg: "bg-amber-50", border: "border-amber-100" },
                                 { label: "Experience", val: "2+ Yrs", icon: Clock, color: "text-green-600", bg: "bg-green-50", border: "border-green-100" },
                             ].map((s, i) => (
@@ -482,11 +482,11 @@ const DashboardPage = () => {
                         {/* Lectures List */}
                         <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
                             <div className="flex items-center justify-between mb-8">
-                                <h2 className="text-2xl font-bold text-gray-800">Uploaded Resources <span className="text-gray-400 font-medium ml-2 text-lg">({lectures.length})</span></h2>
+                                <h2 className="text-2xl font-bold text-gray-800">Uploaded Resources <span className="text-gray-400 font-medium ml-2 text-lg">({lectures?.length || 0})</span></h2>
                                 <button onClick={() => document.getElementById('add-lecture').scrollIntoView({ behavior: 'smooth' })} className="text-blue-600 font-bold text-sm hover:underline md:hidden">Add New</button>
                             </div>
 
-                            {lectures.length === 0 ? (
+                            {lectures?.length === 0 ? (
                                 <div className="text-center py-16 bg-gray-50 rounded-3xl border-2 border-dashed border-gray-200">
                                     <Video className="mx-auto text-gray-300 mb-4" size={56} />
                                     <h3 className="text-gray-900 font-bold text-lg">No content yet</h3>
@@ -553,7 +553,7 @@ const DashboardPage = () => {
                             </div>
 
                             {/* UPCOMING LIST */}
-                            {sessions.length > 0 && (
+                            {sessions?.length > 0 && (
                                 <div className="border-t border-gray-100 bg-gray-50/50 p-4">
                                     <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3 px-2">Upcoming Classes</h4>
                                     <div className="space-y-3 max-h-64 overflow-y-auto custom-scrollbar pr-1">
@@ -583,10 +583,10 @@ const DashboardPage = () => {
                         <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
                             <div className="p-5 border-b border-gray-100 flex items-center justify-between">
                                 <h3 className="font-bold text-lg text-gray-800 flex items-center gap-2"><Users size={20} className="text-purple-600" /> Requests</h3>
-                                <span className="bg-purple-100 text-purple-700 text-xs font-bold px-2 py-1 rounded-full">{bookings.length} New</span>
+                                <span className="bg-purple-100 text-purple-700 text-xs font-bold px-2 py-1 rounded-full">{bookings?.length || 0} New</span>
                             </div>
 
-                            {bookings.length === 0 ? (
+                            {bookings?.length === 0 ? (
                                 <div className="p-8 text-center bg-gray-50/50">
                                     <p className="text-gray-400 text-sm font-medium italic">No pending requests.</p>
                                 </div>
