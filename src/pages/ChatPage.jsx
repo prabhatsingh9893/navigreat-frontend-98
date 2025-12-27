@@ -39,7 +39,7 @@ const ChatPage = () => {
 
     // 2. Fetch Target User Info & Messages
     useEffect(() => {
-        if (!targetUserId || !currentUser) return;
+        if (!targetUserId || targetUserId === 'undefined' || !currentUser) return;
 
         // A. Fetch Target User Details
         fetch(`${API_BASE_URL}/mentors/${targetUserId}`) // Works for fetching basic user info too usually? Or need generic /users/:id route?
