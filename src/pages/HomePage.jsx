@@ -114,7 +114,7 @@ function HomePage() {
               />
 
               {/* ✅ Floating Badge 1 (Verified) - Still Here */}
-              <div className="absolute -left-8 top-10 bg-white p-4 rounded-2xl shadow-xl border border-gray-100 flex items-center gap-3 z-20 animate-bounce delay-100">
+              <div className="absolute left-0 md:-left-8 top-10 bg-white p-4 rounded-2xl shadow-xl border border-gray-100 flex items-center gap-3 z-20 animate-bounce delay-100">
                 <div className="bg-green-100 p-2 rounded-full text-green-600"><CheckCircle size={24} /></div>
                 <div><p className="font-bold text-gray-800">Verified</p><p className="text-xs text-gray-500">Mentors</p></div>
               </div>

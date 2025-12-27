@@ -162,6 +162,9 @@ const Header = () => {
                 <Link to="/dashboard" className="text-blue-600 font-bold flex items-center gap-2" onClick={() => setIsOpen(false)}>
                   <LayoutDashboard size={18} /> My Dashboard
                 </Link>
+                <Link to="/chat" className="text-purple-600 font-bold flex items-center gap-2" onClick={() => setIsOpen(false)}>
+                  <Mail size={18} /> Messages
+                </Link>
                 <button onClick={handleLogout} className="text-red-500 font-bold flex items-center gap-2 text-left">
                   <LogOut size={18} /> Logout
                 </button>
