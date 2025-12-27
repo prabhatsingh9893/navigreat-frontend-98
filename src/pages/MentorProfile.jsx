@@ -298,19 +298,19 @@ const MentorProfile = () => {
                                                     const isSessionLive = now >= new Date(start.getTime() - startBuffer) && now <= new Date(end.getTime() + endBuffer);
 
                                                     return (
-                                                        <div key={session._id || session.id} className={`flex justify-between items-center bg-white p-4 rounded-xl border ${isSessionLive ? 'border-red-200 bg-red-50/50' : 'border-gray-100'} shadow-sm`}>
-                                                            <div className="flex items-center gap-3">
-                                                                <div className={`p-2 rounded-full ${isSessionLive ? 'bg-red-100 text-red-600' : 'bg-gray-100 text-gray-500'}`}>
+                                                        <div key={session._id || session.id} className={`flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 bg-white p-4 rounded-xl border ${isSessionLive ? 'border-red-200 bg-red-50/50' : 'border-gray-100'} shadow-sm`}>
+                                                            <div className="flex items-center gap-3 w-full">
+                                                                <div className={`p-2 rounded-full flex-shrink-0 ${isSessionLive ? 'bg-red-100 text-red-600' : 'bg-gray-100 text-gray-500'}`}>
                                                                     {isSessionLive ? <Video size={20} /> : <Clock size={20} />}
                                                                 </div>
-                                                                <div>
-                                                                    <h4 className="font-bold text-gray-800">{session.title}</h4>
+                                                                <div className="min-w-0">
+                                                                    <h4 className="font-bold text-gray-800 break-words">{session.title}</h4>
                                                                     <p className={`text-xs font-bold uppercase ${isSessionLive ? 'text-red-500' : 'text-gray-400'}`}>
                                                                         {isSessionLive ? '🔴 Live Now' : `${dateString}, ${timeString}`}
                                                                     </p>
                                                                 </div>
                                                             </div>
-                                                            {isSessionLive && <button onClick={handleJoinClass} className="px-4 py-2 rounded-lg text-sm font-bold bg-red-600 text-white hover:bg-red-700 shadow-md">Join</button>}
+                                                            {isSessionLive && <button onClick={handleJoinClass} className="w-full sm:w-auto px-4 py-2 rounded-lg text-sm font-bold bg-red-600 text-white hover:bg-red-700 shadow-md whitespace-nowrap">Join Class</button>}
                                                         </div>
                                                     );
                                                 })}

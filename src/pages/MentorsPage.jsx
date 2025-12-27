@@ -46,10 +46,8 @@ function MentorsPage() {
 
   return (
     // ✅ FIX: "min-h-screen" ensure karta hai page hamesha full height rahe
-    <div className="pt-28 pb-20 bg-gray-50 min-h-screen w-full">
-
-      {/* ✅ FIX: "container" hata kar "max-w-7xl" lagaya taaki baaki pages jaisa broad dikhe */}
-      <div className="max-w-7xl mx-auto px-6">
+    <div className="pt-24 md:pt-28 pb-20 bg-gray-50 min-h-screen w-full">
+      <div className="max-w-7xl mx-auto px-4 md:px-6">
 
         {/* Title & Search Bar */}
         <div className="text-center mb-12">
