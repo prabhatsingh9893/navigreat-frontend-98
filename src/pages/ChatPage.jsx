@@ -16,8 +16,10 @@ const ChatPage = () => {
     const [newMessage, setNewMessage] = useState("");
     const [currentUser, setCurrentUser] = useState(null);
     const [targetUser, setTargetUser] = useState(null);
-    const [contactList, setContactList] = useState([]); // Simplified: List of Mentors
+    const [contactList, setContactList] = useState([]);
+    const [isTyping, setIsTyping] = useState(false); // ⌨️
     const scrollRef = useRef();
+    let typingTimeout = null;
 
     // 1. Auth Check & Setup
     useEffect(() => {
@@ -74,8 +76,14 @@ const ChatPage = () => {
 
         socket.on("receive_message", handleReceiveMessage);
 
+        // Typing Listeners
+        socket.on("display_typing", () => setIsTyping(true));
+        socket.on("hide_typing", () => setIsTyping(false));
+
         return () => {
             socket.off("receive_message", handleReceiveMessage);
+            socket.off("display_typing");
+            socket.off("hide_typing");
         };
     }, [targetUserId]);
 
@@ -162,7 +170,9 @@ const ChatPage = () => {
                         </div>
                         <div>
                             <h3 className="font-bold text-gray-900">{targetUser?.username || "Loading..."}</h3>
-                            <p className="text-xs text-green-500 flex items-center gap-1">● Online (Simulated)</p>
+                            <p className="text-xs text-green-500 flex items-center gap-1">
+                                {isTyping ? <span className="text-blue-500 font-bold animate-pulse">Typing...</span> : "● Online"}
+                            </p>
                         </div>
                     </div>
 
@@ -190,7 +200,13 @@ const ChatPage = () => {
                             <input
                                 type="text"
                                 value={newMessage}
-                                onChange={(e) => setNewMessage(e.target.value)}
+                                onChange={(e) => {
+                                    setNewMessage(e.target.value);
+                                    // Emit Typing
+                                    socket.emit("typing", targetUserId);
+                                    if (typingTimeout) clearTimeout(typingTimeout);
+                                    typingTimeout = setTimeout(() => socket.emit("stop_typing", targetUserId), 2000);
+                                }}
                                 onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
                                 placeholder="Type a message..."
                                 className="flex-1 border border-gray-300 rounded-full px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-50"
