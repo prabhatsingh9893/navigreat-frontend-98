@@ -245,7 +245,7 @@ const MentorProfile = () => {
                                         )}
                                     </>
                                 )}
-                                <button className="w-full border border-slate-200 text-slate-700 py-3.5 rounded-xl font-bold hover:bg-slate-50 transition flex items-center justify-center gap-2">
+                                <button onClick={() => navigate(`/chat/${mentor._id}`)} className="w-full border border-slate-200 text-slate-700 py-3.5 rounded-xl font-bold hover:bg-slate-50 transition flex items-center justify-center gap-2">
                                     <MessageSquare size={18} /> Chat with Mentor
                                 </button>
                             </div>
