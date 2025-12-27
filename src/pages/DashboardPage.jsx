@@ -592,8 +592,8 @@ const DashboardPage = () => {
                                 </div>
                             ) : (
                                 <div className="max-h-80 overflow-y-auto custom-scrollbar p-0">
-                                    {bookings.map((b, idx) => (
-                                        <div key={b._id} className={`p-5 hover:bg-purple-50 transition-colors ${idx !== bookings.length - 1 ? 'border-b border-gray-100' : ''}`}>
+                                    {bookings?.map((b, idx) => (
+                                        <div key={b._id} className={`p-5 hover:bg-purple-50 transition-colors ${idx !== (bookings?.length || 0) - 1 ? 'border-b border-gray-100' : ''}`}>
                                             <div className="flex justify-between items-start mb-2">
                                                 <h4 className="font-bold text-gray-800 text-sm">{b.studentEmail || "Student"}</h4>
                                                 <span className="text-[10px] uppercase font-bold text-gray-400 tracking-wide">
