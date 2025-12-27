@@ -13,7 +13,6 @@ import MentorsPage from './pages/MentorsPage.jsx';
 import MentorSignupPage from './pages/MentorSignupPage.jsx';
 import DashboardPage from './pages/DashboardPage.jsx';
 import MentorProfile from './pages/MentorProfile.jsx';
-import MentorProfile from './pages/MentorProfile.jsx';
 import AdminMessagesPage from './pages/AdminMessagesPage.jsx';
 import ChatPage from './pages/ChatPage.jsx';
 import Loader from './components/Loader';
