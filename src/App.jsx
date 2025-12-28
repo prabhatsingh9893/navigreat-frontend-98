@@ -18,6 +18,8 @@ import ChatPage from './pages/ChatPage.jsx';
 import ForgotPasswordPage from './pages/ForgotPasswordPage.jsx';
 import ResetPasswordPage from './pages/ResetPasswordPage.jsx';
 import Loader from './components/Loader';
+import ScrollToTop from './components/ScrollToTop'; // ✅ Scroll Fix
+import NotFoundPage from './pages/NotFoundPage'; // ✅ 404 Page
 
 // ✅ LAZY LOAD LIVE SESSION TO PREVENT CSS POLLUTION
 const LiveSession = React.lazy(() => import('./pages/LiveSession.jsx'));
@@ -28,6 +30,8 @@ function App() {
 
       {/* 👉 2. TOASTER COMPONENT ADDED HERE */}
       <Toaster position="top-center" reverseOrder={false} />
+      <ScrollToTop />
+
 
       <Header />
       <main className="flex-grow">
@@ -65,10 +69,13 @@ function App() {
               </Suspense>
             }
           />
+
+          {/* 404 PAGE */}
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </main>
       <Footer />
-    </div>
+    </div >
   );
 }
 

@@ -411,7 +411,7 @@ const DashboardPage = () => {
                             <Edit2 size={18} /> Edit Profile
                         </button>
                         {user?.role === 'mentor' && (
-                            <button onClick={() => navigate(`/mentor/${user.id}`)} className="bg-gray-800 text-white px-4 py-3 rounded-xl hover:bg-black transition shadow-lg hover:shadow-xl hover:-translate-y-0.5"><Share2 size={20} /></button>
+                            <button onClick={() => navigate(`/mentor/${user._id || user.id}`)} className="bg-gray-800 text-white px-4 py-3 rounded-xl hover:bg-black transition shadow-lg hover:shadow-xl hover:-translate-y-0.5"><Share2 size={20} /></button>
                         )}
                     </div>
                 </div>
