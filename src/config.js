@@ -1,5 +1,5 @@
-const isDev = import.meta.env.DEV;
+const isDev = import.meta.env.MODE === 'development';
 
 export const API_BASE_URL = isDev
-    ? "http://localhost:5000/api"
+    ? "/api"
     : "https://navigreat-backend-98.onrender.com/api";

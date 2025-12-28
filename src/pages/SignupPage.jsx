@@ -23,7 +23,7 @@ function SignupPage() {
       // ---------------------------------------------------------
       // STEP 1: Register
       // ---------------------------------------------------------
-      const registerRes = await fetch(`${API_BASE_URL}/register`, {
+      const registerRes = await fetch(`${API_BASE_URL}/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),

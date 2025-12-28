@@ -14,6 +14,13 @@ export default defineConfig(({ command }) => ({
     },
   },
   server: {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:5000',
+        changeOrigin: true,
+        secure: false,
+      },
+    },
     headers: {
       // ⚠️ Inhe abhi commented hi rahne dein (Google Login ke liye ye zaruri hai)
       // "Cross-Origin-Embedder-Policy": "require-corp",
