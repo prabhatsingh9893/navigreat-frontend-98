@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { io } from "socket.io-client";
-import { Send, User as UserIcon, MessageSquare, ArrowLeft } from 'lucide-react';
+import { Send, User as UserIcon, MessageSquare, ArrowLeft, Mic, StopCircle } from 'lucide-react';
 import { API_BASE_URL } from '../config';
 
 // Initialize Socket outside component to avoid re-connections
@@ -18,6 +18,12 @@ const ChatPage = () => {
     const [targetUser, setTargetUser] = useState(null);
     const [contactList, setContactList] = useState([]);
     const [isTyping, setIsTyping] = useState(false); // ⌨️
+
+    // 🎙️ Voice Recording State
+    const [isRecording, setIsRecording] = useState(false);
+    const mediaRecorderRef = useRef(null);
+    const audioChunksRef = useRef([]);
+
     const scrollRef = useRef();
     let typingTimeout = null;
 
@@ -144,6 +150,61 @@ const ChatPage = () => {
         }
     };
 
+    // 🎙️ RECORDING LOGIC
+    const startRecording = async () => {
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            mediaRecorderRef.current = new MediaRecorder(stream);
+
+            mediaRecorderRef.current.ondataavailable = (event) => {
+                if (event.data.size > 0) {
+                    audioChunksRef.current.push(event.data);
+                }
+            };
+
+            mediaRecorderRef.current.onstop = () => {
+                const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
+                const reader = new FileReader();
+                reader.readAsDataURL(audioBlob);
+                reader.onloadend = () => {
+                    const base64Audio = reader.result;
+                    sendAudioMessage(base64Audio);
+                };
+                audioChunksRef.current = []; // Reset chunks
+            };
+
+            mediaRecorderRef.current.start();
+            setIsRecording(true);
+        } catch (err) {
+            console.error("Error accessing microphone:", err);
+            alert("Could not access microphone.");
+        }
+    };
+
+    const stopRecording = () => {
+        if (mediaRecorderRef.current && isRecording) {
+            mediaRecorderRef.current.stop();
+            setIsRecording(false);
+            // Stop all tracks to release mic
+            mediaRecorderRef.current.stream.getTracks().forEach(track => track.stop());
+        }
+    };
+
+    const sendAudioMessage = (base64Audio) => {
+        if (!targetUserId) return;
+
+        const msgData = {
+            sender: currentUser._id || currentUser.id,
+            receiver: targetUserId,
+            content: "🎤 Voice Message", // Fallback text
+            messageType: 'audio',
+            audioUrl: base64Audio,
+            timestamp: new Date()
+        };
+
+        socket.emit("send_message", msgData);
+    };
+
     const sendMessage = async () => {
         if (!newMessage.trim() || !targetUserId) return;
 
@@ -154,15 +215,7 @@ const ChatPage = () => {
             timestamp: new Date()
         };
 
-        // Emit Socket
         socket.emit("send_message", msgData);
-
-        // Optimistic UI Update (Socket also sends back, but let's wait for safety or just append?)
-        // Backend emits back to sender too in my code, so let's rely on that to avoid dupe.
-        // Wait, strictly reliant on socket return might feel slow? 
-        // My backend code: io.to(sender).emit... 
-        // So it will come back via "receive_message".
-
         setNewMessage("");
     };
 
@@ -244,7 +297,15 @@ const ChatPage = () => {
                             return (
                                 <div key={index} className={`flex ${isMe ? 'justify-end' : 'justify-start'}`}>
                                     <div className={`max-w-[70%] p-3 rounded-2xl shadow-sm text-sm ${isMe ? 'bg-blue-600 text-white rounded-br-none' : 'bg-white text-gray-800 rounded-bl-none border border-gray-200'}`}>
-                                        <p>{msg.content}</p>
+
+                                        {msg.messageType === 'audio' ? (
+                                            <div className="flex items-center gap-2 min-w-[200px]">
+                                                <audio controls src={msg.audioUrl} className="w-full h-8" />
+                                            </div>
+                                        ) : (
+                                            <p>{msg.content}</p>
+                                        )}
+
                                         <div className={`text-[10px] mt-1 text-right ${isMe ? 'text-blue-200' : 'text-gray-400'}`}>
                                             {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                         </div>
@@ -269,14 +330,15 @@ const ChatPage = () => {
                                     typingTimeout = setTimeout(() => socket.emit("stop_typing", targetUserId), 2000);
                                 }}
                                 onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
-                                placeholder="Type a message..."
-                                className="flex-1 border border-gray-300 rounded-full px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-50"
+                                placeholder={isRecording ? "Recording audio..." : "Type a message..."}
+                                disabled={isRecording}
+                                className={`flex-1 border border-gray-300 rounded-full px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-50 ${isRecording ? 'opacity-50 cursor-not-allowed bg-red-50' : ''}`}
                             />
                             <button
-                                onClick={sendMessage}
-                                className="bg-blue-600 text-white p-3 rounded-full hover:bg-blue-700 transition shadow-md active:scale-95"
+                                onClick={newMessage.trim() ? sendMessage : (isRecording ? stopRecording : startRecording)}
+                                className={`${isRecording ? 'bg-red-500 hover:bg-red-600 animate-pulse' : 'bg-blue-600 hover:bg-blue-700'} text-white p-3 rounded-full transition shadow-md active:scale-95`}
                             >
-                                <Send size={20} />
+                                {newMessage.trim() ? <Send size={20} /> : (isRecording ? <StopCircle size={20} /> : <Mic size={20} />)}
                             </button>
                         </div>
                     </div>

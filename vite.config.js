@@ -20,11 +20,17 @@ export default defineConfig(({ command }) => ({
         changeOrigin: true,
         secure: false,
       },
+      '/socket.io': {
+        target: 'http://localhost:5000', // Forward socket connections to backend
+        changeOrigin: true,
+        secure: false,
+        ws: true,
+      },
     },
     headers: {
-      // ⚠️ Inhe abhi commented hi rahne dein (Google Login ke liye ye zaruri hai)
+      // ⚠️ Commented out to prevent "Blocked by Response" error for Zoom assets
       // "Cross-Origin-Embedder-Policy": "require-corp",
       // "Cross-Origin-Opener-Policy": "same-origin",
     },
   },
-}));// vercel update check
+}));// forced restart timestamp: 123456
