@@ -19,6 +19,8 @@ import ForgotPasswordPage from './pages/ForgotPasswordPage.jsx';
 import ResetPasswordPage from './pages/ResetPasswordPage.jsx';
 import Loader from './components/Loader';
 import ScrollToTop from './components/ScrollToTop'; // ✅ Scroll Fix
+import AppPrivacy from './pages/AppPrivacy';
+import AppTerms from './pages/AppTerms';
 import NotFoundPage from './pages/NotFoundPage'; // ✅ 404 Page
 
 // ✅ LAZY LOAD LIVE SESSION TO PREVENT CSS POLLUTION
@@ -54,6 +56,10 @@ function App() {
 
           {/* ADMIN */}
           <Route path="/admin/messages" element={<AdminMessagesPage />} />
+
+          {/* LEGAL */}
+          <Route path="/privacy" element={<AppPrivacy />} />
+          <Route path="/terms" element={<AppTerms />} />
 
 
           {/* CHAT */}

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useReactMediaRecorder } from 'react-media-recorder';
-import { Video, Square, Download, Trash2, MonitorPlay } from 'lucide-react';
+import { Square, Download, Trash2, MonitorPlay } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 const ScreenRecorder = () => {

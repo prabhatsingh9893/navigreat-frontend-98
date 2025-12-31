@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Navigreat Live Session</title>
+    <!-- Zoom CSS (3.6.0) -->
+    <link type="text/css" rel="stylesheet" href="https://source.zoom.us/3.6.0/css/bootstrap.css" />
+    <link type="text/css" rel="stylesheet" href="https://source.zoom.us/3.6.0/css/react-select.css" />
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: black;
+            overflow: hidden;
+        }
+
+        #zmmtg-root {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            background: black;
+            z-index: 10000;
+            /* Ensure Zoom is on top */
+        }
+
+        #loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #1a1a1a;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 5000;
+            font-family: sans-serif;
+            gap: 1rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="loading-overlay">
+        <h1>Navigreat Secure Meeting</h1>
+        <div id="status-text">Connecting to Zoom...</div>
+    </div>
+    <div id="zmmtg-root"></div>
+
+    <!-- 1. Buffer Polyfill (Critical for Zoom 3.x) -->
+    <script src="https://cdn.jsdelivr.net/npm/buffer@6.0.3/index.min.js" crossorigin="anonymous"></script>
+    <script>
+        console.log("Setting up Polyfills...");
+        window.global = window;
+        window.process = { env: { NODE_ENV: 'production' }, browser: true, nextTick: function (cb) { setTimeout(cb, 0); } };
+
+        // Robust Buffer Assignment
+        if (typeof window.Buffer === 'undefined') {
+            if (typeof window.buffer !== 'undefined' && window.buffer.Buffer) {
+                window.Buffer = window.buffer.Buffer;
+            } else if (typeof window.buffer !== 'undefined') {
+                window.Buffer = window.buffer;
+            } else {
+                console.warn("Buffer library not loaded correctly. Creating simple shim...");
+                // Simple shim to prevent immediate crash, though functionality might be limited
+                window.Buffer = {
+                    isBuffer: function () { return false; },
+                    from: function (data) { return new Uint8Array(data); },
+                    alloc: function (size) { return new Uint8Array(size); }
+                };
+            }
+        }
+        console.log("Final Buffer status:", !!window.Buffer, typeof window.Buffer);
+    </script>
+
+    <!-- Zoom Dependencies (3.6.0) -->
+    <script src="https://source.zoom.us/3.6.0/lib/vendor/react.min.js"></script>
+    <script src="https://source.zoom.us/3.6.0/lib/vendor/react-dom.min.js"></script>
+    <script src="https://source.zoom.us/3.6.0/lib/vendor/redux.min.js"></script>
+    <script src="https://source.zoom.us/3.6.0/lib/vendor/redux-thunk.min.js"></script>
+    <script src="https://source.zoom.us/3.6.0/lib/vendor/lodash.min.js"></script>
+    <script src="https://source.zoom.us/zoom-meeting-3.6.0.min.js"></script>
+
+    <script>
+        // Fallback: Hide overlay after 15 seconds if Zoom is silent
+        setTimeout(() => {
+            const overlay = document.getElementById('loading-overlay');
+            if (overlay) overlay.style.display = 'none';
+        }, 15000);
+
+        // Parse Parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const meetingNumber = urlParams.get('mn');
+        const passWord = urlParams.get('pwd');
+        const signature = urlParams.get('sig');
+        const sdkKey = urlParams.get('sdkKey');
+        const userName = urlParams.get('name') || 'Navigreat User';
+        const userEmail = urlParams.get('email') || '';
+        const leaveUrl = urlParams.get('leaveUrl') || '/';
+
+        if (ZoomMtg) {
+            console.log("Initializing Zoom 3.6.0...");
+            console.log("Cross Origin Isolated:", window.crossOriginIsolated);
+
+            ZoomMtg.setZoomJSLib('https://source.zoom.us/3.6.0/lib', '/av');
+            // ZoomMtg.preLoadWasm(); // Removed in 3.x
+            ZoomMtg.prepareWebSDK();
+            ZoomMtg.i18n.load('en-US');
+
+            ZoomMtg.init({
+                leaveUrl: leaveUrl,
+                isSupportAV: true,
+                success: function () {
+                    console.log("Zoom Init Success");
+                    ZoomMtg.join({
+                        signature: signature,
+                        meetingNumber: meetingNumber,
+                        userName: userName,
+                        sdkKey: sdkKey,
+                        userEmail: userEmail,
+                        passWord: passWord,
+                        success: function (res) {
+                            console.log("Join Success", res);
+                            const overlay = document.getElementById('loading-overlay');
+                            if (overlay) overlay.style.display = 'none';
+                        },
+                        error: function (res) {
+                            console.error("Join Error", res);
+                            alert("Join Failed: " + (res.errorMessage || res.errorCode));
+                        }
+                    });
+                },
+                error: function (res) {
+                    console.error("Init Error", res);
+                    alert("Zoom Init Failed");
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>
