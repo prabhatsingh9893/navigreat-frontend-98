@@ -14,6 +14,7 @@ const LiveSession = () => {
   const role = location.state?.role || 0;
   const username = location.state?.username || "Student";
   const rawMeetingNumber = location.state?.meetingNumber || "";
+  // यह String है (जैसे "123456")
   const meetingNumber = rawMeetingNumber.replace(/[^0-9]/g, '');
   const passWord = location.state?.passWord || "";
 
@@ -26,25 +27,35 @@ const LiveSession = () => {
 
     const generateSignature = async () => {
       try {
+        console.log("Generating signature for:", meetingNumber);
+
         const response = await fetch(`${API_BASE_URL}/generate-signature`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${localStorage.getItem('token')}`
           },
-          body: JSON.stringify({ meetingNumber, role })
+          // 👇 CHANGE HERE: meetingNumber को parseInt करके भेजें (String -> Number)
+          body: JSON.stringify({
+            meetingNumber: parseInt(meetingNumber, 10),
+            role
+          })
         });
+
         const data = await response.json();
 
         if (data.signature) {
           const leaveUrl = window.location.origin + '/dashboard?meeting_ended=true';
           const sdkKey = import.meta.env.VITE_ZOOM_CLIENT_ID;
+
           // Construct the isolated meeting URL
+          // URL में String ही रहने दें, वहां कोई दिक्कत नहीं है
           const url = `/meeting.html?mn=${meetingNumber}&pwd=${passWord}&sig=${encodeURIComponent(data.signature)}&sdkKey=${sdkKey}&name=${encodeURIComponent(username)}&leaveUrl=${encodeURIComponent(leaveUrl)}`;
           setMeetingUrl(url);
           setLoading(false);
         } else {
           toast.error("Signature Missing");
+          console.error("Backend Response:", data);
           navigate('/dashboard');
         }
       } catch (error) {
