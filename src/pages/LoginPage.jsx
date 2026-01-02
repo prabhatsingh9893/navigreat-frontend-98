@@ -96,12 +96,12 @@ function LoginPage() {
       const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
       if (isMobile) {
-        console.log("Mobile detected: Using Redirect (no popup)");
+        console.log("[vMobileFix] Mobile detected: Using Redirect (no popup)");
         toast.loading("Redirecting to Google...");
         await signInWithRedirect(auth, provider);
         // Result will be handled by useEffect on page reload
       } else {
-        console.log("Desktop detected: Using Popup");
+        console.log("[vMobileFix] Desktop detected: Using Popup");
         const result = await signInWithPopup(auth, provider);
         verifyWithBackend(result.user);
       }
@@ -147,6 +147,21 @@ function LoginPage() {
           <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" className="w-6 h-6" />
           Continue with Google
         </button>
+
+        {/* Fallback Button for Stubborn Mobile Devices */}
+        <div className="mt-4 text-center">
+          <button
+            type="button"
+            onClick={async () => {
+              console.log("[vMobileFix] Manual Redirect Triggered");
+              toast.loading("Redirecting...");
+              await signInWithRedirect(auth, provider);
+            }}
+            className="text-xs text-blue-400 hover:text-blue-600 underline"
+          >
+            Having trouble? Click here for Alternative Login
+          </button>
+        </div>
 
         <p className="mt-4 text-center text-gray-600">
           New here? <Link to="/signup" className="text-blue-600 font-bold">Create Account</Link>
