@@ -1,42 +1,64 @@
 import { signInWithPopup, signInWithRedirect, getRedirectResult } from 'firebase/auth';
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { auth, provider } from '../firebaseConfig';
 import toast from 'react-hot-toast';
 import { API_BASE_URL } from '../config';
 
+// Simple Loader Component for internal use
+const ProcessingOverlay = ({ text }) => (
+  <div className="fixed inset-0 bg-white/90 z-50 flex flex-col items-center justify-center p-4">
+    <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-600 mb-4"></div>
+    <h3 className="text-xl font-semibold text-gray-800">{text}</h3>
+    <p className="text-sm text-gray-500 mt-2">Please wait while we secure your session...</p>
+  </div>
+);
+
 function LoginPage() {
   const [formData, setFormData] = useState({ email: '', password: '' });
+  const [verifying, setVerifying] = useState(false);
+  const [statusMessage, setStatusMessage] = useState("");
+  const navigate = useNavigate();
 
   // --- Helper: Verify Logic for both Popup and Redirect ---
   const verifyWithBackend = async (user) => {
-    const loadingToast = toast.loading("Verifying with Backend...");
+    if (!user) return;
+    setVerifying(true);
+    setStatusMessage("Verifying Google Account...");
+
     try {
+      // Robust Payload to prevent 400 Errors
+      const payload = {
+        username: user.displayName || user.email.split('@')[0], // Fallback if name missing
+        email: user.email,
+        image: user.photoURL || "" // Fallback if photo missing
+      };
+
+      console.log("[vLoginFinal] Sending Payload:", payload);
+
       const response = await fetch(`${API_BASE_URL}/google-login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          username: user.displayName,
-          email: user.email,
-          image: user.photoURL
-        }),
+        body: JSON.stringify(payload),
       });
 
       const data = await response.json();
-      toast.dismiss(loadingToast);
 
       if (data.success) {
         localStorage.setItem('token', data.token);
         localStorage.setItem('userData', JSON.stringify(data.user));
-        toast.success("Google Login Successful!");
-        window.location.href = "/";
+        toast.success("Login Successful!");
+        window.location.href = "/"; // Force refresh to update Header
       } else {
-        toast.error("Backend Error: " + data.message);
+        setVerifying(false);
+        console.error("[vLoginFinal] Backend Error:", data);
+        toast.error(data.message || "Login Verification Failed");
+        alert("Login Failed: " + (data.message || "Unknown Backend Error"));
       }
     } catch (error) {
-      toast.dismiss(loadingToast);
-      toast.error("Login verification failed");
-      console.error(error);
+      setVerifying(false);
+      console.error("[vLoginFinal] Network Error:", error);
+      toast.error("Network Error: Could not reach server.");
     }
   };
 
@@ -46,12 +68,12 @@ function LoginPage() {
       try {
         const result = await getRedirectResult(auth);
         if (result && result.user) {
-          console.log("Redirect Login Success:", result.user);
+          console.log("[vLoginFinal] Redirect Success:", result.user);
           verifyWithBackend(result.user);
         }
       } catch (error) {
-        console.error("Redirect Error:", error);
-        // toast.error("Mobile Login Error: " + error.message);
+        console.error("[vLoginFinal] Redirect Error:", error);
+        toast.error("Mobile Login Error: " + error.message);
       }
     };
     checkRedirect();
@@ -96,27 +118,32 @@ function LoginPage() {
       const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
       if (isMobile) {
-        console.log("[vMobileFix] Mobile detected: Using Redirect (no popup)");
-        toast.loading("Redirecting to Google...");
+        setVerifying(true);
+        setStatusMessage("Redirecting to Google...");
         await signInWithRedirect(auth, provider);
         // Result will be handled by useEffect on page reload
       } else {
-        console.log("[vMobileFix] Desktop detected: Using Popup");
         const result = await signInWithPopup(auth, provider);
         verifyWithBackend(result.user);
       }
 
     } catch (error) {
+      setVerifying(false);
       console.error("Google Login Error:", error);
+
       // Fallback: If popup somehow runs and fails (e.g. tablet treated as desktop), try redirect
       if (error.code === 'auth/popup-closed-by-user' || error.code === 'auth/popup-blocked') {
-        toast.loading("Retrying with Redirect...");
+        toast.loading("Popup failed, retrying with Redirect...");
         await signInWithRedirect(auth, provider);
       } else {
         toast.error("Login Failed: " + error.message);
       }
     }
   };
+
+  if (verifying) {
+    return <ProcessingOverlay text={statusMessage} />;
+  }
 
   return (
     <div className="pt-24 md:pt-32 pb-20 bg-gray-50 min-h-screen flex justify-center items-center px-4">
@@ -153,8 +180,8 @@ function LoginPage() {
           <button
             type="button"
             onClick={async () => {
-              console.log("[vMobileFix] Manual Redirect Triggered");
-              toast.loading("Redirecting...");
+              setVerifying(true);
+              setStatusMessage("Redirecting...");
               await signInWithRedirect(auth, provider);
             }}
             className="text-xs text-blue-400 hover:text-blue-600 underline"
