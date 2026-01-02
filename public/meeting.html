@@ -19,12 +19,11 @@
         #zmmtg-root {
             width: 100%;
             height: 100%;
-            position: absolute;
+            position: fixed;
             top: 0;
             left: 0;
             background: black;
             z-index: 10000;
-            /* Ensure Zoom is on top */
         }
 
         #loading-overlay {
@@ -54,56 +53,25 @@
     <div id="zmmtg-root"></div>
 
     <!-- 1. Buffer Polyfill (Browser-Ready) -->
-    <script src="https://unpkg.com/buffer@6.0.3/index.js"></script>
-    <script>
-        console.log("Setting up Polyfills...");
-        window.global = window;
-        window.process = { env: { NODE_ENV: 'production' }, browser: true, nextTick: function (cb) { setTimeout(cb, 0); } };
-
-        // buffer@6.0.3 from unpkg usually attaches to `window.buffer` or similar if browserified, 
-        // but often 'require' is needed if it's CJS.
-        // BETTER: Use a proven polyfill pattern or the feross/buffer specifically built for browser.
-    </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/buffer/6.0.3/buffer.min.js"></script>
     <script>
-        // Ensure Buffer is globally available
+        console.log("Setting up Polyfills...");
+
+        // Define Process Environment for Zoom SDK
+        window.process = {
+            env: { NODE_ENV: 'production' },
+            browser: true,
+            nextTick: function (cb) { setTimeout(cb, 0); }
+        };
+
+        // Attach Buffer to Window
         if (window.buffer && window.buffer.Buffer) {
             window.Buffer = window.buffer.Buffer;
         } else if (typeof Buffer !== 'undefined') {
             window.Buffer = Buffer;
         } else {
-            console.error("Buffer failed to load from CDN.");
+            console.warn("Buffer not found in global scope. Waiting for script load...");
         }
-        console.log("Buffer Status:", typeof window.Buffer);
-
-        window.process = { env: { NODE_ENV: 'production' }, browser: true, nextTick: function (cb) { setTimeout(cb, 0); } };
-
-        // Robust Buffer Assignment
-        if (typeof window.Buffer === 'undefined') {
-            if (typeof window.buffer !== 'undefined' && window.buffer.Buffer) {
-                window.Buffer = window.buffer.Buffer;
-            } else if (typeof window.buffer !== 'undefined') {
-                window.Buffer = window.buffer;
-            } else {
-                console.warn("Buffer library not loaded correctly. Creating simple shim...");
-                window.Buffer = {
-                    isBuffer: function () { return false; },
-                    from: function (data) { return new Uint8Array(data); },
-                    alloc: function (size) { return new Uint8Array(size); },
-                    concat: function (list) {
-                        var length = list.reduce(function (acc, curr) { return acc + curr.length; }, 0);
-                        var result = new Uint8Array(length);
-                        var offset = 0;
-                        list.forEach(function (item) {
-                            result.set(item, offset);
-                            offset += item.length;
-                        });
-                        return result;
-                    }
-                };
-            }
-        }
-        console.log("Final Buffer status:", !!window.Buffer, typeof window.Buffer);
     </script>
 
     <!-- Zoom Dependencies (3.6.0) -->
