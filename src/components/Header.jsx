@@ -7,6 +7,9 @@ import Avatar from '../components/Avatar'; // ✅ Import Avatar
 // 👇 1. Import your new Logo here
 import logo from '../assets/navigreat-feather-logo.png';
 
+import { signOut } from 'firebase/auth';
+import { auth } from '../firebaseConfig';
+
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -36,7 +39,13 @@ const Header = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    try {
+      await signOut(auth); // ✅ Ensure Firebase session is cleared
+    } catch (error) {
+      console.error("Firebase Logout Error:", error);
+    }
+
     localStorage.removeItem('userData');
     localStorage.removeItem('token');
     setUser(null);

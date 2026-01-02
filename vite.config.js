@@ -29,8 +29,8 @@ export default defineConfig(({ command }) => ({
     },
     headers: {
       // ⚠️ Commented out to prevent "Blocked by Response" error for Zoom assets
-      "Cross-Origin-Embedder-Policy": "require-corp",
-      "Cross-Origin-Opener-Policy": "same-origin",
+      // "Cross-Origin-Embedder-Policy": "require-corp",
+      "Cross-Origin-Opener-Policy": "unsafe-none",
     },
   },
 }));// forced restart timestamp: 123456

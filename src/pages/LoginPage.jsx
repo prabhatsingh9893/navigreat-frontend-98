@@ -6,11 +6,19 @@ import toast from 'react-hot-toast';
 import { API_BASE_URL } from '../config';
 
 // Simple Loader Component for internal use
-const ProcessingOverlay = ({ text }) => (
+const ProcessingOverlay = ({ text, onCancel }) => (
   <div className="fixed inset-0 bg-white/90 z-50 flex flex-col items-center justify-center p-4">
     <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-600 mb-4"></div>
     <h3 className="text-xl font-semibold text-gray-800">{text}</h3>
     <p className="text-sm text-gray-500 mt-2">Please wait while we secure your session...</p>
+    {onCancel && (
+      <button
+        onClick={onCancel}
+        className="mt-6 text-sm text-red-500 hover:text-red-700 font-medium underline"
+      >
+        Cancel Request
+      </button>
+    )}
   </div>
 );
 
@@ -130,37 +138,39 @@ function LoginPage() {
     }
   };
 
-  // --- 2. Google Login (Mobile = Redirect, Desktop = Popup) ---
+  // --- 2. Google Login (Preferred: Popup, Fallback: Redirect) ---
   const handleGoogleLogin = async () => {
+    setStatusMessage("Connecting to Google...");
     try {
-      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-
-      if (isMobile) {
-        setVerifying(true);
-        setStatusMessage("Redirecting to Google...");
-        await signInWithRedirect(auth, provider);
-        // Result will be handled by useEffect on page reload
-      } else {
-        const result = await signInWithPopup(auth, provider);
-        verifyWithBackend(result.user);
-      }
+      // Attempt Popup Login for ALL devices first (Works better than Redirect on many modern mobile browsers)
+      const result = await signInWithPopup(auth, provider);
+      verifyWithBackend(result.user);
 
     } catch (error) {
-      setVerifying(false);
-      console.error("Google Login Error:", error);
+      console.error("Google Login Popup Error:", error);
 
-      // Fallback: If popup somehow runs and fails (e.g. tablet treated as desktop), try redirect
-      if (error.code === 'auth/popup-closed-by-user' || error.code === 'auth/popup-blocked') {
-        toast.loading("Popup failed, retrying with Redirect...");
-        await signInWithRedirect(auth, provider);
+      // Fallback: If popup is blocked (common on mobile) or closed specifically, try Redirect
+      if (error.code === 'auth/popup-blocked' || error.code === 'auth/popup-closed-by-user') {
+        try {
+          // Only show 'Redirecting' if we are actually switching strategy
+          setVerifying(true);
+          setStatusMessage("Redirecting to Google...");
+          await signInWithRedirect(auth, provider);
+          // Flow continues in useEffect after reload
+        } catch (redirectError) {
+          setVerifying(false);
+          console.error("Google Login Redirect Error:", redirectError);
+          toast.error("Login Failed: " + redirectError.message);
+        }
       } else {
-        toast.error("Login Failed: " + error.message);
+        setVerifying(false); // Reset if it wasn't a retriable error
+        toast.error("Login Error: " + error.message);
       }
     }
   };
 
   if (verifying) {
-    return <ProcessingOverlay text={statusMessage} />;
+    return <ProcessingOverlay text={statusMessage} onCancel={() => setVerifying(false)} />;
   }
 
   return (
