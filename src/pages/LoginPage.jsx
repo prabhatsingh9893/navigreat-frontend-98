@@ -62,21 +62,39 @@ function LoginPage() {
     }
   };
 
-  // --- 0. Handle Redirect Result (For Mobile Flow) ---
+  // --- 0. Handle Auth State (Robust Listener) ---
   useEffect(() => {
+    let isMounted = true;
+
+    // A. Check for Redirect Result (Primary for Redirect Flow)
     const checkRedirect = async () => {
       try {
         const result = await getRedirectResult(auth);
         if (result && result.user) {
-          console.log("[vLoginFinal] Redirect Success:", result.user);
-          verifyWithBackend(result.user);
+          console.log("[vAuth] Redirect Success:", result.user);
+          if (isMounted) verifyWithBackend(result.user);
         }
       } catch (error) {
-        console.error("[vLoginFinal] Redirect Error:", error);
+        console.error("[vAuth] Redirect Error:", error);
         toast.error("Mobile Login Error: " + error.message);
       }
     };
     checkRedirect();
+
+    // B. Listen for Auth Changes (Backup for when RedirectResult is lost but Session exists)
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user) {
+        console.log("[vAuth] Auth State Changed - User Detected:", user.email);
+        if (isMounted) verifyWithBackend(user);
+      } else {
+        console.log("[vAuth] No User Session Found");
+      }
+    });
+
+    return () => {
+      isMounted = false;
+      unsubscribe();
+    };
   }, []);
 
   const handleChange = (e) => {
