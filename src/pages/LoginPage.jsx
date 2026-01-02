@@ -90,27 +90,30 @@ function LoginPage() {
     }
   };
 
-  // --- 2. Google Login (Robust: Try Popup, Fallback to Redirect) ---
+  // --- 2. Google Login (Mobile = Redirect, Desktop = Popup) ---
   const handleGoogleLogin = async () => {
     try {
-      // Attempt 1: Try Popup first (Better UX for Desktop)
-      const result = await signInWithPopup(auth, provider);
-      verifyWithBackend(result.user);
-    } catch (error) {
-      console.warn("Popup failed, switching to Redirect method...", error);
+      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
-      // Attempt 2: If Popup fails (Mobile/Blocked), Try Redirect
-      if (error.code === 'auth/popup-closed-by-user' || error.code === 'auth/popup-blocked' || error.code === 'auth/cancelled-popup-request') {
-        try {
-          toast.loading("Redirecting to Google...");
-          await signInWithRedirect(auth, provider);
-          // Result handled in useEffect
-        } catch (redirectError) {
-          console.error("Redirect Login Error:", redirectError);
-          toast.error("Login Failed: " + redirectError.message);
-        }
+      if (isMobile) {
+        console.log("Mobile detected: Using Redirect (no popup)");
+        toast.loading("Redirecting to Google...");
+        await signInWithRedirect(auth, provider);
+        // Result will be handled by useEffect on page reload
       } else {
-        toast.error("Login Error: " + error.message);
+        console.log("Desktop detected: Using Popup");
+        const result = await signInWithPopup(auth, provider);
+        verifyWithBackend(result.user);
+      }
+
+    } catch (error) {
+      console.error("Google Login Error:", error);
+      // Fallback: If popup somehow runs and fails (e.g. tablet treated as desktop), try redirect
+      if (error.code === 'auth/popup-closed-by-user' || error.code === 'auth/popup-blocked') {
+        toast.loading("Retrying with Redirect...");
+        await signInWithRedirect(auth, provider);
+      } else {
+        toast.error("Login Failed: " + error.message);
       }
     }
   };
