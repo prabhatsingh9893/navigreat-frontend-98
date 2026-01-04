@@ -8,19 +8,22 @@ import ScreenRecorder from '../components/ScreenRecorder';
 const LiveSession = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  // Capture state ONCE on mount to ensure stability even if history is cleared
+  const [sessionState] = useState(location.state || {});
   const [meetingUrl, setMeetingUrl] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const role = location.state?.role || 0;
-  const username = location.state?.username || "Student";
-  const rawMeetingNumber = location.state?.meetingNumber || "";
-  // यह String है (जैसे "123456")
+  const role = sessionState.role || 0;
+  const username = sessionState.username || "Student";
+  const rawMeetingNumber = sessionState.meetingNumber || "";
   const meetingNumber = rawMeetingNumber.replace(/[^0-9]/g, '');
-  const passWord = location.state?.passWord || "";
+  const passWord = sessionState.passWord || "";
 
   useEffect(() => {
+    // If details are missing from the captured state, redirect immediately
     if (!meetingNumber || !passWord) {
-      toast.error("Invalid Meeting Details");
+      console.warn("Missing meeting details in session state.");
+      // Small delay to allow toast to render if needed, or just redirect
       navigate('/dashboard');
       return;
     }
@@ -35,7 +38,6 @@ const LiveSession = () => {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${localStorage.getItem('token')}`
           },
-          // 👇 CHANGE HERE: meetingNumber को parseInt करके भेजें (String -> Number)
           body: JSON.stringify({
             meetingNumber: parseInt(meetingNumber, 10),
             role
@@ -48,11 +50,14 @@ const LiveSession = () => {
           const leaveUrl = window.location.origin + '/dashboard?meeting_ended=true';
           const sdkKey = import.meta.env.VITE_ZOOM_CLIENT_ID;
 
-          // Construct the isolated meeting URL
-          // URL में String ही रहने दें, वहां कोई दिक्कत नहीं है
           const url = `/meeting.html?mn=${meetingNumber}&pwd=${passWord}&sig=${encodeURIComponent(data.signature)}&sdkKey=${sdkKey}&name=${encodeURIComponent(username)}&leaveUrl=${encodeURIComponent(leaveUrl)}`;
           setMeetingUrl(url);
           setLoading(false);
+
+          // ✅ SECURITY: Clear Browser History State
+          // This prevents the user from refreshing and auto-rejoining with the same credentials.
+          // We use window.history directly to avoid React Router re-triggering location hooks.
+          window.history.replaceState({}, document.title);
         } else {
           toast.error("Signature Missing");
           console.error("Backend Response:", data);
@@ -66,6 +71,7 @@ const LiveSession = () => {
     };
 
     generateSignature();
+    // Depend ONLY on the captured sessionState values, not location.state
   }, [meetingNumber, passWord, role, username, navigate]);
 
   return (

@@ -3,6 +3,11 @@ import React, { useState } from 'react';
 const Avatar = ({ src, name, size = "w-10 h-10", fontSize = "text-lg", className = "" }) => {
     const [error, setError] = useState(false);
 
+    // Reset error when src changes so we try to load the new image
+    React.useEffect(() => {
+        setError(false);
+    }, [src]);
+
     // If no source or image failed to load (COEP/404), show visuals
     if (!src || error) {
         // Generate consistent color based on name length
