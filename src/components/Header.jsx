@@ -20,13 +20,24 @@ const Header = () => {
   const dropdownRef = useRef(null);
 
   useEffect(() => {
-    const storedUser = localStorage.getItem('userData');
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    } else {
-      setUser(null);
-    }
-    setIsDropdownOpen(false);
+    const updateHeaderUser = () => {
+      const storedUser = localStorage.getItem('userData');
+      if (storedUser) {
+        setUser(JSON.parse(storedUser));
+      } else {
+        setUser(null);
+      }
+    };
+
+    // Initial check
+    updateHeaderUser();
+
+    // Listen for custom event
+    window.addEventListener('userUpdated', updateHeaderUser);
+
+    return () => {
+      window.removeEventListener('userUpdated', updateHeaderUser);
+    };
   }, [location]);
 
   useEffect(() => {

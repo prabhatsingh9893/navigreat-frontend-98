@@ -12,6 +12,7 @@ import ReviewModal from '../components/ReviewModal'; // ✅ Import ReviewModal
 
 // API URL Constant
 import { API_BASE_URL } from '../config';
+import { uploadToCloudinary } from '../utils/upload'; // ✅ Import Upload Utility
 
 const DashboardPage = () => {
     const navigate = useNavigate();
@@ -175,8 +176,16 @@ const DashboardPage = () => {
 
         // Combine Date and Time
         const startDateTime = new Date(`${schedule.date}T${schedule.startTime}`);
+        const now = new Date();
+
+        if (startDateTime < now) {
+            toast.error("Cannot schedule classes in the past!");
+            return;
+        }
+
         // Calculate End Time
-        const endDateTime = new Date(startDateTime.getTime() + schedule.duration * 60000);
+        const durationMinutes = parseInt(schedule.duration) || 60;
+        const endDateTime = new Date(startDateTime.getTime() + durationMinutes * 60000);
 
         const loadingToast = toast.loading("Scheduling Class...");
 
@@ -210,15 +219,52 @@ const DashboardPage = () => {
         }
     };
 
+    const [selectedFile, setSelectedFile] = useState(null); // ✅ Store file for simple upload
+
     const handleSaveProfile = async () => {
         const loadingToast = toast.loading("Saving Profile...");
         try {
-            await updateBackend(editForm);
-            setProfile({ ...profile, ...editForm });
+            let imageUrl = editForm.image;
+
+            // 1. Upload to Cloudinary if new file selected
+            if (selectedFile) {
+                try {
+                    const uploadResult = await uploadToCloudinary(selectedFile);
+                    imageUrl = uploadResult.url;
+                } catch (err) {
+                    console.error("Upload failed", err);
+                    toast.error("Image upload failed");
+                    toast.dismiss(loadingToast);
+                    return;
+                }
+            }
+
+            const updatedData = { ...editForm, image: imageUrl };
+
+            // 2. Update Backend
+            await updateBackend(updatedData);
+
+            // 3. Update Local State
+            setProfile(updatedData);
+            setUser(prev => ({ ...prev, ...updatedData })); // Update user state
             setIsEditing(false);
+            setSelectedFile(null); // Clear selected file
+
+            // 4. Update LocalStorage & Notify Header
+            const storedUser = JSON.parse(localStorage.getItem('userData') || '{}');
+            const newUserData = { ...storedUser, ...updatedData };
+            localStorage.setItem('userData', JSON.stringify(newUserData));
+
+            // Dispatch custom event for Header to pick up changes
+            window.dispatchEvent(new Event('userUpdated'));
+
             toast.dismiss(loadingToast);
             toast.success("Profile Updated!");
-        } catch (error) { toast.dismiss(loadingToast); }
+        } catch (error) {
+            console.error(error);
+            toast.dismiss(loadingToast);
+            toast.error("Update failed");
+        }
     };
 
     const handleSaveZoom = async () => {
@@ -250,9 +296,11 @@ const DashboardPage = () => {
         const file = e.target.files[0];
         if (file) {
             if (file.size > 5000000) { toast.error("Max 5MB"); return; }
+            setSelectedFile(file); // ✅ Store file for upload
+
             const reader = new FileReader();
             reader.readAsDataURL(file);
-            reader.onloadend = () => setEditForm({ ...editForm, image: reader.result });
+            reader.onloadend = () => setEditForm(prev => ({ ...prev, image: reader.result }));
         }
     };
 
