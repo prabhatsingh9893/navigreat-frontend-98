@@ -14,6 +14,8 @@ function MentorSignupPage() {
     role: 'mentor'
   });
 
+  const [selectedFile, setSelectedFile] = useState(null);
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -26,11 +28,23 @@ function MentorSignupPage() {
       return;
     }
 
+    // Create FormData for file upload
+    const data = new FormData();
+    data.append('username', formData.username);
+    data.append('email', formData.email);
+    data.append('password', formData.password);
+    data.append('college', formData.college);
+    data.append('branch', formData.branch);
+    data.append('role', 'mentor');
+    if (selectedFile) {
+      data.append('image', selectedFile);
+    }
+
     try {
       const response = await fetch(`${API_BASE_URL}/auth/register`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        // Headers are automatically set for FormData
+        body: data,
       });
 
       const data = await response.json();
@@ -68,6 +82,18 @@ function MentorSignupPage() {
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
           <form className="space-y-6" onSubmit={handleSubmit}>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Profile Photo</label>
+              <div className="mt-1 flex items-center">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => setSelectedFile(e.target.files[0])}
+                  className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                />
+              </div>
+            </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700">Full Name</label>
