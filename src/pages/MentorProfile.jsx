@@ -2,8 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
     CheckCircle, Video, Share2, MessageSquare, Zap,
-    Briefcase, Calendar, Clock, Star, Radio
+    Briefcase, Calendar, Clock, Radio, MapPin,
+    ExternalLink, ArrowLeft
 } from 'lucide-react';
+import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
 import { API_BASE_URL } from '../config';
 
@@ -20,8 +22,6 @@ const MentorProfile = () => {
     const [mentor, setMentor] = useState(null);
     const [loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState('about');
-
-    // ✅ STATE: Live Status & Real Database Sessions
     const [isLiveNow, setIsLiveNow] = useState(false);
     const [sessions, setSessions] = useState([]);
     const [lectures, setLectures] = useState([]);
@@ -35,7 +35,6 @@ const MentorProfile = () => {
                 // A. Fetch Mentor Profile
                 const mRes = await fetch(`${API_BASE_URL}/mentors/${id}`);
 
-                // Check if mentor request failed
                 if (!mRes.ok) {
                     console.error("Mentor fetch failed with status:", mRes.status);
                     setLoading(false);
@@ -45,14 +44,11 @@ const MentorProfile = () => {
                 const mData = await mRes.json();
                 if (mData.success) setMentor(mData.mentor || mData.user);
 
-                // B. ✅ FETCH REAL SESSIONS (SAFE CHECK ADDED)
+                // B. Fetch Real Sessions
                 try {
                     const sRes = await fetch(`${API_BASE_URL}/sessions/${id}`);
-
-                    // 🛑 SAFETY CHECK: Only parse JSON if status is OK (200-299)
                     if (sRes.ok) {
                         const sData = await sRes.json();
-
                         if (sData.success && Array.isArray(sData.sessions)) {
                             const formattedSessions = sData.sessions.map(session => ({
                                 ...session,
@@ -62,12 +58,11 @@ const MentorProfile = () => {
                             setSessions(formattedSessions);
                         }
                     } else {
-                        // If 404 or 500 error, just log warning and keep sessions empty
                         console.warn(`Sessions API endpoint not found (Status: ${sRes.status}). Showing empty schedule.`);
                         setSessions([]);
                     }
 
-                    // C. ✅ FETCH LECTURES
+                    // C. Fetch Lectures
                     const lRes = await fetch(`${API_BASE_URL}/lectures/${id}`);
                     if (lRes.ok) {
                         const lData = await lRes.json();
@@ -76,7 +71,7 @@ const MentorProfile = () => {
 
                 } catch (sessionErr) {
                     console.error("Error parsing session data:", sessionErr);
-                    setSessions([]); // Fallback to empty list
+                    setSessions([]);
                 }
 
             } catch (err) {
@@ -89,39 +84,27 @@ const MentorProfile = () => {
         fetchData();
     }, [id]);
 
-    // --- 2. ⏰ REAL TIME LIVE CHECK (With 30 Min Buffer) ---
+    // --- 2. Live Check ---
     useEffect(() => {
         const checkLiveStatus = () => {
             if (sessions.length === 0) return;
-
-            const now = new Date(); // Current Time
-
+            const now = new Date();
             const foundLiveSession = sessions.find(session => {
                 const start = new Date(session.startTime);
                 const end = new Date(session.endTime);
-
-                // ✅ 5 Minute Buffer Logic (Actually Live)
                 const startBuffer = 5 * 60 * 1000;
                 const endBuffer = 10 * 60 * 1000;
-
                 const bufferStart = new Date(start.getTime() - startBuffer);
                 const bufferEnd = new Date(end.getTime() + endBuffer);
-
                 return now >= bufferStart && now <= bufferEnd;
             });
-
-            const status = !!foundLiveSession;
-
-            // Fix: Simply update value. Effect below handles Toast.
-            setIsLiveNow(status);
+            setIsLiveNow(!!foundLiveSession);
         };
-
         checkLiveStatus();
         const intervalId = setInterval(checkLiveStatus, 1000);
         return () => clearInterval(intervalId);
     }, [sessions]);
 
-    // ✅ FIX: Toast Logic in Separate Effect
     useEffect(() => {
         if (isLiveNow) {
             toast.success("🔴 Class is LIVE! Join now.", { id: 'live-toast' });
@@ -157,7 +140,7 @@ const MentorProfile = () => {
 
             const data = await res.json();
             if (res.ok) {
-                toast.success(data.message || "Booking request sent! Redirecting to Dashboard...");
+                toast.success(data.message || "Booking request sent! Redirecting...");
                 setTimeout(() => navigate('/dashboard'), 2000);
             } else {
                 toast.error(data.message || "Booking failed");
@@ -181,159 +164,229 @@ const MentorProfile = () => {
     if (!mentor) return <div className="text-center py-20 text-red-500 font-bold">Mentor Not Found</div>;
 
     return (
-        <div className="bg-[#F8FAFC] min-h-screen">
+        <div className="bg-white min-h-screen relative font-sans">
 
-            {/* HEADER */}
-            <div className="h-52 md:h-64 relative bg-slate-900 overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-r from-blue-900 to-slate-900"></div>
-                <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
+            {/* Header / Cover */}
+            <div className="h-96 relative bg-slate-900 overflow-hidden">
+                <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80')] bg-cover bg-center opacity-30"></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/60 to-transparent"></div>
+
+                <div className="absolute top-8 left-8 z-30">
+                    <button onClick={() => navigate('/mentors')} className="flex items-center gap-2 text-white/80 hover:text-white transition font-medium bg-black/20 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 hover:bg-black/30">
+                        <ArrowLeft size={18} /> Back to Mentors
+                    </button>
+                </div>
             </div>
 
-            <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 -mt-20 relative z-10 pb-20">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-40 relative z-10 pb-20">
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
 
                     {/* === LEFT SIDEBAR === */}
-                    <div className="lg:col-span-4 flex flex-col items-center">
-
-                        {/* --- IMAGE & LIVE RING --- */}
-                        <div className="relative w-32 h-32 mb-4 z-20 cursor-pointer" onClick={isLiveNow ? handleJoinClass : null}>
-                            <div className={`p-1 rounded-full h-full w-full bg-white ${isLiveNow ? 'ring-4 ring-red-500 ring-offset-4 ring-offset-slate-50 animate-pulse' : 'shadow-md'}`}>
-                                <img
-                                    src={mentor.image || `https://api.dicebear.com/7.x/initials/svg?seed=${mentor.username}&size=512`}
-                                    alt={mentor.username}
-                                    className="w-full h-full rounded-full object-cover border-[3px] border-white"
-                                />
-                            </div>
-                            {isLiveNow ? (
-                                <div className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 bg-red-600 text-white px-3 py-0.5 rounded-full text-[10px] font-bold border-2 border-white tracking-wider shadow-sm animate-bounce">LIVE</div>
-                            ) : (
-                                <div className="absolute bottom-1 right-1 bg-green-500 text-white p-1 rounded-full border-[3px] border-white shadow-sm"><CheckCircle size={14} fill="currentColor" /></div>
+                    <div className="lg:col-span-4 flex flex-col">
+                        <motion.div
+                            initial={{ opacity: 0, y: 30 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.5 }}
+                            className="bg-white rounded-3xl shadow-xl shadow-slate-200/50 p-6 border border-slate-100 relative overflow-hidden"
+                        >
+                            {/* LIVE Indicator */}
+                            {isLiveNow && (
+                                <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-red-500 to-pink-500 animate-pulse"></div>
                             )}
-                        </div>
 
-                        <div className="text-center mb-6 w-full">
-                            <h1 className="text-3xl font-extrabold text-gray-900 capitalize mb-1 leading-tight">{mentor.username}</h1>
-                            <p className="text-sm font-medium text-slate-500 flex justify-center items-center gap-1 mb-3">{mentor.college}</p>
-                        </div>
+                            <div className="flex flex-col items-center text-center">
+                                {/* Image Ring */}
+                                <div className="relative w-40 h-40 mb-5 z-20 cursor-pointer" onClick={isLiveNow ? handleJoinClass : null}>
+                                    <div className={`p-1.5 rounded-full h-full w-full bg-white ${isLiveNow ? 'ring-4 ring-red-500 ring-offset-4 ring-offset-white animate-pulse' : 'ring-1 ring-slate-100 shadow-lg'}`}>
+                                        <img
+                                            src={mentor.image || `https://api.dicebear.com/7.x/initials/svg?seed=${mentor.username}&size=512`}
+                                            alt={mentor.username}
+                                            className="w-full h-full rounded-full object-cover"
+                                        />
+                                    </div>
+                                    {isLiveNow ? (
+                                        <div className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 bg-red-600 text-white px-3 py-1 rounded-full text-[10px] font-bold border-4 border-white tracking-widest shadow-lg animate-bounce uppercase">LIVE NOW</div>
+                                    ) : (
+                                        <div className="absolute bottom-2 right-2 bg-green-500 text-white p-1.5 rounded-full border-4 border-white shadow-md"><CheckCircle size={16} fill="currentColor" /></div>
+                                    )}
+                                </div>
 
-                        {/* --- BUTTONS --- */}
-                        <div className="bg-white w-full rounded-3xl shadow-xl shadow-gray-200/50 p-6 border border-gray-100">
-                            <div className="space-y-3 mb-4">
-                                {isLiveNow ? (
-                                    <button onClick={handleJoinClass} className="w-full bg-red-600 text-white py-3.5 rounded-xl font-bold hover:bg-red-700 shadow-lg shadow-red-200 flex items-center justify-center gap-2 animate-pulse">
-                                        <Radio size={20} className="animate-ping absolute inline-flex opacity-75" />
-                                        <Radio size={20} className="relative inline-flex" /> JOIN LIVE CLASS
+                                <h1 className="text-3xl font-extrabold text-slate-900 capitalize mb-2">{mentor.username}</h1>
+
+                                <div className="flex items-center justify-center gap-2 mb-6">
+                                    <span className="px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-bold border border-blue-100 flex items-center gap-1">
+                                        <Briefcase size={12} /> {mentor.role || "Mentor"}
+                                    </span>
+                                    <span className="px-3 py-1 rounded-full bg-purple-50 text-purple-700 text-xs font-bold border border-purple-100 flex items-center gap-1">
+                                        <MapPin size={12} /> {mentor.college?.split(',')[0]}
+                                    </span>
+                                </div>
+
+                                <div className="w-full space-y-3">
+                                    {isLiveNow ? (
+                                        <button onClick={handleJoinClass} className="w-full bg-red-600 text-white py-4 rounded-xl font-bold hover:bg-red-700 shadow-lg shadow-red-200 flex items-center justify-center gap-2 animate-pulse relative overflow-hidden group">
+                                            <div className="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
+                                            <Radio size={20} className="animate-ping absolute inline-flex opacity-75" />
+                                            <Radio size={20} className="relative inline-flex" /> JOIN LIVE CLASS
+                                        </button>
+                                    ) : (
+                                        <>
+                                            {sessions.filter(s => new Date(s.startTime) > new Date()).sort((a, b) => new Date(a.startTime) - new Date(b.startTime))[0] ? (
+                                                <div className="w-full bg-slate-50 border border-slate-200 p-4 rounded-xl flex flex-col items-center justify-center gap-1">
+                                                    <div className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-1 flex items-center gap-1.5">
+                                                        <Calendar size={12} /> Next Session
+                                                    </div>
+                                                    <div className="text-xl font-bold text-slate-800">
+                                                        {new Date(sessions.filter(s => new Date(s.startTime) > new Date()).sort((a, b) => new Date(a.startTime) - new Date(b.startTime))[0].startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                                    </div>
+                                                    <div className="text-sm font-medium text-blue-600">
+                                                        {new Date(sessions.filter(s => new Date(s.startTime) > new Date()).sort((a, b) => new Date(a.startTime) - new Date(b.startTime))[0].startTime).toLocaleDateString([], { month: 'long', day: 'numeric', weekday: 'short' })}
+                                                    </div>
+                                                </div>
+                                            ) : (
+                                                <button onClick={handleBookSession} className="w-full bg-slate-900 text-white py-4 rounded-xl font-bold hover:bg-black transition shadow-xl shadow-slate-200 flex items-center justify-center gap-2 group">
+                                                    <Zap size={18} className="text-yellow-400 group-hover:scale-110 transition" /> Book Priority Session
+                                                </button>
+                                            )}
+                                        </>
+                                    )}
+                                    <button onClick={() => navigate(`/chat/${mentor._id}`)} className="w-full bg-white border-2 border-slate-100 text-slate-600 py-3.5 rounded-xl font-bold hover:border-blue-500 hover:text-blue-600 transition flex items-center justify-center gap-2">
+                                        <MessageSquare size={18} /> Chat with Mentor
                                     </button>
-                                ) : (
-                                    <>
-                                        {/* ✅ Show Next Class Time if available */}
-                                        {sessions.filter(s => new Date(s.startTime) > new Date()).sort((a, b) => new Date(a.startTime) - new Date(b.startTime))[0] ? (
-                                            <div className="w-full bg-blue-50 border border-blue-200 text-blue-800 py-3.5 rounded-xl font-bold flex flex-col items-center justify-center gap-1 shadow-sm">
-                                                <div className="flex items-center gap-2 text-xs uppercase tracking-widest opacity-70">
-                                                    <Calendar size={14} /> Next Live Class
-                                                </div>
-                                                <div className="text-xl">
-                                                    {new Date(sessions.filter(s => new Date(s.startTime) > new Date()).sort((a, b) => new Date(a.startTime) - new Date(b.startTime))[0].startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                                                    <span className="text-sm ml-1 font-normal text-blue-600">
-                                                        ({new Date(sessions.filter(s => new Date(s.startTime) > new Date()).sort((a, b) => new Date(a.startTime) - new Date(b.startTime))[0].startTime).toLocaleDateString([], { month: 'short', day: 'numeric' })})
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        ) : (
-                                            <button onClick={handleBookSession} className="w-full bg-slate-900 text-white py-3.5 rounded-xl font-bold hover:bg-black transition shadow-lg flex items-center justify-center gap-2">
-                                                <Zap size={18} className="text-yellow-400" /> Book Priority Session
-                                            </button>
-                                        )}
-                                    </>
-                                )}
-                                <button onClick={() => navigate(`/chat/${mentor._id}`)} className="w-full border border-slate-200 text-slate-700 py-3.5 rounded-xl font-bold hover:bg-slate-50 transition flex items-center justify-center gap-2">
-                                    <MessageSquare size={18} /> Chat with Mentor
-                                </button>
+                                    <button className="w-full bg-white border-2 border-slate-100 text-slate-600 py-3.5 rounded-xl font-bold hover:border-purple-500 hover:text-purple-600 transition flex items-center justify-center gap-2">
+                                        <Share2 size={18} /> Share Profile
+                                    </button>
+                                </div>
                             </div>
-                        </div>
+                        </motion.div>
+
+                        {/* Quick Stats */}
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.2, duration: 0.5 }}
+                            className="mt-6 grid grid-cols-2 gap-4"
+                        >
+                            <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm text-center">
+                                <div className="text-2xl font-extrabold text-blue-600">{lectures.length}</div>
+                                <div className="text-xs text-slate-400 font-bold uppercase tracking-wider">Lectures</div>
+                            </div>
+                            <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm text-center">
+                                <div className="text-2xl font-extrabold text-purple-600">4.9</div>
+                                <div className="text-xs text-slate-400 font-bold uppercase tracking-wider">Rating</div>
+                            </div>
+                        </motion.div>
                     </div>
 
                     {/* === RIGHT CONTENT === */}
-                    <div className="lg:col-span-8 pt-4 lg:pt-0">
-
-                        {/* --- LIVE BANNER --- */}
+                    <div className="lg:col-span-8">
+                        {/* Live Banner Mobile */}
                         {isLiveNow && (
-                            <div className="bg-gradient-to-r from-red-500 to-pink-600 rounded-2xl p-1 mb-6 shadow-lg shadow-red-200 animate-in fade-in slide-in-from-top-4 duration-500">
-                                <div className="bg-white rounded-xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-                                    <div className="flex items-center gap-4">
-                                        <div className="bg-red-50 p-3 rounded-full text-red-600"><Video size={24} /></div>
-                                        <div><h3 className="font-bold text-gray-900 text-lg">Live Session Active!</h3><p className="text-slate-500 text-sm">Session started. Join {mentor.username} now.</p></div>
+                            <div className="bg-gradient-to-r from-red-600 to-orange-600 rounded-2xl p-1 mb-6 shadow-xl shadow-red-200 animate-in slide-in-from-top-4 duration-500 lg:hidden">
+                                <div className="bg-white rounded-xl p-4 flex flex-row items-center justify-between gap-4">
+                                    <div className="flex items-center gap-3">
+                                        <div className="bg-red-50 p-2.5 rounded-full text-red-600 animate-pulse"><Video size={20} /></div>
+                                        <div><h3 className="font-bold text-gray-900 text-sm">Live Session Active!</h3></div>
                                     </div>
-                                    <button onClick={handleJoinClass} className="bg-red-600 text-white px-6 py-2.5 rounded-lg font-bold hover:bg-red-700 transition w-full sm:w-auto shadow-md">Join Now</button>
+                                    <button onClick={handleJoinClass} className="bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-bold shadow-md">Join</button>
                                 </div>
                             </div>
                         )}
 
-                        <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-8 min-h-[400px]">
-                            {activeTab === 'about' ? (
-                                <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                        <motion.div
+                            initial={{ opacity: 0, x: 20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ duration: 0.5 }}
+                            className="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden min-h-[600px]"
+                        >
+                            <div className="p-8">
+                                <div className="flex flex-col space-y-8">
 
-                                    {/* SCHEDULE LIST */}
-                                    <div className="border border-blue-100 bg-blue-50/30 rounded-2xl p-5">
-                                        <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-3 flex items-center gap-2"><Calendar size={16} /> Upcoming Schedule</h3>
-
-                                        {sessions.filter(s => new Date(s.endTime) > new Date()).length === 0 ? (
-                                            <p className="text-gray-400 text-center italic py-4">
-                                                No upcoming sessions found for this mentor.
+                                    {/* About Section */}
+                                    <div>
+                                        <h3 className="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
+                                            <div className="p-2 bg-blue-50 rounded-lg text-blue-600"><User size={20} /></div>
+                                            About Me
+                                        </h3>
+                                        <div className="bg-slate-50/50 p-6 rounded-2xl border border-slate-100">
+                                            <p className="text-slate-600 leading-8 text-lg whitespace-pre-wrap font-medium">
+                                                {mentor.about || "No bio added yet."}
                                             </p>
-                                        ) : (
-                                            <div className="space-y-3">
-                                                {sessions.filter(s => new Date(s.endTime) > new Date()).map((session) => {
-                                                    const now = new Date();
-                                                    const start = new Date(session.startTime);
-                                                    const end = new Date(session.endTime);
+                                        </div>
+                                    </div>
 
-                                                    // Formatting Time for Display
-                                                    const timeString = start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-                                                    const dateString = start.toLocaleDateString([], { month: 'short', day: 'numeric' });
+                                    {/* Schedule Section */}
+                                    <div>
+                                        <h3 className="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
+                                            <div className="p-2 bg-purple-50 rounded-lg text-purple-600"><Calendar size={20} /></div>
+                                            Upcoming Schedule
+                                        </h3>
 
-                                                    // Check if specifically this session is live
-                                                    const startBuffer = 5 * 60 * 1000;
-                                                    const endBuffer = 10 * 60 * 1000;
-                                                    const isSessionLive = now >= new Date(start.getTime() - startBuffer) && now <= new Date(end.getTime() + endBuffer);
+                                        <div className="relative">
+                                            {/* Timeline Line */}
+                                            <div className="absolute left-4 top-4 bottom-4 w-0.5 bg-slate-100"></div>
 
-                                                    return (
-                                                        <div key={session._id || session.id} className={`flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 bg-white p-4 rounded-xl border ${isSessionLive ? 'border-red-200 bg-red-50/50' : 'border-gray-100'} shadow-sm`}>
-                                                            <div className="flex items-center gap-3 w-full">
-                                                                <div className={`p-2 rounded-full flex-shrink-0 ${isSessionLive ? 'bg-red-100 text-red-600' : 'bg-gray-100 text-gray-500'}`}>
-                                                                    {isSessionLive ? <Video size={20} /> : <Clock size={20} />}
-                                                                </div>
-                                                                <div className="min-w-0">
-                                                                    <h4 className="font-bold text-gray-800 break-words">{session.title}</h4>
-                                                                    <p className={`text-xs font-bold uppercase ${isSessionLive ? 'text-red-500' : 'text-gray-400'}`}>
-                                                                        {isSessionLive ? '🔴 Live Now' : `${dateString}, ${timeString}`}
-                                                                    </p>
+                                            {sessions.filter(s => new Date(s.endTime) > new Date()).length === 0 ? (
+                                                <div className="text-center py-10 bg-slate-50 rounded-2xl border border-dashed border-slate-200">
+                                                    <p className="text-slate-400 font-medium">No upcoming sessions scheduled.</p>
+                                                </div>
+                                            ) : (
+                                                <div className="space-y-4">
+                                                    {sessions.filter(s => new Date(s.endTime) > new Date()).map((session) => {
+                                                        const now = new Date();
+                                                        const start = new Date(session.startTime);
+                                                        const end = new Date(session.endTime);
+                                                        const timeString = start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                                                        const dateString = start.toLocaleDateString([], { month: 'short', day: 'numeric' });
+
+                                                        const startBuffer = 5 * 60 * 1000;
+                                                        const endBuffer = 10 * 60 * 1000;
+                                                        const isSessionLive = now >= new Date(start.getTime() - startBuffer) && now <= new Date(end.getTime() + endBuffer);
+
+                                                        return (
+                                                            <div key={session._id || session.id} className={`relative pl-12 transition-all hover:pl-14 duration-300 group`}>
+                                                                {/* Timeline Dot */}
+                                                                <div className={`absolute left-[11px] top-6 w-3 h-3 rounded-full border-2 border-white shadow-sm z-10 ${isSessionLive ? 'bg-red-500 animate-pulse ring-4 ring-red-100' : 'bg-blue-500'}`}></div>
+
+                                                                <div className={`bg-white p-5 rounded-2xl border ${isSessionLive ? 'border-red-200 shadow-red-100 ring-1 ring-red-100' : 'border-slate-100 hover:border-slate-300'} shadow-sm transition-all group-hover:shadow-md flex flex-col sm:flex-row sm:items-center justify-between gap-4`}>
+                                                                    <div>
+                                                                        <h4 className="font-bold text-slate-800 text-lg mb-1">{session.title}</h4>
+                                                                        <div className="flex items-center gap-3 text-sm">
+                                                                            <span className={`font-bold ${isSessionLive ? 'text-red-600' : 'text-slate-500'}`}>
+                                                                                {isSessionLive ? '🔴 HAPPENING NOW' : dateString}
+                                                                            </span>
+                                                                            {!isSessionLive && <span className="w-1 h-1 bg-slate-300 rounded-full"></span>}
+                                                                            {!isSessionLive && <span className="text-slate-400 font-medium">{timeString}</span>}
+                                                                        </div>
+                                                                    </div>
+                                                                    {isSessionLive && (
+                                                                        <button onClick={handleJoinClass} className="bg-red-600 text-white px-6 py-2.5 rounded-xl font-bold hover:bg-red-700 shadow-lg shadow-red-200 transition whitespace-nowrap">
+                                                                            Join Now
+                                                                        </button>
+                                                                    )}
                                                                 </div>
                                                             </div>
-                                                            {isSessionLive && <button onClick={handleJoinClass} className="w-full sm:w-auto px-4 py-2 rounded-lg text-sm font-bold bg-red-600 text-white hover:bg-red-700 shadow-md whitespace-nowrap">Join Class</button>}
-                                                        </div>
-                                                    );
-                                                })}
-                                            </div>
-                                        )}
+                                                        );
+                                                    })}
+                                                </div>
+                                            )}
+                                        </div>
                                     </div>
 
-                                    <div>
-                                        <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2"><Briefcase size={20} />About Me</h3>
-                                        <p className="text-gray-600 leading-8 text-lg whitespace-pre-wrap">{mentor.about || "No bio added yet."}</p>
-                                    </div>
-
-                                    {/* RECORDED SESSIONS / YOUTUBE SECTION */}
+                                    {/* Lectures Section */}
                                     {lectures.length > 0 && (
                                         <div>
-                                            <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2"><Video size={20} /> Recorded Sessions & Demos</h3>
-                                            <div className="grid md:grid-cols-2 gap-4">
+                                            <h3 className="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
+                                                <div className="p-2 bg-orange-50 rounded-lg text-orange-600"><Video size={20} /></div>
+                                                Recorded Sessions
+                                            </h3>
+                                            <div className="grid md:grid-cols-2 gap-6">
                                                 {lectures.map((lecture) => {
                                                     const videoId = getYouTubeID(lecture.url);
                                                     return (
-                                                        <div key={lecture._id} className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden group hover:shadow-md transition">
+                                                        <div key={lecture._id} className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden group hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
                                                             {videoId ? (
-                                                                <div className="relative aspect-video bg-black">
+                                                                <div className="relative aspect-video bg-black/5 group-hover:bg-black/0 transition">
                                                                     <iframe
                                                                         width="100%"
                                                                         height="100%"
@@ -342,17 +395,19 @@ const MentorProfile = () => {
                                                                         frameBorder="0"
                                                                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                                                         allowFullScreen
-                                                                        className="absolute inset-0"
+                                                                        className="absolute inset-0 pointer-events-none group-hover:pointer-events-auto"
                                                                     ></iframe>
                                                                 </div>
                                                             ) : (
-                                                                <div className="h-40 bg-gray-100 flex items-center justify-center text-gray-400">
+                                                                <div className="h-40 bg-slate-50 flex items-center justify-center text-slate-400 font-medium">
                                                                     Video Unavailable
                                                                 </div>
                                                             )}
-                                                            <div className="p-3">
-                                                                <h4 className="font-bold text-gray-800 text-sm line-clamp-2" title={lecture.title}>{lecture.title}</h4>
-                                                                <a href={lecture.url} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-600 mt-2 inline-block hover:underline">Watch on YouTube</a>
+                                                            <div className="p-4">
+                                                                <h4 className="font-bold text-slate-800 leading-snug line-clamp-2 mb-3 group-hover:text-blue-600 transition">{lecture.title}</h4>
+                                                                <a href={lecture.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-xs font-bold text-slate-400 hover:text-red-500 uppercase tracking-wide transition">
+                                                                    <ExternalLink size={12} /> Watch on YouTube
+                                                                </a>
                                                             </div>
                                                         </div>
                                                     );
@@ -360,12 +415,12 @@ const MentorProfile = () => {
                                             </div>
                                         </div>
                                     )}
+
                                 </div>
-                            ) : (
-                                <div>Resources go here...</div>
-                            )}
-                        </div>
+                            </div>
+                        </motion.div>
                     </div>
+
                 </div>
             </div>
         </div>
