@@ -77,11 +77,11 @@ const Header = () => {
 
   // Dynamic Header Classes
   // Dynamic Header Classes
-  const headerClasses = "fixed w-full z-50 transition-all duration-300 bg-white/90 backdrop-blur-md shadow-sm border-b border-gray-100 py-3";
+  const headerClasses = "fixed w-full z-50 transition-all duration-300 bg-white/90 backdrop-blur-md shadow-sm border-b border-gray-100 py-2";
 
   return (
     <header className={headerClasses}>
-      <div className="container mx-auto px-6 py-3 flex justify-between items-center">
+      <div className="container mx-auto px-6 py-1 flex justify-between items-center">
 
         {/* 👇 2. UPDATED LOGO SECTION */}
         <Link to="/" className="flex items-center gap-3 group">
@@ -89,7 +89,7 @@ const Header = () => {
           <img
             src={logo}
             alt="NaviGreat Logo"
-            className="h-16 w-auto object-contain group-hover:scale-105 transition duration-300 mix-blend-multiply brightness-110 contrast-125"
+            className="h-12 w-auto object-contain group-hover:scale-105 transition duration-300 mix-blend-multiply brightness-110 contrast-125"
           />
         </Link>
 
