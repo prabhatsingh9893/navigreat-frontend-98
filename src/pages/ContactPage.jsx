@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Mail, Phone, MapPin } from 'lucide-react';
 import { API_BASE_URL } from '../config';
+import PageTransition from '../components/PageTransition';
 
 function ContactPage() {
   const [formData, setFormData] = useState({
@@ -41,7 +42,7 @@ function ContactPage() {
   };
 
   return (
-    <div className="pt-28 pb-20 bg-white">
+    <PageTransition className="pt-28 pb-20 bg-white">
       <div className="container mx-auto px-6">
         <div className="text-center mb-20">
           <h1 className="text-5xl font-bold text-gray-900 mb-6">Contact</h1>
@@ -61,7 +62,7 @@ function ContactPage() {
                   value={formData.name}
                   onChange={handleChange}
                   required
-                  className="w-full border border-gray-300 rounded-lg px-4 py-3 bg-gray-50"
+                  className="w-full border border-gray-300 rounded-lg px-4 py-3 bg-gray-50 focus:ring-2 focus:ring-blue-500 transition outline-none"
                   placeholder="Enter your name"
                 />
               </div>
@@ -74,7 +75,7 @@ function ContactPage() {
                   value={formData.email}
                   onChange={handleChange}
                   required
-                  className="w-full border border-gray-300 rounded-lg px-4 py-3 bg-gray-50"
+                  className="w-full border border-gray-300 rounded-lg px-4 py-3 bg-gray-50 focus:ring-2 focus:ring-blue-500 transition outline-none"
                   placeholder="Enter your email"
                 />
               </div>
@@ -87,25 +88,34 @@ function ContactPage() {
                   onChange={handleChange}
                   rows="5"
                   required
-                  className="w-full border border-gray-300 rounded-lg px-4 py-3 bg-gray-50"
+                  className="w-full border border-gray-300 rounded-lg px-4 py-3 bg-gray-50 focus:ring-2 focus:ring-blue-500 transition outline-none"
                   placeholder="Write your message here..."
                 ></textarea>
               </div>
 
-              <button type="submit" className="bg-blue-600 text-white px-8 py-4 rounded-lg font-bold w-full hover:bg-blue-700 shadow-lg">
+              <button type="submit" className="bg-blue-600 text-white px-8 py-4 rounded-lg font-bold w-full hover:bg-blue-700 shadow-lg transition-transform transform hover:-translate-y-1">
                 Send Message
               </button>
             </form>
           </div>
 
           <div className="flex flex-col gap-8">
-            <div className="flex items-center gap-4"><Mail className="text-blue-600" /> support@edumentor.com</div>
-            <div className="flex items-center gap-4"><Phone className="text-blue-600" /> +91 98765 43210</div>
-            <div className="flex items-center gap-4"><MapPin className="text-blue-600" /> Bhopal, India</div>
+            <div className="flex items-center gap-4 group p-4 rounded-xl hover:bg-blue-50 transition cursor-pointer">
+              <div className="bg-blue-100 p-3 rounded-full text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition"><Mail /></div>
+              <span className="text-lg font-medium text-gray-700">support@navigreat.com</span>
+            </div>
+            <div className="flex items-center gap-4 group p-4 rounded-xl hover:bg-blue-50 transition cursor-pointer">
+              <div className="bg-blue-100 p-3 rounded-full text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition"><Phone /></div>
+              <span className="text-lg font-medium text-gray-700">+91 7974714605</span>
+            </div>
+            <div className="flex items-center gap-4 group p-4 rounded-xl hover:bg-blue-50 transition cursor-pointer">
+              <div className="bg-blue-100 p-3 rounded-full text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition"><MapPin /></div>
+              <span className="text-lg font-medium text-gray-700">Maulana Azad National Institute of Technology, Bhopal</span>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </PageTransition>
   );
 }
 
