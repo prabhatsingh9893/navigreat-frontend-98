@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { API_BASE_URL } from '../config';
 import { motion } from 'framer-motion';
-import { ArrowLeft, User, Lock, Mail, ChevronRight, Briefcase, GraduationCap, Sparkles } from 'lucide-react';
+import { ArrowLeft, User as UserIcon, Lock, Mail, ChevronRight, Briefcase, GraduationCap, Sparkles } from 'lucide-react';
 
 function SignupPage() {
   const [formData, setFormData] = useState({
@@ -138,7 +138,7 @@ function SignupPage() {
             <div className="space-y-2">
               <label className="text-sm font-semibold text-slate-700 ml-1">Full Name</label>
               <div className="relative">
-                <User className="absolute left-4 top-3.5 text-slate-400" size={20} />
+                <UserIcon className="absolute left-4 top-3.5 text-slate-400" size={20} />
                 <input
                   type="text"
                   name="username"

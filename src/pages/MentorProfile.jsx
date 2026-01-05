@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import {
     CheckCircle, Video, Share2, MessageSquare, Zap,
     Briefcase, Calendar, Clock, Radio, MapPin,
-    ExternalLink, ArrowLeft
+    ExternalLink, ArrowLeft, User as UserIcon
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
@@ -305,7 +305,7 @@ const MentorProfile = () => {
                                     {/* About Section */}
                                     <div>
                                         <h3 className="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
-                                            <div className="p-2 bg-blue-50 rounded-lg text-blue-600"><User size={20} /></div>
+                                            <div className="p-2 bg-blue-50 rounded-lg text-blue-600"><UserIcon size={20} /></div>
                                             About Me
                                         </h3>
                                         <div className="bg-slate-50/50 p-6 rounded-2xl border border-slate-100">
