@@ -4,7 +4,6 @@ import { Menu, X, LogOut, LayoutDashboard, ChevronDown, User, Mail } from 'lucid
 import Avatar from '../components/Avatar'; // ✅ Import Avatar
 
 // 👇 1. Import your new Logo here
-// 👇 1. Import your new Logo here
 import logo from '../assets/navigreat-feather-logo.png';
 
 import { signOut } from 'firebase/auth';

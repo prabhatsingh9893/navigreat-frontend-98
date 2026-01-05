@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { motion } from 'framer-motion';
 // Icons
 import {
     Share2, BadgeCheck, Users, Clock, Star, Video, Trash2, Plus,
