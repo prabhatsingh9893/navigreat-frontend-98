@@ -55,9 +55,22 @@ function MentorsPage() {
   };
 
   return (
-    <div className="pt-24 md:pt-32 pb-20 bg-gray-50 min-h-screen w-full relative overflow-x-hidden">
-      {/* Background Decorative Elements */}
-      <div className="absolute top-0 left-0 w-full h-[500px] bg-gradient-to-b from-blue-50 to-transparent pointer-events-none -z-10"></div>
+    <div className="pt-24 min-h-screen w-full relative overflow-x-hidden bg-slate-50">
+
+      {/* 1. Header Background Video */}
+      <div className="absolute top-0 left-0 w-full h-[600px] overflow-hidden rounded-b-[4rem] shadow-sm z-0">
+        <div className="absolute inset-0 bg-white/60 z-10"></div> {/* Light overlay */}
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="w-full h-full object-cover"
+        >
+          <source src="https://videos.pexels.com/video-files/3242988/3242988-uhd_2560_1440_25fps.mp4" type="video/mp4" />
+        </video>
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-50 to-transparent z-20"></div> {/* Fade out to list */}
+      </div>
 
       <div className="max-w-7xl mx-auto px-4 md:px-6">
 
