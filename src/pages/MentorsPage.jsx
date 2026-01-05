@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, MapPin, BookOpen, User, Frown, Sparkles } from 'lucide-react';
+import { Search, MapPin, BookOpen, User as UserIcon, Frown, Sparkles } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { API_BASE_URL } from '../config';
 import Avatar from '../components/Avatar';
@@ -177,7 +177,7 @@ function MentorsPage() {
                     onClick={() => handleViewProfile(mentor._id)}
                     className="mt-auto w-full bg-white border border-gray-200 text-gray-700 hover:border-blue-600 hover:text-blue-600 py-3.5 rounded-xl font-bold transition-all flex items-center justify-center gap-2 group-hover:bg-blue-600 group-hover:text-white group-hover:border-transparent group-hover:shadow-lg group-hover:shadow-blue-200"
                   >
-                    View Profile <User size={18} />
+                    View Profile <UserIcon size={18} />
                   </button>
                 </div>
               </motion.div>

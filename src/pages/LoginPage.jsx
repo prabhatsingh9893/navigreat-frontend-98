@@ -5,7 +5,7 @@ import { auth, provider } from '../firebaseConfig';
 import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
 import { API_BASE_URL } from '../config';
-import { ArrowLeft, User, Lock, Mail, ChevronRight, Sparkles } from 'lucide-react';
+import { ArrowLeft, User as UserIcon, Lock, Mail, ChevronRight, Sparkles } from 'lucide-react';
 
 // Simple Loader Component for internal use
 const ProcessingOverlay = ({ text, onCancel }) => (
@@ -208,7 +208,7 @@ function LoginPage() {
             <div className="flex -space-x-4">
               {[1, 2, 3].map(i => (
                 <div key={i} className="w-12 h-12 rounded-full border-2 border-slate-900 bg-slate-700 flex items-center justify-center text-xs">
-                  <User size={20} className="text-slate-400" />
+                  <UserIcon size={20} className="text-slate-400" />
                 </div>
               ))}
             </div>

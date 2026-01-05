@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Menu, X, LogOut, LayoutDashboard, ChevronDown, User, Mail } from 'lucide-react';
+import { Menu, X, LogOut, LayoutDashboard, ChevronDown, User as UserIcon, Mail } from 'lucide-react';
 import Avatar from '../components/Avatar'; // ✅ Import Avatar
 
 // 👇 1. Import your new Logo here
@@ -126,7 +126,7 @@ const Header = () => {
                       onClick={() => setIsDropdownOpen(false)}
                       className="flex items-center gap-3 px-4 py-2.5 text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition group"
                     >
-                      <User size={18} />
+                      <UserIcon size={18} />
                       <span className="font-medium">Edit Profile</span>
                     </Link>
 
