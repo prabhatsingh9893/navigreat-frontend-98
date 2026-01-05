@@ -67,7 +67,7 @@ function MentorsPage() {
           playsInline
           className="w-full h-full object-cover"
         >
-          <source src="https://videos.pexels.com/video-files/3242988/3242988-uhd_2560_1440_25fps.mp4" type="video/mp4" />
+          <source src="https://cdn.pixabay.com/video/2019/04/23/23011-332483109_large.mp4" type="video/mp4" />
         </video>
         <div className="absolute inset-0 bg-gradient-to-t from-slate-50 to-transparent z-20"></div> {/* Fade out to list */}
       </div>
