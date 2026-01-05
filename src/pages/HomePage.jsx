@@ -75,17 +75,19 @@ function HomePage() {
     <PageTransition className="pt-0"> {/* Wrapper for Global Transition */}
       <div className="font-sans bg-slate-50 min-h-screen">
         {/* 1. HERO SECTION (Video Background) */}
-        <section className="relative pt-32 pb-24 overflow-hidden min-h-[90vh] flex items-center bg-gray-900">
+        {/* 1. HERO SECTION (Video Background - Light Theme) */}
+        <section className="relative pt-32 pb-24 overflow-hidden min-h-[90vh] flex items-center bg-white">
 
           {/* ✅ VIDEO BACKGROUND */}
           <div className="absolute inset-0 z-0">
-            <div className="absolute inset-0 bg-black/60 z-10" /> {/* Dark Overlay for readability */}
+            {/* Subtle light overlay to ensure text contrast without hiding video */}
+            <div className="absolute inset-0 bg-white/40 z-10" />
             <video
               autoPlay
               loop
               muted
               playsInline
-              className="w-full h-full object-cover opacity-60"
+              className="w-full h-full object-cover"
             >
               <source src="https://assets.mixkit.co/videos/preview/mixkit-white-abstract-technology-network-background-20412-large.mp4" type="video/mp4" />
               Your browser does not support the video tag.
@@ -101,19 +103,19 @@ function HomePage() {
             >
               {/* Left Content */}
               <div className="md:w-1/2 text-center md:text-left space-y-8">
-                <motion.div variants={itemVariants} className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-md text-blue-200 font-semibold text-sm border border-white/10 shadow-sm">
-                  <Sparkles size={16} className="text-blue-400" />
+                <motion.div variants={itemVariants} className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-50 text-blue-700 font-semibold text-sm border border-blue-100 shadow-sm backdrop-blur-sm">
+                  <Sparkles size={16} className="text-blue-600" />
                   <span>#1 Mentorship Platform</span>
                 </motion.div>
 
-                <motion.h1 variants={itemVariants} className="text-5xl md:text-7xl font-extrabold text-white leading-tight tracking-tight">
+                <motion.h1 variants={itemVariants} className="text-5xl md:text-7xl font-extrabold text-slate-900 leading-tight tracking-tight">
                   Unlock Your <br />
-                  <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-indigo-400">
+                  <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600">
                     {text}
                   </span>
                 </motion.h1>
 
-                <motion.p variants={itemVariants} className="text-lg text-gray-300 leading-relaxed max-w-lg mx-auto md:mx-0 font-medium">
+                <motion.p variants={itemVariants} className="text-lg text-slate-600 leading-relaxed max-w-lg mx-auto md:mx-0 font-medium">
                   Stop guessing your career path. Connect with verified seniors from IITs & NITs who have already walked the road.
                 </motion.p>
 
@@ -121,7 +123,7 @@ function HomePage() {
                   <Link to="/mentors" className="bg-blue-600 text-white px-8 py-4 rounded-xl font-bold shadow-lg shadow-blue-500/25 hover:bg-blue-700 transition-all transform hover:-translate-y-1 flex items-center justify-center gap-2">
                     Find a Mentor <ArrowRight size={20} />
                   </Link>
-                  <Link to="/become-mentor" className="bg-white/10 backdrop-blur-sm text-white border border-white/20 px-8 py-4 rounded-xl font-bold hover:bg-white/20 transition-all hover:border-white/40">
+                  <Link to="/become-mentor" className="bg-white text-slate-700 border border-slate-200 px-8 py-4 rounded-xl font-bold hover:bg-slate-50 transition-all hover:border-slate-300 backdrop-blur-sm bg-opacity-80">
                     Become a Mentor
                   </Link>
                 </motion.div>
@@ -129,13 +131,13 @@ function HomePage() {
                 <motion.div variants={itemVariants} className="flex items-center gap-4 justify-center md:justify-start pt-4">
                   <div className="flex -space-x-3">
                     {[1, 2, 3, 4].map(i => (
-                      <div key={i} className="w-10 h-10 rounded-full bg-slate-800 border-2 border-slate-600 flex items-center justify-center text-xs font-bold text-slate-400">
+                      <div key={i} className="w-10 h-10 rounded-full bg-slate-200 border-2 border-white flex items-center justify-center text-xs font-bold text-slate-500">
                         <Users size={16} />
                       </div>
                     ))}
                   </div>
-                  <div className="text-sm font-medium text-gray-300">
-                    <span className="font-bold text-white">500+</span> Students Joined
+                  <div className="text-sm font-medium text-slate-600">
+                    <span className="font-bold text-slate-900">500+</span> Students Joined
                   </div>
                 </motion.div>
               </div>
