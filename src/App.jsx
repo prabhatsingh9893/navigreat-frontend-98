@@ -1,6 +1,7 @@
 import React, { Suspense } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast'; // 👉 1. IMPORT ADDED
+import { AnimatePresence } from 'framer-motion';
 
 import Header from './components/Header.jsx';
 import Footer from './components/Footer.jsx';
@@ -27,8 +28,10 @@ import NotFoundPage from './pages/NotFoundPage'; // ✅ 404 Page
 const LiveSession = React.lazy(() => import('./pages/LiveSession.jsx'));
 
 function App() {
+  const location = useLocation();
+
   return (
-    <div className="w-full max-w-full overflow-x-hidden min-h-screen">
+    <div className="w-full max-w-full overflow-x-hidden min-h-screen flex flex-col">
 
       {/* 👉 2. TOASTER COMPONENT ADDED HERE */}
       <Toaster position="top-center" reverseOrder={false} />
@@ -37,48 +40,50 @@ function App() {
 
       <Header />
       <main className="flex-grow">
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/about" element={<AboutPage />} />
-          <Route path="/contact" element={<ContactPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/signup" element={<SignupPage />} />
-          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-          <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
+        <AnimatePresence mode="wait">
+          <Routes location={location} key={location.pathname}>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/about" element={<AboutPage />} />
+            <Route path="/contact" element={<ContactPage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/signup" element={<SignupPage />} />
+            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+            <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
 
-          {/* Mentor Related Routes */}
-          <Route path="/mentors" element={<MentorsPage />} />
-          <Route path="/become-mentor" element={<MentorSignupPage />} />
-          <Route path="/dashboard" element={<DashboardPage />} />
+            {/* Mentor Related Routes */}
+            <Route path="/mentors" element={<MentorsPage />} />
+            <Route path="/become-mentor" element={<MentorSignupPage />} />
+            <Route path="/dashboard" element={<DashboardPage />} />
 
-          {/* NEW ROUTE FOR PROFILE DETAILS */}
-          <Route path="/mentor/:id" element={<MentorProfile />} />
+            {/* NEW ROUTE FOR PROFILE DETAILS */}
+            <Route path="/mentor/:id" element={<MentorProfile />} />
 
-          {/* ADMIN */}
-          <Route path="/admin/messages" element={<AdminMessagesPage />} />
+            {/* ADMIN */}
+            <Route path="/admin/messages" element={<AdminMessagesPage />} />
 
-          {/* LEGAL */}
-          <Route path="/privacy" element={<AppPrivacy />} />
-          <Route path="/terms" element={<AppTerms />} />
+            {/* LEGAL */}
+            <Route path="/privacy" element={<AppPrivacy />} />
+            <Route path="/terms" element={<AppTerms />} />
 
 
-          {/* CHAT */}
-          <Route path="/chat" element={<ChatPage />} />
-          <Route path="/chat/:userId" element={<ChatPage />} />
+            {/* CHAT */}
+            <Route path="/chat" element={<ChatPage />} />
+            <Route path="/chat/:userId" element={<ChatPage />} />
 
-          {/* ✅ ZOOM LIVE SESSION ROUTE WITH SUSPENSE */}
-          <Route
-            path="/session"
-            element={
-              <Suspense fallback={<div className="h-screen flex items-center justify-center"><Loader text="Loading Session..." /></div>}>
-                <LiveSession />
-              </Suspense>
-            }
-          />
+            {/* ✅ ZOOM LIVE SESSION ROUTE WITH SUSPENSE */}
+            <Route
+              path="/session"
+              element={
+                <Suspense fallback={<div className="h-screen flex items-center justify-center"><Loader text="Loading Session..." /></div>}>
+                  <LiveSession />
+                </Suspense>
+              }
+            />
 
-          {/* 404 PAGE */}
-          <Route path="*" element={<NotFoundPage />} />
-        </Routes>
+            {/* 404 PAGE */}
+            <Route path="*" element={<NotFoundPage />} />
+          </Routes>
+        </AnimatePresence>
       </main>
       <Footer />
     </div >
