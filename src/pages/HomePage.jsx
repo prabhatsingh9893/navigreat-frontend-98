@@ -89,7 +89,7 @@ function HomePage() {
               playsInline
               className="w-full h-full object-cover"
             >
-              <source src="https://assets.mixkit.co/videos/preview/mixkit-white-abstract-technology-network-background-20412-large.mp4" type="video/mp4" />
+              <source src="https://videos.pexels.com/video-files/3129671/3129671-uhd_2560_1440_30fps.mp4" type="video/mp4" />
               Your browser does not support the video tag.
             </video>
           </div>
