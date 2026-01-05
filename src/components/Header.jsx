@@ -63,8 +63,26 @@ const Header = () => {
     setIsDropdownOpen(false);
   };
 
+  // --- SCROLL EFFECT ---
+  const [isScrolled, setIsScrolled] = useState(false);
+  const isHomePage = location.pathname === '/';
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Dynamic Header Classes
+  const headerClasses = `fixed w-full z-50 transition-all duration-300 ${isHomePage && !isScrolled
+      ? "bg-transparent border-b border-transparent py-4"
+      : "bg-white/90 backdrop-blur-md shadow-sm border-b border-gray-100 py-3"
+    }`;
+
   return (
-    <header className="fixed w-full bg-white/90 backdrop-blur-md shadow-sm z-50 border-b border-gray-100">
+    <header className={headerClasses}>
       <div className="container mx-auto px-6 py-3 flex justify-between items-center">
 
         {/* 👇 2. UPDATED LOGO SECTION */}
