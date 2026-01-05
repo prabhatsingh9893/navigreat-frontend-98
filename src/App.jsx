@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react';
-import { Routes, Route, useLocation } from 'react-router-dom';
+import { Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast'; // 👉 1. IMPORT ADDED
 import { AnimatePresence } from 'framer-motion';
 
@@ -27,6 +27,15 @@ import NotFoundPage from './pages/NotFoundPage'; // ✅ 404 Page
 // ✅ LAZY LOAD LIVE SESSION TO PREVENT CSS POLLUTION
 const LiveSession = React.lazy(() => import('./pages/LiveSession.jsx'));
 
+// 🔒 Protected Route Component
+const ProtectedRoute = ({ children }) => {
+  const token = localStorage.getItem('token');
+  if (!token) {
+    return <Navigate to="/login" replace />;
+  }
+  return children;
+};
+
 function App() {
   const location = useLocation();
 
@@ -42,6 +51,7 @@ function App() {
       <main className="flex-grow">
         <AnimatePresence mode="wait">
           <Routes location={location} key={location.pathname}>
+            {/* Public Routes */}
             <Route path="/" element={<HomePage />} />
             <Route path="/about" element={<AboutPage />} />
             <Route path="/contact" element={<ContactPage />} />
@@ -49,34 +59,27 @@ function App() {
             <Route path="/signup" element={<SignupPage />} />
             <Route path="/forgot-password" element={<ForgotPasswordPage />} />
             <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
-
-            {/* Mentor Related Routes */}
-            <Route path="/mentors" element={<MentorsPage />} />
             <Route path="/become-mentor" element={<MentorSignupPage />} />
-            <Route path="/dashboard" element={<DashboardPage />} />
-
-            {/* NEW ROUTE FOR PROFILE DETAILS */}
-            <Route path="/mentor/:id" element={<MentorProfile />} />
-
-            {/* ADMIN */}
-            <Route path="/admin/messages" element={<AdminMessagesPage />} />
-
-            {/* LEGAL */}
             <Route path="/privacy" element={<AppPrivacy />} />
             <Route path="/terms" element={<AppTerms />} />
 
+            {/* 🔒 Protected Routes (Require Login) */}
+            <Route path="/mentors" element={<ProtectedRoute><MentorsPage /></ProtectedRoute>} />
+            <Route path="/dashboard" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
+            <Route path="/mentor/:id" element={<ProtectedRoute><MentorProfile /></ProtectedRoute>} />
+            <Route path="/chat" element={<ProtectedRoute><ChatPage /></ProtectedRoute>} />
+            <Route path="/chat/:userId" element={<ProtectedRoute><ChatPage /></ProtectedRoute>} />
+            <Route path="/admin/messages" element={<ProtectedRoute><AdminMessagesPage /></ProtectedRoute>} />
 
-            {/* CHAT */}
-            <Route path="/chat" element={<ChatPage />} />
-            <Route path="/chat/:userId" element={<ChatPage />} />
-
-            {/* ✅ ZOOM LIVE SESSION ROUTE WITH SUSPENSE */}
+            {/* ✅ ZOOM LIVE SESSION ROUTE WITH SUSPENSE & PROTECTION */}
             <Route
               path="/session"
               element={
-                <Suspense fallback={<div className="h-screen flex items-center justify-center"><Loader text="Loading Session..." /></div>}>
-                  <LiveSession />
-                </Suspense>
+                <ProtectedRoute>
+                  <Suspense fallback={<div className="h-screen flex items-center justify-center"><Loader text="Loading Session..." /></div>}>
+                    <LiveSession />
+                  </Suspense>
+                </ProtectedRoute>
               }
             />
 
