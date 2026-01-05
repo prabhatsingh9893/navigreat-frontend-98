@@ -76,10 +76,8 @@ const Header = () => {
   }, []);
 
   // Dynamic Header Classes
-  const headerClasses = `fixed w-full z-50 transition-all duration-300 ${isHomePage && !isScrolled
-      ? "bg-transparent border-b border-transparent py-4"
-      : "bg-white/90 backdrop-blur-md shadow-sm border-b border-gray-100 py-3"
-    }`;
+  // Dynamic Header Classes
+  const headerClasses = "fixed w-full z-50 transition-all duration-300 bg-white/90 backdrop-blur-md shadow-sm border-b border-gray-100 py-3";
 
   return (
     <header className={headerClasses}>
