@@ -227,13 +227,13 @@ function HomePage() {
         <section id="mentors" className="py-24 relative overflow-hidden">
           {/* Section Background Video */}
           <div className="absolute inset-0 z-0">
-            <div className="absolute inset-0 bg-white/90 z-10" /> {/* Strong overlay for readability */}
+            <div className="absolute inset-0 bg-white/40 z-10" /> {/* Light overlay for visibility */}
             <video
               autoPlay
               loop
               muted
               playsInline
-              className="w-full h-full object-cover opacity-50"
+              className="w-full h-full object-cover"
             >
               <source src="https://cdn.pixabay.com/video/2019/04/23/23011-332483109_large.mp4" type="video/mp4" />
             </video>
