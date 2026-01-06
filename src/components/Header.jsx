@@ -84,17 +84,13 @@ const Header = () => {
       <div className="container mx-auto px-6 py-1 flex justify-between items-center">
 
         {/* 👇 2. UPDATED LOGO SECTION */}
-        <Link to="/" className="flex items-center gap-2 group">
-          {/* Image Logo (Icon) */}
+        <Link to="/" className="flex items-center gap-3 group">
+          {/* Image Logo */}
           <img
             src={logo}
             alt="NaviGreat Logo"
-            className="h-10 w-auto object-contain group-hover:scale-110 transition duration-300 transform"
+            className="h-12 w-auto object-contain group-hover:scale-105 transition duration-300"
           />
-          {/* Text Logo */}
-          <span className="text-2xl font-bold text-blue-700 tracking-tight font-sans">
-            NaviGreat
-          </span>
         </Link>
 
         {/* Desktop Menu */}
