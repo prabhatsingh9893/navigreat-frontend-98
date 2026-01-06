@@ -85,11 +85,11 @@ const Header = () => {
 
         {/* 👇 2. UPDATED LOGO SECTION */}
         <Link to="/" className="flex items-center gap-3 group">
-          {/* Image Logo */}
+          {/* Image Logo - Optimized Size for Integration */}
           <img
             src={logo}
             alt="NaviGreat Logo"
-            className="h-12 w-auto object-contain group-hover:scale-105 transition duration-300"
+            className="h-10 w-auto object-contain group-hover:scale-105 transition duration-300"
           />
         </Link>
 
