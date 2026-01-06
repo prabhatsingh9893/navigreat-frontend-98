@@ -224,7 +224,21 @@ function HomePage() {
         </section>
 
         {/* 3. MENTORS SECTION (Glass Cards) */}
-        <section id="mentors" className="py-24 bg-slate-50 relative">
+        <section id="mentors" className="py-24 relative overflow-hidden">
+          {/* Section Background Video */}
+          <div className="absolute inset-0 z-0">
+            <div className="absolute inset-0 bg-white/90 z-10" /> {/* Strong overlay for readability */}
+            <video
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="w-full h-full object-cover opacity-50"
+            >
+              <source src="https://cdn.pixabay.com/video/2020/08/02/46112-447547514_large.mp4" type="video/mp4" />
+            </video>
+          </div>
+
           <div className="container mx-auto px-6 relative z-10">
             <div className="text-center mb-16 space-y-4">
               <span className="text-blue-600 font-bold tracking-wider uppercase text-sm bg-blue-50 px-4 py-1 rounded-full">Expert Guidance</span>
