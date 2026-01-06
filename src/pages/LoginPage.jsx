@@ -141,31 +141,39 @@ function LoginPage() {
   };
 
   // --- 2. Google Login (Preferred: Popup, Fallback: Redirect) ---
+  // --- 2. Google Login (Smart Handler) ---
   const handleGoogleLogin = async () => {
     setStatusMessage("Connecting to Google...");
+
+    // Simple User Agent Check for Mobile
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
     try {
-      // Attempt Popup Login for ALL devices first (Works better than Redirect on many modern mobile browsers)
-      const result = await signInWithPopup(auth, provider);
-      verifyWithBackend(result.user);
-
+      if (isMobile) {
+        // Mobile: Prefer Redirect immediately to avoid popup blocks
+        setVerifying(true);
+        setStatusMessage("Redirecting to Google...");
+        await signInWithRedirect(auth, provider);
+      } else {
+        // Desktop: Prefer Popup for better UX
+        const result = await signInWithPopup(auth, provider);
+        verifyWithBackend(result.user);
+      }
     } catch (error) {
-      console.error("Google Login Popup Error:", error);
+      console.error("Google Login Error:", error);
 
-      // Fallback: If popup is blocked (common on mobile) or closed specifically, try Redirect
+      // Fallback Logic
       if (error.code === 'auth/popup-blocked' || error.code === 'auth/popup-closed-by-user') {
         try {
-          // Only show 'Redirecting' if we are actually switching strategy
           setVerifying(true);
           setStatusMessage("Redirecting to Google...");
           await signInWithRedirect(auth, provider);
-          // Flow continues in useEffect after reload
         } catch (redirectError) {
-          setVerifying(false);
-          console.error("Google Login Redirect Error:", redirectError);
+          setVerifying(false); // Only reset if redirect failed synchronously
           toast.error("Login Failed: " + redirectError.message);
         }
       } else {
-        setVerifying(false); // Reset if it wasn't a retriable error
+        setVerifying(false);
         toast.error("Login Error: " + error.message);
       }
     }
