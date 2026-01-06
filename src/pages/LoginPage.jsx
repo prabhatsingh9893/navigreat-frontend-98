@@ -142,40 +142,18 @@ function LoginPage() {
 
   // --- 2. Google Login (Preferred: Popup, Fallback: Redirect) ---
   // --- 2. Google Login (Smart Handler) ---
+  // --- 2. Google Login (Universal Redirect Handler) ---
   const handleGoogleLogin = async () => {
-    setStatusMessage("Connecting to Google...");
-
-    // Simple User Agent Check for Mobile
-    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    setStatusMessage("Redirecting to Google...");
+    setVerifying(true);
 
     try {
-      if (isMobile) {
-        // Mobile: Prefer Redirect immediately to avoid popup blocks
-        setVerifying(true);
-        setStatusMessage("Redirecting to Google...");
-        await signInWithRedirect(auth, provider);
-      } else {
-        // Desktop: Prefer Popup for better UX
-        const result = await signInWithPopup(auth, provider);
-        verifyWithBackend(result.user);
-      }
+      // Use Redirect for ALL devices to avoid popup blocking and cross-site cookie issues
+      await signInWithRedirect(auth, provider);
     } catch (error) {
-      console.error("Google Login Error:", error);
-
-      // Fallback Logic
-      if (error.code === 'auth/popup-blocked' || error.code === 'auth/popup-closed-by-user') {
-        try {
-          setVerifying(true);
-          setStatusMessage("Redirecting to Google...");
-          await signInWithRedirect(auth, provider);
-        } catch (redirectError) {
-          setVerifying(false); // Only reset if redirect failed synchronously
-          toast.error("Login Failed: " + redirectError.message);
-        }
-      } else {
-        setVerifying(false);
-        toast.error("Login Error: " + error.message);
-      }
+      console.error("Google Login Redirect Error:", error);
+      setVerifying(false);
+      toast.error("Login Error: " + error.message);
     }
   };
 
