@@ -44,6 +44,10 @@ const LiveSession = () => {
           })
         });
 
+        if (!response.ok) {
+          throw new Error(`Server Error: ${response.status}`);
+        }
+
         const data = await response.json();
 
         if (data.signature) {
@@ -54,14 +58,12 @@ const LiveSession = () => {
           setMeetingUrl(url);
           setLoading(false);
 
-          // ✅ SECURITY: Clear Browser History State
-          // This prevents the user from refreshing and auto-rejoining with the same credentials.
-          // We use window.history directly to avoid React Router re-triggering location hooks.
-          window.history.replaceState({}, document.title);
+          // History clearing removed to allow user to refresh page if connection fails
         } else {
-          toast.error("Signature Missing");
+          toast.error("Invalid Signature Received");
           console.error("Backend Response:", data);
-          navigate('/dashboard');
+          // Don't auto-navigate away immediately, let user see error
+          setLoading(false);
         }
       } catch (error) {
         console.error(error);
