@@ -140,20 +140,28 @@ function LoginPage() {
     }
   };
 
-  // --- 2. Google Login (Preferred: Popup, Fallback: Redirect) ---
-  // --- 2. Google Login (Smart Handler) ---
-  // --- 2. Google Login (Universal Redirect Handler) ---
+  // --- 2. Google Login (Universal Popup Handler) ---
   const handleGoogleLogin = async () => {
-    setStatusMessage("Redirecting to Google...");
+    setStatusMessage("Connecting to Google...");
     setVerifying(true);
 
     try {
-      // Use Redirect for ALL devices to avoid popup blocking and cross-site cookie issues
-      await signInWithRedirect(auth, provider);
+      // Use Popup for ALL devices
+      // Note: Redirect flow causes 'Missing Initial State' on many mobile browsers due to standard cookie blocking.
+      // Popup is safer if domain is authorized.
+      const result = await signInWithPopup(auth, provider);
+      verifyWithBackend(result.user);
     } catch (error) {
-      console.error("Google Login Redirect Error:", error);
-      setVerifying(false);
-      toast.error("Login Error: " + error.message);
+      console.error("Google Login Popup Error:", error);
+
+      if (error.code === 'auth/popup-blocked' || error.code === 'auth/popup-closed-by-user') {
+        setVerifying(false);
+        toast.error("Popup Blocked. Please allow popups for this site.");
+        alert("Please allow popups for this website to sign in with Google.");
+      } else {
+        setVerifying(false); // Reset
+        toast.error("Login Error: " + error.message);
+      }
     }
   };
 
