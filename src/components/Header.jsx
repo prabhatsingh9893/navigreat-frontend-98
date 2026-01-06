@@ -85,7 +85,7 @@ const Header = () => {
 
         {/* 👇 2. UPDATED LOGO SECTION */}
         <Link to="/" className="flex items-center gap-3 group">
-          {/* Image Logo - Blended to remove background artifacts */}
+          {/* Image Logo - Blend Mode for Seamless Background */}
           <img
             src={logo}
             alt="NaviGreat Logo"
