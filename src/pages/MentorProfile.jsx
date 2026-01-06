@@ -231,8 +231,9 @@ const MentorProfile = () => {
                                         </button>
                                     ) : (
                                         <>
-                                            {sessions.filter(s => new Date(s.startTime) > new Date()).sort((a, b) => new Date(a.startTime) - new Date(b.startTime))[0] ? (
-                                                <div className="w-full bg-slate-50 border border-slate-200 p-4 rounded-xl flex flex-col items-center justify-center gap-1">
+                                            {/* Show Next Session Info if available */}
+                                            {sessions.filter(s => new Date(s.startTime) > new Date()).sort((a, b) => new Date(a.startTime) - new Date(b.startTime))[0] && (
+                                                <div className="w-full bg-slate-50 border border-slate-200 p-4 rounded-xl flex flex-col items-center justify-center gap-1 mb-2">
                                                     <div className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-1 flex items-center gap-1.5">
                                                         <Calendar size={12} /> Next Session
                                                     </div>
@@ -243,11 +244,12 @@ const MentorProfile = () => {
                                                         {new Date(sessions.filter(s => new Date(s.startTime) > new Date()).sort((a, b) => new Date(a.startTime) - new Date(b.startTime))[0].startTime).toLocaleDateString([], { month: 'long', day: 'numeric', weekday: 'short' })}
                                                     </div>
                                                 </div>
-                                            ) : (
-                                                <button onClick={handleBookSession} className="w-full bg-slate-900 text-white py-4 rounded-xl font-bold hover:bg-black transition shadow-xl shadow-slate-200 flex items-center justify-center gap-2 group">
-                                                    <Zap size={18} className="text-yellow-400 group-hover:scale-110 transition" /> Book Priority Session
-                                                </button>
                                             )}
+
+                                            {/* Always show Book Session Button */}
+                                            <button onClick={handleBookSession} className="w-full bg-slate-900 text-white py-4 rounded-xl font-bold hover:bg-black transition shadow-xl shadow-slate-200 flex items-center justify-center gap-2 group">
+                                                <Zap size={18} className="text-yellow-400 group-hover:scale-110 transition" /> Book Priority Session
+                                            </button>
                                         </>
                                     )}
                                     <button onClick={() => navigate(`/chat/${mentor._id}`)} className="w-full bg-white border-2 border-slate-100 text-slate-600 py-3.5 rounded-xl font-bold hover:border-blue-500 hover:text-blue-600 transition flex items-center justify-center gap-2">
