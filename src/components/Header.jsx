@@ -77,7 +77,7 @@ const Header = () => {
 
   // Dynamic Header Classes
   // Dynamic Header Classes
-  const headerClasses = "fixed w-full z-50 transition-all duration-300 bg-white/90 backdrop-blur-md shadow-sm border-b border-gray-100 py-2";
+  const headerClasses = "fixed w-full z-50 transition-all duration-300 bg-white shadow-sm border-b border-gray-100 py-2";
 
   return (
     <header className={headerClasses}>
