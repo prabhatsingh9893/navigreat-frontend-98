@@ -4,7 +4,7 @@ import { Menu, X, LogOut, LayoutDashboard, ChevronDown, User as UserIcon, Mail }
 import Avatar from '../components/Avatar'; // ✅ Import Avatar
 
 // 👇 1. Import your new Logo here
-import logo from '../assets/navigreat-feather-logo.png';
+import logo from '../assets/startup-logo.png';
 
 import { signOut } from 'firebase/auth';
 import { auth } from '../firebaseConfig';
@@ -77,11 +77,11 @@ const Header = () => {
 
   // Dynamic Header Classes
   // Dynamic Header Classes
-  const headerClasses = "fixed w-full z-50 transition-all duration-300 bg-white shadow-sm border-b border-gray-100 py-2";
+  const headerClasses = "fixed w-full z-50 transition-all duration-300 bg-white shadow-sm border-b border-gray-100";
 
   return (
     <header className={headerClasses}>
-      <div className="container mx-auto px-6 py-1 flex justify-between items-center">
+      <div className="container mx-auto px-6 flex justify-between items-center">
 
         {/* 👇 2. UPDATED LOGO SECTION */}
         <Link to="/" className="flex items-center gap-3 group">
@@ -89,7 +89,7 @@ const Header = () => {
           <img
             src={logo}
             alt="NaviGreat Logo"
-            className="h-16 w-auto object-contain group-hover:scale-110 transition duration-300 pointer-events-none mix-blend-multiply"
+            className="h-20 w-auto object-contain transition duration-300 pointer-events-none mix-blend-multiply"
           />
         </Link>
 
