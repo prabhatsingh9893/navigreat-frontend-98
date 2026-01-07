@@ -89,7 +89,7 @@ function HomePage() {
               playsInline
               className="w-full h-full object-cover"
             >
-              <source src="https://videos.pexels.com/video-files/3129671/3129671-uhd_2560_1440_30fps.mp4" type="video/mp4" />
+              <source src="/hero-bg.mp4" type="video/mp4" />
               Your browser does not support the video tag.
             </video>
           </div>
@@ -101,29 +101,29 @@ function HomePage() {
               initial="hidden"
               animate="visible"
             >
-              {/* Left Content */}
-              <div className="md:w-1/2 text-center md:text-left space-y-8">
-                <motion.div variants={itemVariants} className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-50 text-blue-700 font-semibold text-sm border border-blue-100 shadow-sm backdrop-blur-sm">
+              {/* Left Content with Glass Effect for Readability */}
+              <div className="md:w-1/2 text-center md:text-left space-y-8 p-8 rounded-3xl bg-white/70 backdrop-blur-md shadow-sm border border-white/50">
+                <motion.div variants={itemVariants} className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-50 text-blue-700 font-semibold text-sm border border-blue-100 shadow-sm">
                   <Sparkles size={16} className="text-blue-600" />
                   <span>#1 Mentorship Platform</span>
                 </motion.div>
 
-                <motion.h1 variants={itemVariants} className="text-5xl md:text-7xl font-extrabold text-slate-900 leading-tight tracking-tight">
+                <motion.h1 variants={itemVariants} className="text-5xl md:text-7xl font-extrabold text-slate-900 leading-tight tracking-tight drop-shadow-sm">
                   Unlock Your <br />
-                  <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600">
+                  <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-700 to-indigo-700">
                     {text}
                   </span>
                 </motion.h1>
 
-                <motion.p variants={itemVariants} className="text-lg text-slate-600 leading-relaxed max-w-lg mx-auto md:mx-0 font-medium">
+                <motion.p variants={itemVariants} className="text-lg text-slate-800 leading-relaxed max-w-lg mx-auto md:mx-0 font-bold">
                   Stop guessing your career path. Connect with verified seniors from IITs & NITs who have already walked the road.
                 </motion.p>
 
                 <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
-                  <Link to="/mentors" className="bg-blue-600 text-white px-8 py-4 rounded-xl font-bold shadow-lg shadow-blue-500/25 hover:bg-blue-700 transition-all transform hover:-translate-y-1 flex items-center justify-center gap-2">
+                  <Link to="/mentors" className="bg-blue-700 text-white px-8 py-4 rounded-xl font-bold shadow-lg shadow-blue-500/25 hover:bg-blue-800 transition-all transform hover:-translate-y-1 flex items-center justify-center gap-2">
                     Find a Mentor <ArrowRight size={20} />
                   </Link>
-                  <Link to="/become-mentor" className="bg-white text-slate-700 border border-slate-200 px-8 py-4 rounded-xl font-bold hover:bg-slate-50 transition-all hover:border-slate-300 backdrop-blur-sm bg-opacity-80">
+                  <Link to="/become-mentor" className="bg-white text-slate-900 border border-slate-300 px-8 py-4 rounded-xl font-bold hover:bg-slate-50 transition-all hover:border-slate-400">
                     Become a Mentor
                   </Link>
                 </motion.div>
@@ -136,7 +136,7 @@ function HomePage() {
                       </div>
                     ))}
                   </div>
-                  <div className="text-sm font-medium text-slate-600">
+                  <div className="text-sm font-medium text-slate-800">
                     <span className="font-bold text-slate-900">500+</span> Students Joined
                   </div>
                 </motion.div>
@@ -235,7 +235,7 @@ function HomePage() {
               playsInline
               className="w-full h-full object-cover"
             >
-              <source src="https://cdn.pixabay.com/video/2019/04/23/23011-332483109_large.mp4" type="video/mp4" />
+              <source src="https://videos.pexels.com/video-files/3129957/3129957-hd_1920_1080_25fps.mp4" type="video/mp4" />
             </video>
           </div>
 
