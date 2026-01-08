@@ -89,7 +89,7 @@ const Header = () => {
           <img
             src={logo}
             alt="NaviGreat Logo"
-            className="h-24 w-auto object-contain transition duration-300 pointer-events-none mix-blend-multiply"
+            className="h-20 w-auto object-contain transition duration-300 pointer-events-none mix-blend-multiply"
           />
         </Link>
 
