@@ -14,7 +14,9 @@ const LiveSession = () => {
   const [loading, setLoading] = useState(true);
 
   const role = sessionState.role || 0;
-  const username = sessionState.username || "Student";
+  // Attempt to get name from state, then localStorage, then default
+  const storedUser = JSON.parse(localStorage.getItem('userData') || '{}');
+  const username = sessionState.username || storedUser.username || "Student";
   const rawMeetingNumber = sessionState.meetingNumber || "";
   const meetingNumber = rawMeetingNumber.replace(/[^0-9]/g, '');
   const passWord = sessionState.passWord || "";

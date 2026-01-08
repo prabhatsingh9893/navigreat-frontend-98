@@ -153,6 +153,16 @@
                             console.log("Join Success", res);
                             const overlay = document.getElementById('loading-overlay');
                             if (overlay) overlay.style.display = 'none';
+
+                            // ✅ FORCE REDIRECT ON MEETING END
+                            ZoomMtg.inMeetingServiceListener('onMeetingStatus', function (data) {
+                                console.log('Meeting Status Change:', data);
+                                // 3 = MEETING_STATUS_DISCONNECTED (Includes "Ended by Host")
+                                if (data.meetingStatus === 3) {
+                                    console.log("Meeting ended, redirecting...");
+                                    window.location.href = leaveUrl;
+                                }
+                            });
                         },
                         error: function (res) {
                             console.error("Join Error", JSON.stringify(res, null, 2));
