@@ -81,7 +81,7 @@ const Header = () => {
 
   return (
     <header className={headerClasses}>
-      <div className="container mx-auto px-6 flex justify-between items-center">
+      <div className="w-full px-4 md:px-8 flex justify-between items-center">
 
         {/* 👇 2. UPDATED LOGO SECTION */}
         <Link to="/" className="flex items-center gap-3 group">
@@ -89,7 +89,7 @@ const Header = () => {
           <img
             src={logo}
             alt="NaviGreat Logo"
-            className="h-20 w-auto object-contain transition duration-300 pointer-events-none mix-blend-multiply"
+            className="h-24 w-auto object-contain transition duration-300 pointer-events-none mix-blend-multiply"
           />
         </Link>
 
