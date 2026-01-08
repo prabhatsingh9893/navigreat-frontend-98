@@ -23,6 +23,7 @@ import ScrollToTop from './components/ScrollToTop'; // ✅ Scroll Fix
 import AppPrivacy from './pages/AppPrivacy';
 import AppTerms from './pages/AppTerms';
 import NotFoundPage from './pages/NotFoundPage'; // ✅ 404 Page
+import SessionEndedPage from './pages/SessionEndedPage'; // ✅ Auto Rejoin Page
 
 // ✅ LAZY LOAD LIVE SESSION TO PREVENT CSS POLLUTION
 const LiveSession = React.lazy(() => import('./pages/LiveSession.jsx'));
@@ -82,6 +83,7 @@ function App() {
                 </ProtectedRoute>
               }
             />
+            <Route path="/session-ended" element={<ProtectedRoute><SessionEndedPage /></ProtectedRoute>} />
 
             {/* 404 PAGE */}
             <Route path="*" element={<NotFoundPage />} />
