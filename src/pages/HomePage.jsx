@@ -59,6 +59,15 @@ function HomePage() {
     return () => clearInterval(interval);
   }, []);
 
+  // Detect Mobile for Performance Optimization
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   // Fetch Mentors
   useEffect(() => {
     fetch(`${API_BASE_URL}/mentors`)
@@ -78,20 +87,16 @@ function HomePage() {
         {/* 1. HERO SECTION (Video Background - Light Theme) */}
         <section className="relative pt-32 pb-24 overflow-hidden min-h-[90vh] flex items-center bg-white">
 
-          {/* ✅ VIDEO BACKGROUND */}
+          {/* ✅ VIDEO BACKGROUND - Optimized for Performance */}
           <div className="absolute inset-0 z-0">
-            {/* Subtle light overlay to ensure text contrast without hiding video */}
-            <div className="absolute inset-0 bg-white/40 z-10" />
-            <video
-              autoPlay
-              loop
-              muted
-              playsInline
+            {/* Overlay: Slightly more opaque on mobile to ensure text readability without expensive blur */}
+            <div className={`absolute inset-0 z-10 ${isMobile ? 'bg-white/70' : 'bg-white/40'}`} />
+
+            <img
+              src="https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&q=80&w=1920"
+              alt="Hero Background"
               className="w-full h-full object-cover"
-            >
-              <source src="/hero-bg.mp4" type="video/mp4" />
-              Your browser does not support the video tag.
-            </video>
+            />
           </div>
 
           <div className="container mx-auto px-6 relative z-20">
@@ -101,8 +106,8 @@ function HomePage() {
               initial="hidden"
               animate="visible"
             >
-              {/* Left Content with Glass Effect for Readability */}
-              <div className="md:w-1/2 text-center md:text-left space-y-8 p-8 rounded-3xl bg-white/70 backdrop-blur-md shadow-sm border border-white/50">
+              {/* Left Content - Reduced Blur on Mobile */}
+              <div className={`md:w-1/2 text-center md:text-left space-y-8 p-8 rounded-3xl ${isMobile ? 'bg-white/95' : 'bg-white/70 backdrop-blur-md'} shadow-sm border border-white/50`}>
                 <motion.div variants={itemVariants} className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-50 text-blue-700 font-semibold text-sm border border-blue-100 shadow-sm">
                   <Sparkles size={16} className="text-blue-600" />
                   <span>#1 Mentorship Platform</span>
@@ -226,17 +231,15 @@ function HomePage() {
         {/* 3. MENTORS SECTION (Glass Cards) */}
         <section id="mentors" className="py-24 relative overflow-hidden">
           {/* Section Background Video */}
+          {/* Section Background Video - Desktop Only */}
+          {/* Section Background Video */}
           <div className="absolute inset-0 z-0">
-            <div className="absolute inset-0 bg-white/40 z-10" /> {/* Light overlay for visibility */}
-            <video
-              autoPlay
-              loop
-              muted
-              playsInline
+            <div className={`absolute inset-0 z-10 ${isMobile ? 'bg-white/70' : 'bg-white/40'}`} />
+            <img
+              src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&q=80&w=1920"
+              alt="Mentors Background"
               className="w-full h-full object-cover"
-            >
-              <source src="https://videos.pexels.com/video-files/3129957/3129957-hd_1920_1080_25fps.mp4" type="video/mp4" />
-            </video>
+            />
           </div>
 
           <div className="container mx-auto px-6 relative z-10">

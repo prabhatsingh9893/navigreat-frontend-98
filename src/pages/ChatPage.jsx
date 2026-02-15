@@ -7,7 +7,13 @@ import { API_BASE_URL } from '../config';
 // Initialize Socket outside component to avoid re-connections
 // Note: API_BASE_URL usually ends with /api, we need root domain for socket
 const SOCKET_URL = API_BASE_URL.replace('/api', '');
-const socket = io(SOCKET_URL);
+const socket = io(SOCKET_URL, {
+    autoConnect: true,
+    reconnection: true,
+    reconnectionAttempts: 5,
+    reconnectionDelay: 3000,
+    transports: ["websocket", "polling"] // Try websocket first
+});
 
 const ChatPage = () => {
     const { userId: targetUserId } = useParams();

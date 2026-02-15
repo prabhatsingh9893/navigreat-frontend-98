@@ -6,24 +6,24 @@ const pageVariants = {
     initial: {
         opacity: 0,
         y: 15,
-        filter: 'blur(8px)',
+        // filter: 'blur(8px)', // Removed for performance
         scale: 0.98
     },
     animate: {
         opacity: 1,
         y: 0,
-        filter: 'blur(0px)',
+        // filter: 'blur(0px)', // Removed for performance
         scale: 1,
         transition: {
-            duration: 0.6,
-            ease: [0.25, 0.1, 0.25, 1.0], // Premium Cubic Bezier (similar to iOS)
+            duration: 0.4, // Reduced duration for snappier feel
+            ease: "easeOut",
             staggerChildren: 0.1
         }
     },
     exit: {
         opacity: 0,
         y: -15,
-        filter: 'blur(8px)',
+        // filter: 'blur(8px)', // Removed for performance
         scale: 0.98,
         transition: {
             duration: 0.4,

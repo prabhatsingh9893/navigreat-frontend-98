@@ -63,19 +63,6 @@ const Header = () => {
     setIsDropdownOpen(false);
   };
 
-  // --- SCROLL EFFECT ---
-  const [isScrolled, setIsScrolled] = useState(false);
-  const isHomePage = location.pathname === '/';
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  // Dynamic Header Classes
   // Dynamic Header Classes
   const headerClasses = "fixed w-full z-50 transition-all duration-300 bg-white shadow-sm border-b border-gray-100";
 
@@ -146,6 +133,20 @@ const Header = () => {
                       <span className="font-medium">Edit Profile</span>
                     </Link>
 
+                    {/* ADMIN PANEL LINK */}
+                    {user.role === 'admin' && (
+                      <Link
+                        to="/admin"
+                        onClick={() => setIsDropdownOpen(false)}
+                        className="flex items-center gap-3 px-4 py-2.5 text-gray-700 hover:bg-green-50 hover:text-green-600 rounded-lg transition group"
+                      >
+                        <div className="w-[18px] h-[18px] flex items-center justify-center rounded bg-green-100 text-green-600">
+                          <LayoutDashboard size={12} />
+                        </div>
+                        <span className="font-medium">Admin Panel</span>
+                      </Link>
+                    )}
+
                     {/* MESSAGES/CHAT LINK */}
                     <Link
                       to="/chat"
@@ -197,6 +198,11 @@ const Header = () => {
                 <Link to="/dashboard" className="text-blue-600 font-bold flex items-center gap-2" onClick={() => setIsOpen(false)}>
                   <LayoutDashboard size={18} /> My Dashboard
                 </Link>
+                {user.role === 'admin' && (
+                  <Link to="/admin" className="text-green-600 font-bold flex items-center gap-2" onClick={() => setIsOpen(false)}>
+                    <LayoutDashboard size={18} /> Admin Panel
+                  </Link>
+                )}
                 <Link to="/chat" className="text-purple-600 font-bold flex items-center gap-2" onClick={() => setIsOpen(false)}>
                   <Mail size={18} /> Messages
                 </Link>

@@ -48,9 +48,9 @@ const DashboardPage = () => {
     const [user, setUser] = useState(null);
     const [sessions, setSessions] = useState([]); // ✅ NEW: Sessions List
     const [profile, setProfile] = useState({
-        username: "", role: "Mentor", about: "", college: "", branch: "", image: "",
+        username: "", role: "", about: "", college: "", branch: "", image: "",
         meetingId: "", passcode: "",
-        skills: ["Career Guidance"], badges: ["Verified Mentor"]
+        skills: ["Career Guidance"], badges: [] // ✅ Cleared hardcoded badges
     });
     const [lectures, setLectures] = useState([]);
     const [bookings, setBookings] = useState([]); // ✅ NEW: Bookings State
@@ -436,7 +436,13 @@ const DashboardPage = () => {
                             fontSize="text-6xl"
                             className="bg-white border-[6px] border-white shadow-2xl relative"
                         />
-                        <div className="absolute bottom-5 right-5 bg-blue-600 text-white p-2 rounded-full border-4 border-white shadow-lg" title="Verified Mentor"><BadgeCheck size={24} /></div>
+                        {/* Badge Logic */}
+                        {profile.isVerified && (
+                            <div className="absolute bottom-5 right-5 bg-blue-600 text-white p-2 rounded-full border-4 border-white shadow-lg" title="Verified Mentor"><BadgeCheck size={24} /></div>
+                        )}
+                        {!profile.isVerified && profile.verificationStatus === 'pending' && (
+                            <div className="absolute bottom-5 right-5 bg-yellow-500 text-white p-2 rounded-full border-4 border-white shadow-lg" title="Verification Pending"><Clock size={24} /></div>
+                        )}
                     </div>
 
                     {/* Profile Info */}
@@ -519,6 +525,21 @@ const DashboardPage = () => {
             ) : (
                 /* --- MENTOR DASHBOARD VIEW (Original) --- */
                 <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+                    {/* VERIFICATION BANNER */}
+                    {(profile.verificationStatus === 'pending' || profile.verificationStatus === 'rejected') && profile.role.toLowerCase() === 'mentor' && (
+                        <div className={`col-span-1 lg:col-span-3 border-l-4 p-4 rounded-r-lg shadow-sm flex items-center gap-3 ${profile.verificationStatus === 'rejected' ? 'bg-red-50 border-red-400' : 'bg-yellow-50 border-yellow-400'}`}>
+                            {profile.verificationStatus === 'rejected' ? <X className="text-red-500" size={24} /> : <Clock className="text-yellow-500" size={24} />}
+                            <div>
+                                <h3 className={`text-lg font-bold ${profile.verificationStatus === 'rejected' ? 'text-red-800' : 'text-yellow-800'}`}>
+                                    {profile.verificationStatus === 'rejected' ? 'Verification Rejected' : 'Verifying by Team'}
+                                </h3>
+                                <p className={`text-sm ${profile.verificationStatus === 'rejected' ? 'text-red-700' : 'text-yellow-700'}`}>
+                                    {profile.verificationStatus === 'rejected' ? 'Your profile was rejected. Please update your details and contact support.' : 'Your profile is currently under review. At least 50% Profile completion is recommended.'}
+                                </p>
+                            </div>
+                        </div>
+                    )}
 
                     {/* LEFT COLUMN */}
                     <div className="lg:col-span-2 space-y-8">
@@ -714,16 +735,19 @@ const DashboardPage = () => {
                     </div>
 
                 </div>
-            )}
+            )
+            }
 
             {/* Review Modal */}
-            {reviewMentorId && (
-                <ReviewModal
-                    mentorId={reviewMentorId}
-                    onClose={() => setReviewMentorId(null)}
-                />
-            )}
-        </div>
+            {
+                reviewMentorId && (
+                    <ReviewModal
+                        mentorId={reviewMentorId}
+                        onClose={() => setReviewMentorId(null)}
+                    />
+                )
+            }
+        </div >
     );
 };
 

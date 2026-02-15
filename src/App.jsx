@@ -15,6 +15,7 @@ import MentorSignupPage from './pages/MentorSignupPage.jsx';
 import DashboardPage from './pages/DashboardPage.jsx';
 import MentorProfile from './pages/MentorProfile.jsx';
 import AdminMessagesPage from './pages/AdminMessagesPage.jsx';
+import AdminPage from './pages/AdminPage.jsx'; // ✅ Import Admin Page
 import ChatPage from './pages/ChatPage.jsx';
 import ForgotPasswordPage from './pages/ForgotPasswordPage.jsx';
 import ResetPasswordPage from './pages/ResetPasswordPage.jsx';
@@ -70,6 +71,7 @@ function App() {
             <Route path="/mentor/:id" element={<ProtectedRoute><MentorProfile /></ProtectedRoute>} />
             <Route path="/chat" element={<ProtectedRoute><ChatPage /></ProtectedRoute>} />
             <Route path="/chat/:userId" element={<ProtectedRoute><ChatPage /></ProtectedRoute>} />
+            <Route path="/admin" element={<ProtectedRoute><AdminPage /></ProtectedRoute>} /> {/* ✅ Admin Panel Route */}
             <Route path="/admin/messages" element={<ProtectedRoute><AdminMessagesPage /></ProtectedRoute>} />
 
             {/* ✅ ZOOM LIVE SESSION ROUTE WITH SUSPENSE & PROTECTION */}

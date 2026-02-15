@@ -60,15 +60,11 @@ function MentorsPage() {
       {/* 1. Header Background Video */}
       <div className="absolute top-0 left-0 w-full h-[600px] overflow-hidden rounded-b-[4rem] shadow-sm z-0">
         <div className="absolute inset-0 bg-white/60 z-10"></div> {/* Light overlay */}
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
+        <img
+          src="https://images.unsplash.com/photo-1531545514256-b1400bc00f31?auto=format&fit=crop&q=80&w=1920"
+          alt="Mentors Background"
           className="w-full h-full object-cover"
-        >
-          <source src="/mentors-bg.mp4" type="video/mp4" />
-        </video>
+        />
         <div className="absolute inset-0 bg-gradient-to-t from-slate-50 to-transparent z-20"></div> {/* Fade out to list */}
       </div>
 
