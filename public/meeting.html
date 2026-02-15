@@ -141,6 +141,8 @@
                 isSupportAV: true,
                 isSupportChat: true, // ✅ ENABLES CHAT
                 disablePreview: false, // ✅ SHOWS PREVIEW
+                isLockBottom: false, // ✅ Allow bottom bar to float on mobile
+                screenShare: false, // ✅ Disable screen share to save space on mobile
                 success: function () {
                     console.log("Zoom Init Success");
                     ZoomMtg.join({
@@ -154,13 +156,12 @@
                         success: function (res) {
                             console.log("Join Success", res);
 
-                            // ✅ FORCE OPEN CHAT ON MOBILE
-                            setTimeout(() => {
-                                if (window.innerWidth < 768) {
-                                    ZoomMtg.showChat(true);
-                                    console.log("Mobile Chat Auto-Opened");
-                                }
-                            }, 1000);
+                            // setTimeout(() => {
+                            //    if (window.innerWidth < 768) {
+                            //        ZoomMtg.showChat(true);
+                            //        console.log("Mobile Chat Auto-Opened");
+                            //    }
+                            // }, 1000);
 
                             const overlay = document.getElementById('loading-overlay');
                             if (overlay) overlay.style.display = 'none';
