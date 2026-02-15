@@ -153,10 +153,14 @@
                         tk: '', // Token if needed, else empty
                         success: function (res) {
                             console.log("Join Success", res);
-                            // ✅ Auto-Show Chat on Mobile by simulating click after join (Optional, but safe)
-                            // setTimeout(() => {
-                            //    if (window.innerWidth < 768) ZoomMtg.showChat(true); 
-                            // }, 2000);
+
+                            // ✅ FORCE OPEN CHAT ON MOBILE
+                            setTimeout(() => {
+                                if (window.innerWidth < 768) {
+                                    ZoomMtg.showChat(true);
+                                    console.log("Mobile Chat Auto-Opened");
+                                }
+                            }, 1000);
 
                             const overlay = document.getElementById('loading-overlay');
                             if (overlay) overlay.style.display = 'none';
