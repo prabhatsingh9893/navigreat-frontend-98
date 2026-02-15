@@ -528,16 +528,38 @@ const DashboardPage = () => {
 
                     {/* VERIFICATION BANNER */}
                     {(profile.verificationStatus === 'pending' || profile.verificationStatus === 'rejected') && profile.role.toLowerCase() === 'mentor' && (
-                        <div className={`col-span-1 lg:col-span-3 border-l-4 p-4 rounded-r-lg shadow-sm flex items-center gap-3 ${profile.verificationStatus === 'rejected' ? 'bg-red-50 border-red-400' : 'bg-yellow-50 border-yellow-400'}`}>
-                            {profile.verificationStatus === 'rejected' ? <X className="text-red-500" size={24} /> : <Clock className="text-yellow-500" size={24} />}
-                            <div>
-                                <h3 className={`text-lg font-bold ${profile.verificationStatus === 'rejected' ? 'text-red-800' : 'text-yellow-800'}`}>
-                                    {profile.verificationStatus === 'rejected' ? 'Verification Rejected' : 'Verifying by Team'}
-                                </h3>
-                                <p className={`text-sm ${profile.verificationStatus === 'rejected' ? 'text-red-700' : 'text-yellow-700'}`}>
-                                    {profile.verificationStatus === 'rejected' ? 'Your profile was rejected. Please update your details and contact support.' : 'Your profile is currently under review. At least 50% Profile completion is recommended.'}
-                                </p>
+                        <div className={`col-span-1 lg:col-span-3 border-l-4 p-4 rounded-r-lg shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-3 ${profile.verificationStatus === 'rejected' ? 'bg-red-50 border-red-400' : 'bg-yellow-50 border-yellow-400'}`}>
+                            <div className="flex items-center gap-3">
+                                {profile.verificationStatus === 'rejected' ? <X className="text-red-500" size={24} /> : <Clock className="text-yellow-500" size={24} />}
+                                <div>
+                                    <h3 className={`text-lg font-bold ${profile.verificationStatus === 'rejected' ? 'text-red-800' : 'text-yellow-800'}`}>
+                                        {profile.verificationStatus === 'rejected' ? 'Verification Rejected' : 'Verifying by Team'}
+                                    </h3>
+                                    <p className={`text-sm ${profile.verificationStatus === 'rejected' ? 'text-red-700' : 'text-yellow-700'}`}>
+                                        {profile.verificationStatus === 'rejected' ? 'Your profile was rejected. Please update your details and contact support.' : 'Your profile is currently under review.'}
+                                    </p>
+                                </div>
                             </div>
+                            <button
+                                onClick={async () => {
+                                    if (!window.confirm("Verify yourself immediately? (Dev Mode)")) return;
+                                    const res = await fetch(`${API_BASE_URL}/dev/verify-me`, {
+                                        method: 'PUT',
+                                        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+                                    });
+                                    const data = await res.json();
+                                    if (data.success) {
+                                        toast.success("✅ DEV: Verified Successfully!");
+                                        setProfile(prev => ({ ...prev, isVerified: true, verificationStatus: 'verified' }));
+                                        window.location.reload();
+                                    } else {
+                                        toast.error("Failed to verify");
+                                    }
+                                }}
+                                className="px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-bold hover:bg-gray-100 shadow-sm whitespace-nowrap"
+                            >
+                                ⚡ Self Verify (Dev)
+                            </button>
                         </div>
                     )}
 

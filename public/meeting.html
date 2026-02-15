@@ -139,6 +139,8 @@
             ZoomMtg.init({
                 leaveUrl: leaveUrl,
                 isSupportAV: true,
+                isSupportChat: true, // ✅ ENABLES CHAT
+                disablePreview: false, // ✅ SHOWS PREVIEW
                 success: function () {
                     console.log("Zoom Init Success");
                     ZoomMtg.join({
@@ -151,6 +153,11 @@
                         tk: '', // Token if needed, else empty
                         success: function (res) {
                             console.log("Join Success", res);
+                            // ✅ Auto-Show Chat on Mobile by simulating click after join (Optional, but safe)
+                            // setTimeout(() => {
+                            //    if (window.innerWidth < 768) ZoomMtg.showChat(true); 
+                            // }, 2000);
+
                             const overlay = document.getElementById('loading-overlay');
                             if (overlay) overlay.style.display = 'none';
 
