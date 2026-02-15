@@ -231,7 +231,7 @@ const ChatPage = () => {
     };
 
     return (
-        <div className="flex h-[100dvh] bg-gray-100 pt-16">
+        <div className="flex h-[calc(100vh-64px)] mt-16 bg-gray-100">
             {/* Sidebar */}
             <div className={`${targetUserId ? 'hidden md:flex' : 'flex'} w-full md:w-1/3 bg-white border-r border-gray-200 flex-col`}>
                 <div className="p-4 border-b border-gray-100 bg-gray-50 flex justify-between items-center">

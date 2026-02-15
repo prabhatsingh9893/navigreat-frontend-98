@@ -218,7 +218,7 @@ function HomePage() {
         </section>
 
         {/* 3. MENTORS SECTION (Glass Cards) */}
-        <section id="mentors" className="py-24 relative overflow-hidden">
+        <section id="mentors" className="py-12 md:py-24 relative overflow-hidden">
           {/* Section Background Video */}
           <div className="absolute inset-0 z-0">
             <div className={`absolute inset-0 z-10 ${isMobile ? 'bg-white/70' : 'bg-white/40'}`} />
@@ -231,50 +231,63 @@ function HomePage() {
 
           <div className="container mx-auto px-6 relative z-10">
             <FadeIn>
-              <div className="text-center mb-16 space-y-4">
+              <div className="text-center mb-12 md:mb-16 space-y-4">
                 <span className="text-blue-600 font-bold tracking-wider uppercase text-sm bg-blue-50 px-4 py-1 rounded-full">Expert Guidance</span>
-                <h2 className="text-4xl font-extrabold text-slate-900">Meet Your Future Mentors</h2>
+                <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900">Meet Your Future Mentors</h2>
                 <p className="text-slate-500 max-w-2xl mx-auto">Get personalized guidance from students who have cracked the toughest exams.</p>
               </div>
             </FadeIn>
 
-            <div className="grid md:grid-cols-3 gap-8">
-              {loading ? ([1, 2, 3].map((n) => <div key={n} className="h-96 bg-gray-200 rounded-2xl animate-pulse"></div>)) :
-                (!mentors || mentors.length === 0) ? (<div className="col-span-3 text-center text-gray-500">No mentors found.</div>) : (
+            <div className="grid md:grid-cols-3 gap-6 md:gap-8">
+              {loading ? ([1, 2, 3].map((n) => <div key={n} className="h-96 bg-gray-200 rounded-3xl animate-pulse"></div>)) :
+                (!mentors || mentors.length === 0) ? (
+                  <div className="col-span-3 flex flex-col items-center justify-center p-12 bg-white/50 backdrop-blur-sm rounded-3xl text-center border border-white/40">
+                    <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mb-4">
+                      <Users size={32} className="text-slate-400" />
+                    </div>
+                    <h3 className="text-lg font-bold text-slate-700">No Mentors Found</h3>
+                    <p className="text-slate-500 text-sm">Check back later for new mentors.</p>
+                  </div>
+                ) : (
                   mentors.map((mentor, index) => (
                     <FadeIn key={mentor._id} delay={index * 0.1}>
-                      <div className="glass-card flex flex-col overflow-hidden group">
+                      <div className="glass-card flex flex-col overflow-hidden group rounded-3xl border-0 shadow-xl shadow-slate-200/50">
                         {/* Image */}
-                        <div className="relative h-72 overflow-hidden bg-slate-100">
+                        <div className="relative h-72 md:h-80 overflow-hidden bg-slate-100">
                           <Avatar
                             src={mentor.image}
                             name={mentor.username}
                             size="w-full h-full"
-                            fontSize="text-4xl"
-                            className="rounded-none object-cover transition-transform duration-500 group-hover:scale-110"
+                            fontSize="text-5xl"
+                            className="rounded-none object-cover transition-transform duration-700 group-hover:scale-110"
                           />
-                          <div className="absolute top-4 right-4 bg-white/95 backdrop-blur px-3 py-1.5 rounded-full text-xs font-bold text-slate-800 flex items-center gap-1 shadow-sm border border-white/20">
-                            <CheckCircle size={12} className="text-blue-500" /> Verified
+                          <div className="absolute top-4 right-4 bg-white/95 backdrop-blur px-3 py-1.5 rounded-full text-xs font-bold text-slate-800 flex items-center gap-1 shadow-sm border border-white/20 z-10">
+                            <CheckCircle size={14} className="text-blue-500" /> Verified
                           </div>
-                          <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/60 to-transparent" />
-                          <div className="absolute bottom-4 left-4 text-white">
-                            <h3 className="text-xl font-bold truncate pr-4">{mentor.username}</h3>
-                            <p className="text-gray-200 text-sm truncate">{mentor.college || "Top University"}</p>
+                          <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+                          <div className="absolute bottom-5 left-5 text-white z-10">
+                            <h3 className="text-2xl font-bold truncate pr-4 leading-tight mb-1 shadow-black/10 drop-shadow-md">{mentor.username}</h3>
+                            <p className="text-gray-100 text-sm font-medium truncate opacity-90">{mentor.college || "Top University"}</p>
                           </div>
                         </div>
 
                         {/* Info */}
-                        <div className="p-6 flex flex-col flex-grow">
-                          <div className="flex items-center gap-2 text-slate-600 text-sm mb-6 bg-slate-50 p-3 rounded-xl border border-slate-100">
-                            <BookOpen size={16} className="text-blue-500" />
-                            <span className="truncate font-medium">{mentor.branch || "Engineering"}</span>
+                        <div className="p-5 md:p-6 flex flex-col flex-grow bg-white relative">
+                          <div className="flex items-center gap-3 text-slate-700 text-sm mb-5 bg-slate-50 p-3.5 rounded-2xl border border-slate-100">
+                            <div className="bg-blue-100 p-2 rounded-lg text-blue-600">
+                              <BookOpen size={18} />
+                            </div>
+                            <div>
+                              <p className="text-xs text-slate-400 font-bold uppercase tracking-wider">Branch</p>
+                              <span className="font-bold text-slate-800 line-clamp-1">{mentor.branch || "Engineering"}</span>
+                            </div>
                           </div>
 
                           <button
                             onClick={() => navigate(`/mentor/${mentor._id}`)}
-                            className="mt-auto w-full group-hover:bg-blue-600 bg-slate-900 text-white py-3.5 rounded-xl font-bold transition-all duration-300 shadow-lg shadow-slate-200 group-hover:shadow-blue-200"
+                            className="mt-auto w-full bg-blue-600 hover:bg-blue-700 text-white py-3.5 rounded-2xl font-bold text-sm md:text-base transition-all duration-300 shadow-lg shadow-blue-500/20 hover:shadow-blue-500/40 transform active:scale-[0.98] flex items-center justify-center gap-2"
                           >
-                            View Profile
+                            View Profile <ArrowRight size={16} />
                           </button>
                         </div>
                       </div>
