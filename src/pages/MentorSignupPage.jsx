@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { API_BASE_URL } from '../config';
+import toast from 'react-hot-toast';
+import { Loader2, UploadCloud, User } from 'lucide-react';
 
 function MentorSignupPage() {
   const navigate = useNavigate();
@@ -15,18 +17,35 @@ function MentorSignupPage() {
   });
 
   const [selectedFile, setSelectedFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setSelectedFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!formData.college || !formData.branch) {
-      alert("Please fill College and Branch details to become a mentor.");
+      toast.error("Please fill College and Branch details.");
       return;
     }
+
+    setLoading(true);
+    const toastId = toast.loading("Creating your mentor profile...");
 
     // Create FormData for file upload
     const data = new FormData();
@@ -43,28 +62,31 @@ function MentorSignupPage() {
     try {
       const response = await fetch(`${API_BASE_URL}/auth/register`, {
         method: 'POST',
-        // Headers are automatically set for FormData
         body: data,
       });
 
-      const data = await response.json();
+      const responseData = await response.json();
 
       if (response.ok) {
-        alert("🎉 Welcome Mentor! Your profile is created.");
+        toast.success("Welcome aboard! Mentor profile created.", { id: toastId });
 
-        if (data.token) {
-          localStorage.setItem('token', data.token);
-          localStorage.setItem('userData', JSON.stringify(data.user));
-          window.location.href = '/dashboard';
+        if (responseData.token) {
+          localStorage.setItem('token', responseData.token);
+          localStorage.setItem('userData', JSON.stringify(responseData.user));
+          setTimeout(() => {
+            window.location.href = '/dashboard';
+          }, 1500);
         } else {
           navigate('/login');
         }
       } else {
-        alert("❌ Registration Failed: " + (data.message || "Error"));
+        toast.error(responseData.message || "Registration Failed", { id: toastId });
       }
     } catch (error) {
       console.error("Error:", error);
-      alert("Something went wrong!");
+      toast.error("Something went wrong. Please try again.", { id: toastId });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -80,19 +102,27 @@ function MentorSignupPage() {
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10 border border-gray-100">
           <form className="space-y-6" onSubmit={handleSubmit}>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Profile Photo</label>
-              <div className="mt-1 flex items-center">
+            {/* Profile Image Upload with Preview */}
+            <div className="flex flex-col items-center space-y-4 mb-6">
+              <div className="relative w-24 h-24 rounded-full overflow-hidden bg-gray-100 border-2 border-dashed border-gray-300 flex items-center justify-center group hover:border-blue-500 transition-colors cursor-pointer">
+                {imagePreview ? (
+                  <img src={imagePreview} alt="Profile" className="w-full h-full object-cover" />
+                ) : (
+                  <User className="text-gray-400 w-10 h-10" />
+                )}
                 <input
                   type="file"
                   accept="image/*"
-                  onChange={(e) => setSelectedFile(e.target.files[0])}
-                  className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                  onChange={handleFileChange}
+                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                 />
               </div>
+              <p className="text-xs text-gray-500">
+                {selectedFile ? selectedFile.name : "Click to upload profile photo"}
+              </p>
             </div>
 
             <div>
@@ -131,8 +161,19 @@ function MentorSignupPage() {
             </div>
 
             <div>
-              <button type="submit" className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                Register as Mentor
+              <button
+                type="submit"
+                disabled={loading}
+                className={`w-full flex justify-center py-2.5 px-4 border border-transparent rounded-md shadow-sm text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
+              >
+                {loading ? (
+                  <>
+                    <Loader2 className="animate-spin mr-2 h-5 w-5" />
+                    Creating Account...
+                  </>
+                ) : (
+                  "Register as Mentor"
+                )}
               </button>
             </div>
           </form>

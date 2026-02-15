@@ -1,18 +1,18 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { io } from "socket.io-client";
-import { Send, User as UserIcon, MessageSquare, ArrowLeft, Mic, StopCircle } from 'lucide-react';
+import { Send, User as UserIcon, MessageSquare, ArrowLeft, Mic, StopCircle, Check, CheckCheck } from 'lucide-react';
 import { API_BASE_URL } from '../config';
+import toast from 'react-hot-toast';
 
-// Initialize Socket outside component to avoid re-connections
-// Note: API_BASE_URL usually ends with /api, we need root domain for socket
+// Initialize Socket
 const SOCKET_URL = API_BASE_URL.replace('/api', '');
 const socket = io(SOCKET_URL, {
     autoConnect: true,
     reconnection: true,
     reconnectionAttempts: 5,
     reconnectionDelay: 3000,
-    transports: ["websocket", "polling"] // Try websocket first
+    transports: ["websocket", "polling"]
 });
 
 const ChatPage = () => {
@@ -23,7 +23,7 @@ const ChatPage = () => {
     const [currentUser, setCurrentUser] = useState(null);
     const [targetUser, setTargetUser] = useState(null);
     const [contactList, setContactList] = useState([]);
-    const [isTyping, setIsTyping] = useState(false); // ⌨️
+    const [isTyping, setIsTyping] = useState(false);
 
     // 🎙️ Voice Recording State
     const [isRecording, setIsRecording] = useState(false);
@@ -31,6 +31,7 @@ const ChatPage = () => {
     const audioChunksRef = useRef([]);
 
     const scrollRef = useRef();
+    const notificationSound = useRef(new Audio('/sounds/notification.mp3')); // Ensure this file exists or use a CDN
     let typingTimeout = null;
 
     // 1. Auth Check & Setup
@@ -43,7 +44,6 @@ const ChatPage = () => {
         const user = JSON.parse(userData);
         setCurrentUser(user);
 
-        // Join my own room to receive messages
         const joinRoom = () => {
             console.log("Joined Room:", user._id || user.id);
             socket.emit("join_room", user._id || user.id);
@@ -52,7 +52,6 @@ const ChatPage = () => {
         if (socket.connected) joinRoom();
         socket.on("connect", joinRoom);
 
-        // Fetch "Contacts"
         fetchContacts(user.role);
 
         return () => {
@@ -65,7 +64,7 @@ const ChatPage = () => {
         if (!targetUserId || targetUserId === 'undefined' || !currentUser) return;
 
         // A. Fetch Target User Details
-        fetch(`${API_BASE_URL}/mentors/${targetUserId}`) // Works for fetching basic user info too usually? Or need generic /users/:id route?
+        fetch(`${API_BASE_URL}/mentors/${targetUserId}`)
             .then(res => res.json())
             .then(data => {
                 if (data.success) {
@@ -91,12 +90,18 @@ const ChatPage = () => {
             const isCurrentChat = (msg.sender === targetUserId || msg.receiver === targetUserId);
             const isMe = (msg.sender === currentUser?._id || msg.sender === currentUser?.id);
 
-            // A. Update Messages Area (if open)
+            // A. Update Messages Area
             if (isCurrentChat) {
                 setMessages((prev) => [...prev, msg]);
                 scrollToBottom();
-                // If it's the current chat and I received it, assume read immediately in UI? 
-                // Or let the next fetch handle it. For now, we don't increment badge if open.
+            } else if (!isMe) {
+                // Toast Notification for other chats
+                toast(`${msg.content.substring(0, 30)}...`, {
+                    icon: '💬',
+                    style: { borderRadius: '10px', background: '#333', color: '#fff' }
+                });
+                // Optional: Play Sound
+                // notificationSound.current.play().catch(e => console.log("Audio play failed")); 
             }
 
             // B. Update Sidebar (Move to Top + Badge)
@@ -110,28 +115,21 @@ const ChatPage = () => {
                         ...contact,
                         lastMessage: msg.content,
                         lastMessageTime: msg.timestamp,
-                        // Increment badge if: 1. I am NOT sender AND 2. It is NOT the current open chat
                         unreadCount: (!isMe && targetUserId !== contact._id)
                             ? (contact.unreadCount || 0) + 1
                             : contact.unreadCount
                     };
-
-                    // Remove current and move to top
                     newList.splice(index, 1);
                     newList.unshift(updatedContact);
                     return newList;
                 } else {
-                    // If contact not in list (New Conversation), we should ideally fetch it.
-                    // For MVP, trigger a full re-fetch of contacts to be safe.
-                    fetchContacts();
+                    fetchContacts(); // Fetch text if new contact
                     return prev;
                 }
             });
         };
 
         socket.on("receive_message", handleReceiveMessage);
-
-        // Typing Listeners
         socket.on("display_typing", () => setIsTyping(true));
         socket.on("hide_typing", () => setIsTyping(false));
 
@@ -173,17 +171,16 @@ const ChatPage = () => {
                 const reader = new FileReader();
                 reader.readAsDataURL(audioBlob);
                 reader.onloadend = () => {
-                    const base64Audio = reader.result;
-                    sendAudioMessage(base64Audio);
+                    sendAudioMessage(reader.result);
                 };
-                audioChunksRef.current = []; // Reset chunks
+                audioChunksRef.current = [];
             };
 
             mediaRecorderRef.current.start();
             setIsRecording(true);
         } catch (err) {
             console.error("Error accessing microphone:", err);
-            alert("Could not access microphone.");
+            toast.error("Could not access microphone.");
         }
     };
 
@@ -191,36 +188,31 @@ const ChatPage = () => {
         if (mediaRecorderRef.current && isRecording) {
             mediaRecorderRef.current.stop();
             setIsRecording(false);
-            // Stop all tracks to release mic
             mediaRecorderRef.current.stream.getTracks().forEach(track => track.stop());
         }
     };
 
     const sendAudioMessage = (base64Audio) => {
         if (!targetUserId) return;
-
         const msgData = {
             sender: currentUser._id || currentUser.id,
             receiver: targetUserId,
-            content: "🎤 Voice Message", // Fallback text
+            content: "🎤 Voice Message",
             messageType: 'audio',
             audioUrl: base64Audio,
             timestamp: new Date()
         };
-
         socket.emit("send_message", msgData);
     };
 
     const sendMessage = async () => {
         if (!newMessage.trim() || !targetUserId) return;
-
         const msgData = {
             sender: currentUser._id || currentUser.id,
             receiver: targetUserId,
             content: newMessage,
             timestamp: new Date()
         };
-
         socket.emit("send_message", msgData);
         setNewMessage("");
     };
@@ -229,18 +221,22 @@ const ChatPage = () => {
         scrollRef.current?.scrollIntoView({ behavior: "smooth" });
     };
 
-    // Auto-scroll on new messages
     useEffect(() => {
         scrollToBottom();
     }, [messages]);
 
+    const formatTime = (dateString) => {
+        const date = new Date(dateString);
+        return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    };
 
     return (
         <div className="flex h-[100dvh] bg-gray-100 pt-16">
-            {/* Sidebar (Contacts) - Hidden on mobile if chatting */}
+            {/* Sidebar */}
             <div className={`${targetUserId ? 'hidden md:flex' : 'flex'} w-full md:w-1/3 bg-white border-r border-gray-200 flex-col`}>
-                <div className="p-4 border-b border-gray-100 bg-gray-50">
+                <div className="p-4 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
                     <h2 className="text-xl font-bold text-gray-800">Messages</h2>
+                    <span className="text-xs bg-blue-100 text-blue-600 px-2 py-1 rounded-full">{contactList.length} Contacts</span>
                 </div>
                 <div className="flex-1 overflow-y-auto">
                     {contactList.map(contact => (
@@ -249,7 +245,7 @@ const ChatPage = () => {
                             onClick={() => navigate(`/chat/${contact._id}`)}
                             className={`p-4 flex items-center gap-3 cursor-pointer hover:bg-blue-50 transition border-b border-gray-50 ${targetUserId === contact._id ? 'bg-blue-50 border-blue-200' : ''}`}
                         >
-                            <div className="w-12 h-12 rounded-full bg-gray-200 overflow-hidden flex-shrink-0">
+                            <div className="w-12 h-12 rounded-full bg-gray-200 overflow-hidden flex-shrink-0 border border-gray-200">
                                 <img src={contact.image || `https://api.dicebear.com/7.x/initials/svg?seed=${contact.username}`} alt="avatar" className="w-full h-full object-cover" />
                             </div>
                             <div className="flex-1 min-w-0">
@@ -257,12 +253,12 @@ const ChatPage = () => {
                                     <h3 className="font-bold text-gray-800 text-sm truncate">{contact.username}</h3>
                                     {contact.lastMessageTime && (
                                         <span className="text-[10px] text-gray-400 flex-shrink-0">
-                                            {new Date(contact.lastMessageTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                            {formatTime(contact.lastMessageTime)}
                                         </span>
                                     )}
                                 </div>
                                 <div className="flex justify-between items-center">
-                                    <p className="text-xs text-gray-500 truncate">
+                                    <p className="text-xs text-gray-500 truncate w-3/4">
                                         {contact.lastMessage || (contact.college ? contact.college : "Tap to chat")}
                                     </p>
                                     {contact.unreadCount > 0 && (
@@ -280,12 +276,13 @@ const ChatPage = () => {
 
             {/* Chat Area */}
             {targetUserId ? (
-                <div className="flex-1 flex flex-col bg-[#F3F4F6]">
+                <div className="flex-1 flex flex-col bg-[#e5ddd5] relative"> {/* WhatsApp-like bg color */}
+                    <div className="absolute inset-0 opacity-10 pointer-events-none" style={{ backgroundImage: "url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png')" }}></div>
 
                     {/* Header */}
-                    <div className="p-4 bg-white border-b border-gray-200 flex items-center gap-3 shadow-sm z-10">
+                    <div className="p-3 bg-white border-b border-gray-200 flex items-center gap-3 shadow-sm z-10">
                         <button onClick={() => navigate('/chat')} className="md:hidden p-2 text-gray-600"><ArrowLeft size={20} /></button>
-                        <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold overflow-hidden">
+                        <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold overflow-hidden border border-gray-200">
                             {targetUser?.image ? <img src={targetUser.image} className="w-full h-full object-cover" /> : <UserIcon />}
                         </div>
                         <div>
@@ -297,40 +294,56 @@ const ChatPage = () => {
                     </div>
 
                     {/* Messages */}
-                    <div className="flex-1 overflow-y-auto p-4 space-y-4">
-                        {messages.map((msg, index) => {
-                            const isMe = msg.sender === (currentUser._id || currentUser.id);
-                            return (
-                                <div key={index} className={`flex ${isMe ? 'justify-end' : 'justify-start'}`}>
-                                    <div className={`max-w-[70%] p-3 rounded-2xl shadow-sm text-sm ${isMe ? 'bg-blue-600 text-white rounded-br-none' : 'bg-white text-gray-800 rounded-bl-none border border-gray-200'}`}>
+                    <div className="flex-1 overflow-y-auto p-4 space-y-2 z-10 custom-scrollbar">
+                        {messages.length === 0 ? (
+                            <div className="flex flex-col items-center justify-center h-full text-gray-500 opacity-80">
+                                <div className="bg-white/50 p-4 rounded-full mb-3">
+                                    <MessageSquare size={32} className="text-blue-400" />
+                                </div>
+                                <p className="text-sm font-medium">No messages yet</p>
+                                <p className="text-xs">Say "Hi" to start the conversation! 👋</p>
+                            </div>
+                        ) : (
+                            messages.map((msg, index) => {
+                                const isMe = msg.sender === (currentUser._id || currentUser.id);
+                                return (
+                                    <div key={index} className={`flex ${isMe ? 'justify-end' : 'justify-start'}`}>
+                                        <div className={`relative max-w-[70%] p-2 px-3 rounded-lg shadow-sm text-sm ${isMe ? 'bg-[#dcf8c6] text-gray-800' : 'bg-white text-gray-800'}`}>
 
-                                        {msg.messageType === 'audio' ? (
-                                            <div className="flex items-center gap-2 min-w-[200px]">
-                                                <audio controls src={msg.audioUrl} className="w-full h-8" />
+                                            {msg.messageType === 'audio' ? (
+                                                <div className="flex items-center gap-2 min-w-[200px] py-1">
+                                                    <audio controls src={msg.audioUrl} className="w-full h-8" />
+                                                </div>
+                                            ) : (
+                                                <p className="leading-relaxed pb-1">{msg.content}</p>
+                                            )}
+
+                                            <div className="flex items-center justify-end gap-1 mt-0.5 select-none">
+                                                <span className="text-[10px] text-gray-500 min-w-[45px] text-right">
+                                                    {formatTime(msg.timestamp)}
+                                                </span>
+                                                {isMe && (
+                                                    <span>
+                                                        {msg.read ? <CheckCheck size={14} className="text-blue-500" /> : <Check size={14} className="text-gray-400" />}
+                                                    </span>
+                                                )}
                                             </div>
-                                        ) : (
-                                            <p>{msg.content}</p>
-                                        )}
-
-                                        <div className={`text-[10px] mt-1 text-right ${isMe ? 'text-blue-200' : 'text-gray-400'}`}>
-                                            {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                         </div>
                                     </div>
-                                </div>
-                            );
-                        })}
+                                );
+                            })
+                        )}
                         <div ref={scrollRef}></div>
                     </div>
 
                     {/* Input */}
-                    <div className="p-4 bg-white border-t border-gray-200">
-                        <div className="flex gap-2">
+                    <div className="p-3 bg-white border-t border-gray-200 z-10">
+                        <div className="flex gap-2 items-center">
                             <input
                                 type="text"
                                 value={newMessage}
                                 onChange={(e) => {
                                     setNewMessage(e.target.value);
-                                    // Emit Typing
                                     socket.emit("typing", targetUserId);
                                     if (typingTimeout) clearTimeout(typingTimeout);
                                     typingTimeout = setTimeout(() => socket.emit("stop_typing", targetUserId), 2000);
@@ -338,22 +351,25 @@ const ChatPage = () => {
                                 onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
                                 placeholder={isRecording ? "Recording audio..." : "Type a message..."}
                                 disabled={isRecording}
-                                className={`flex-1 border border-gray-300 rounded-full px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-50 ${isRecording ? 'opacity-50 cursor-not-allowed bg-red-50' : ''}`}
+                                className={`flex-1 border border-gray-300 rounded-full px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-50 ${isRecording ? 'opacity-50 cursor-not-allowed bg-red-50' : ''}`}
                             />
                             <button
                                 onClick={newMessage.trim() ? sendMessage : (isRecording ? stopRecording : startRecording)}
-                                className={`${isRecording ? 'bg-red-500 hover:bg-red-600 animate-pulse' : 'bg-blue-600 hover:bg-blue-700'} text-white p-3 rounded-full transition shadow-md active:scale-95`}
+                                className={`${isRecording ? 'bg-red-500 hover:bg-red-600 animate-pulse' : 'bg-blue-600 hover:bg-blue-700'} text-white p-3 rounded-full transition shadow-md active:scale-95 flex items-center justify-center`}
                             >
-                                {newMessage.trim() ? <Send size={20} /> : (isRecording ? <StopCircle size={20} /> : <Mic size={20} />)}
+                                {newMessage.trim() ? <Send size={18} /> : (isRecording ? <StopCircle size={20} /> : <Mic size={20} />)}
                             </button>
                         </div>
                     </div>
 
                 </div>
             ) : (
-                <div className="hidden md:flex flex-1 flex-col items-center justify-center text-gray-400 bg-gray-50">
-                    <MessageSquare size={64} className="mb-4 opacity-20" />
-                    <p className="text-lg font-medium">Select a user to start chatting</p>
+                <div className="hidden md:flex flex-1 flex-col items-center justify-center text-gray-400 bg-gray-50 border-l border-gray-200">
+                    <div className="w-40 h-40 bg-gray-100 rounded-full flex items-center justify-center mb-6">
+                        <MessageSquare size={64} className="opacity-20 text-gray-500" />
+                    </div>
+                    <h2 className="text-2xl font-bold text-gray-700">Welcome to Chat</h2>
+                    <p className="mt-2 text-gray-500">Select a contact to start messaging.</p>
                 </div>
             )}
         </div>
