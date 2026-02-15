@@ -1,10 +1,13 @@
 import React, { useState, useRef } from 'react';
-import { Square, Download, Trash2, MonitorPlay, Mic, Monitor } from 'lucide-react';
+import { Square, Download, Trash2, MonitorPlay, Mic, Monitor, UploadCloud, Share2 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { uploadToCloudinary } from '../utils/upload';
 
 const ScreenRecorder = () => {
     const [status, setStatus] = useState('idle'); // idle, recording, stopped
     const [mediaBlobUrl, setMediaBlobUrl] = useState(null);
+    const [uploading, setUploading] = useState(false);
+    const [uploadedUrl, setUploadedUrl] = useState(null);
     const mediaRecorderRef = useRef(null);
     const chunksRef = useRef([]);
 
@@ -98,7 +101,32 @@ const ScreenRecorder = () => {
 
     const clearBlobUrl = () => {
         setMediaBlobUrl(null);
+        setUploadedUrl(null);
         setStatus('idle');
+    };
+
+    const handleUpload = async () => {
+        if (!mediaBlobUrl) return;
+
+        setUploading(true);
+        const loadingToast = toast.loading("Uploading recording...");
+
+        try {
+            // Convert Blob URL to File
+            const blob = await fetch(mediaBlobUrl).then(r => r.blob());
+            const file = new File([blob], `recording-${Date.now()}.webm`, { type: 'video/webm' });
+
+            const result = await uploadToCloudinary(file);
+
+            setUploadedUrl(result.url);
+            toast.success("Recording uploaded successfully!");
+        } catch (error) {
+            console.error(error);
+            toast.error("Upload failed: " + error.message);
+        } finally {
+            setUploading(false);
+            toast.dismiss(loadingToast);
+        }
     };
 
     if (status === 'idle') {
@@ -158,21 +186,41 @@ const ScreenRecorder = () => {
                 {/* Preview Video */}
                 <video src={mediaBlobUrl} className="w-full rounded-lg bg-black mb-3 border aspect-video" controls />
 
-                <div className="flex gap-2">
-                    <a
-                        href={mediaBlobUrl}
-                        download={`Navigreat_Session_${new Date().toISOString().slice(0, 10)}.webm`}
-                        className="flex-1 bg-green-600 text-white py-2.5 rounded-xl font-bold text-xs flex items-center justify-center gap-2 hover:bg-green-700 transition shadow-lg shadow-green-200"
-                    >
-                        <Download size={16} /> Save Video
-                    </a>
-                    <button
-                        onClick={clearBlobUrl}
-                        className="px-3 bg-red-50 text-red-500 rounded-xl hover:bg-red-100 transition border border-red-100"
-                        title="Discard"
-                    >
-                        <Trash2 size={18} />
-                    </button>
+                <div className="flex flex-col gap-2">
+                    {!uploadedUrl ? (
+                        <button
+                            onClick={handleUpload}
+                            disabled={uploading}
+                            className="w-full bg-blue-600 text-white py-2.5 rounded-xl font-bold text-xs flex items-center justify-center gap-2 hover:bg-blue-700 transition shadow-lg shadow-blue-200 disabled:bg-gray-400"
+                        >
+                            {uploading ? "Uploading..." : <><UploadCloud size={16} /> Upload to Cloud</>}
+                        </button>
+                    ) : (
+                        <div className="bg-green-50 border border-green-200 p-2 rounded-lg text-center">
+                            <p className="text-xs text-green-700 font-bold mb-1">Upload Successful!</p>
+                            <a href={uploadedUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline text-xs break-all">{uploadedUrl}</a>
+                            <button onClick={() => { navigator.clipboard.writeText(uploadedUrl); toast.success("Link copied!") }} className="mt-1 w-full bg-white border border-gray-200 text-xs py-1 rounded shadow-sm hover:bg-gray-50 flex items-center justify-center gap-1">
+                                <Share2 size={12} /> Copy Link
+                            </button>
+                        </div>
+                    )}
+
+                    <div className="flex gap-2">
+                        <a
+                            href={mediaBlobUrl}
+                            download={`Navigreat_Session_${new Date().toISOString().slice(0, 10)}.webm`}
+                            className="flex-1 bg-gray-100 text-gray-700 py-2.5 rounded-xl font-bold text-xs flex items-center justify-center gap-2 hover:bg-gray-200 transition border border-gray-200"
+                        >
+                            <Download size={16} /> Download
+                        </a>
+                        <button
+                            onClick={clearBlobUrl}
+                            className="px-3 bg-red-50 text-red-500 rounded-xl hover:bg-red-100 transition border border-red-100"
+                            title="Discard"
+                        >
+                            <Trash2 size={18} />
+                        </button>
+                    </div>
                 </div>
             </div>
         );

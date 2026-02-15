@@ -2,11 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { BookOpen, CheckCircle, ArrowRight, Sparkles, Users, Award, Star } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import toast from 'react-hot-toast';
 import FAQSection from '../components/FAQSection';
 import { API_BASE_URL } from '../config';
 import Avatar from '../components/Avatar';
 import PageTransition from '../components/PageTransition';
+import { FadeIn } from '../components/Animations';
 
 // --- ANIMATED COUNTER ---
 const Counter = ({ end, duration }) => {
@@ -22,24 +22,6 @@ const Counter = ({ end, duration }) => {
     return () => clearInterval(timer);
   }, [end, duration]);
   return <span>{count}</span>;
-};
-
-// --- ANIMATION VARIANTS ---
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.2 }
-  }
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.5, ease: "easeOut" }
-  }
 };
 
 function HomePage() {
@@ -100,55 +82,65 @@ function HomePage() {
           </div>
 
           <div className="container mx-auto px-6 relative z-20">
-            <motion.div
-              className="flex flex-col md:flex-row items-center gap-12"
-              variants={containerVariants}
-              initial="hidden"
-              animate="visible"
-            >
+            <div className="flex flex-col md:flex-row items-center gap-12">
               {/* Left Content - Reduced Blur on Mobile */}
               <div className={`md:w-1/2 text-center md:text-left space-y-8 p-8 rounded-3xl ${isMobile ? 'bg-white/95' : 'bg-white/70 backdrop-blur-md'} shadow-sm border border-white/50`}>
-                <motion.div variants={itemVariants} className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-50 text-blue-700 font-semibold text-sm border border-blue-100 shadow-sm">
-                  <Sparkles size={16} className="text-blue-600" />
-                  <span>#1 Mentorship Platform</span>
-                </motion.div>
-
-                <motion.h1 variants={itemVariants} className="text-5xl md:text-7xl font-extrabold text-slate-900 leading-tight tracking-tight drop-shadow-sm">
-                  Unlock Your <br />
-                  <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-700 to-indigo-700">
-                    {text}
-                  </span>
-                </motion.h1>
-
-                <motion.p variants={itemVariants} className="text-lg text-slate-800 leading-relaxed max-w-lg mx-auto md:mx-0 font-bold">
-                  Stop guessing your career path. Connect with verified seniors from IITs & NITs who have already walked the road.
-                </motion.p>
-
-                <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
-                  <Link to="/mentors" className="bg-blue-700 text-white px-8 py-4 rounded-xl font-bold shadow-lg shadow-blue-500/25 hover:bg-blue-800 transition-all transform hover:-translate-y-1 flex items-center justify-center gap-2">
-                    Find a Mentor <ArrowRight size={20} />
-                  </Link>
-                  <Link to="/become-mentor" className="bg-white text-slate-900 border border-slate-300 px-8 py-4 rounded-xl font-bold hover:bg-slate-50 transition-all hover:border-slate-400">
-                    Become a Mentor
-                  </Link>
-                </motion.div>
-
-                <motion.div variants={itemVariants} className="flex items-center gap-4 justify-center md:justify-start pt-4">
-                  <div className="flex -space-x-3">
-                    {[1, 2, 3, 4].map(i => (
-                      <div key={i} className="w-10 h-10 rounded-full bg-slate-200 border-2 border-white flex items-center justify-center text-xs font-bold text-slate-500">
-                        <Users size={16} />
-                      </div>
-                    ))}
+                <FadeIn delay={0.1}>
+                  <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-50 text-blue-700 font-semibold text-sm border border-blue-100 shadow-sm">
+                    <Sparkles size={16} className="text-blue-600" />
+                    <span>#1 Mentorship Platform</span>
                   </div>
-                  <div className="text-sm font-medium text-slate-800">
-                    <span className="font-bold text-slate-900">500+</span> Students Joined
+                </FadeIn>
+
+                <FadeIn delay={0.2}>
+                  <h1 className="text-5xl md:text-7xl font-extrabold text-slate-900 leading-tight tracking-tight drop-shadow-sm">
+                    Unlock Your <br />
+                    <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-700 to-indigo-700">
+                      {text}
+                    </span>
+                  </h1>
+                </FadeIn>
+
+                <FadeIn delay={0.3}>
+                  <p className="text-lg text-slate-800 leading-relaxed max-w-lg mx-auto md:mx-0 font-bold">
+                    Stop guessing your career path. Connect with verified seniors from IITs & NITs who have already walked the road.
+                  </p>
+                </FadeIn>
+
+                <FadeIn delay={0.4}>
+                  <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
+                    <Link to="/mentors" className="bg-blue-700 text-white px-8 py-4 rounded-xl font-bold shadow-lg shadow-blue-500/25 hover:bg-blue-800 transition-all transform hover:-translate-y-1 flex items-center justify-center gap-2">
+                      Find a Mentor <ArrowRight size={20} />
+                    </Link>
+                    <Link to="/become-mentor" className="bg-white text-slate-900 border border-slate-300 px-8 py-4 rounded-xl font-bold hover:bg-slate-50 transition-all hover:border-slate-400">
+                      Become a Mentor
+                    </Link>
                   </div>
-                </motion.div>
+                </FadeIn>
+
+                <FadeIn delay={0.5}>
+                  <div className="flex items-center gap-4 justify-center md:justify-start pt-4">
+                    <div className="flex -space-x-3">
+                      {[1, 2, 3, 4].map(i => (
+                        <div key={i} className="w-10 h-10 rounded-full bg-slate-200 border-2 border-white flex items-center justify-center text-xs font-bold text-slate-500">
+                          <Users size={16} />
+                        </div>
+                      ))}
+                    </div>
+                    <div className="text-sm font-medium text-slate-800">
+                      <span className="font-bold text-slate-900">500+</span> Students Joined
+                    </div>
+                  </div>
+                </FadeIn>
               </div>
 
               {/* Right Image (Floating Cards) */}
-              <motion.div variants={itemVariants} className="md:w-1/2 relative flex justify-center perspective-1000">
+              <motion.div
+                initial={{ opacity: 0, x: 50 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+                className="md:w-1/2 relative flex justify-center perspective-1000"
+              >
                 <div className="relative">
                   <motion.div
                     initial={{ rotate: -2 }}
@@ -192,7 +184,7 @@ function HomePage() {
                   </motion.div>
                 </div>
               </motion.div>
-            </motion.div>
+            </div>
           </div>
         </section>
 
@@ -206,23 +198,20 @@ function HomePage() {
                 { label: "Active Mentors", val: 50, color: "text-green-600", bg: "bg-green-50" },
                 { label: "Happy Students", val: 500, color: "text-orange-600", bg: "bg-orange-50" },
               ].map((stat, idx) => (
-                <motion.div
-                  key={idx}
-                  whileHover={{ scale: 1.05 }}
-                  className="text-center p-6 rounded-2xl hover:bg-slate-50 transition-colors"
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: idx * 0.1 }}
-                >
-                  <div className={`w-12 h-12 ${stat.bg} ${stat.color} rounded-xl bg-opacity-20 flex items-center justify-center mx-auto mb-4`}>
-                    <Award size={24} />
-                  </div>
-                  <h3 className={`text-4xl font-extrabold ${stat.color} mb-2`}>
-                    <Counter end={stat.val} duration={2000} />+
-                  </h3>
-                  <p className="font-semibold text-slate-500 text-sm">{stat.label}</p>
-                </motion.div>
+                <FadeIn key={idx} delay={idx * 0.1}>
+                  <motion.div
+                    whileHover={{ scale: 1.05 }}
+                    className="text-center p-6 rounded-2xl hover:bg-slate-50 transition-colors"
+                  >
+                    <div className={`w-12 h-12 ${stat.bg} ${stat.color} rounded-xl bg-opacity-20 flex items-center justify-center mx-auto mb-4`}>
+                      <Award size={24} />
+                    </div>
+                    <h3 className={`text-4xl font-extrabold ${stat.color} mb-2`}>
+                      <Counter end={stat.val} duration={2000} />+
+                    </h3>
+                    <p className="font-semibold text-slate-500 text-sm">{stat.label}</p>
+                  </motion.div>
+                </FadeIn>
               ))}
             </div>
           </div>
@@ -230,8 +219,6 @@ function HomePage() {
 
         {/* 3. MENTORS SECTION (Glass Cards) */}
         <section id="mentors" className="py-24 relative overflow-hidden">
-          {/* Section Background Video */}
-          {/* Section Background Video - Desktop Only */}
           {/* Section Background Video */}
           <div className="absolute inset-0 z-0">
             <div className={`absolute inset-0 z-10 ${isMobile ? 'bg-white/70' : 'bg-white/40'}`} />
@@ -243,66 +230,66 @@ function HomePage() {
           </div>
 
           <div className="container mx-auto px-6 relative z-10">
-            <div className="text-center mb-16 space-y-4">
-              <span className="text-blue-600 font-bold tracking-wider uppercase text-sm bg-blue-50 px-4 py-1 rounded-full">Expert Guidance</span>
-              <h2 className="text-4xl font-extrabold text-slate-900">Meet Your Future Mentors</h2>
-              <p className="text-slate-500 max-w-2xl mx-auto">Get personalized guidance from students who have cracked the toughest exams.</p>
-            </div>
+            <FadeIn>
+              <div className="text-center mb-16 space-y-4">
+                <span className="text-blue-600 font-bold tracking-wider uppercase text-sm bg-blue-50 px-4 py-1 rounded-full">Expert Guidance</span>
+                <h2 className="text-4xl font-extrabold text-slate-900">Meet Your Future Mentors</h2>
+                <p className="text-slate-500 max-w-2xl mx-auto">Get personalized guidance from students who have cracked the toughest exams.</p>
+              </div>
+            </FadeIn>
 
             <div className="grid md:grid-cols-3 gap-8">
               {loading ? ([1, 2, 3].map((n) => <div key={n} className="h-96 bg-gray-200 rounded-2xl animate-pulse"></div>)) :
                 (!mentors || mentors.length === 0) ? (<div className="col-span-3 text-center text-gray-500">No mentors found.</div>) : (
-                  mentors.map((mentor) => (
-                    <motion.div
-                      key={mentor._id}
-                      initial={{ opacity: 0, y: 20 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true }}
-                      className="glass-card flex flex-col overflow-hidden group"
-                    >
-                      {/* Image */}
-                      <div className="relative h-72 overflow-hidden bg-slate-100">
-                        <Avatar
-                          src={mentor.image}
-                          name={mentor.username}
-                          size="w-full h-full"
-                          fontSize="text-4xl"
-                          className="rounded-none object-cover transition-transform duration-500 group-hover:scale-110"
-                        />
-                        <div className="absolute top-4 right-4 bg-white/95 backdrop-blur px-3 py-1.5 rounded-full text-xs font-bold text-slate-800 flex items-center gap-1 shadow-sm border border-white/20">
-                          <CheckCircle size={12} className="text-blue-500" /> Verified
-                        </div>
-                        <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/60 to-transparent" />
-                        <div className="absolute bottom-4 left-4 text-white">
-                          <h3 className="text-xl font-bold truncate pr-4">{mentor.username}</h3>
-                          <p className="text-gray-200 text-sm truncate">{mentor.college || "Top University"}</p>
-                        </div>
-                      </div>
-
-                      {/* Info */}
-                      <div className="p-6 flex flex-col flex-grow">
-                        <div className="flex items-center gap-2 text-slate-600 text-sm mb-6 bg-slate-50 p-3 rounded-xl border border-slate-100">
-                          <BookOpen size={16} className="text-blue-500" />
-                          <span className="truncate font-medium">{mentor.branch || "Engineering"}</span>
+                  mentors.map((mentor, index) => (
+                    <FadeIn key={mentor._id} delay={index * 0.1}>
+                      <div className="glass-card flex flex-col overflow-hidden group">
+                        {/* Image */}
+                        <div className="relative h-72 overflow-hidden bg-slate-100">
+                          <Avatar
+                            src={mentor.image}
+                            name={mentor.username}
+                            size="w-full h-full"
+                            fontSize="text-4xl"
+                            className="rounded-none object-cover transition-transform duration-500 group-hover:scale-110"
+                          />
+                          <div className="absolute top-4 right-4 bg-white/95 backdrop-blur px-3 py-1.5 rounded-full text-xs font-bold text-slate-800 flex items-center gap-1 shadow-sm border border-white/20">
+                            <CheckCircle size={12} className="text-blue-500" /> Verified
+                          </div>
+                          <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/60 to-transparent" />
+                          <div className="absolute bottom-4 left-4 text-white">
+                            <h3 className="text-xl font-bold truncate pr-4">{mentor.username}</h3>
+                            <p className="text-gray-200 text-sm truncate">{mentor.college || "Top University"}</p>
+                          </div>
                         </div>
 
-                        <button
-                          onClick={() => navigate(`/mentor/${mentor._id}`)}
-                          className="mt-auto w-full group-hover:bg-blue-600 bg-slate-900 text-white py-3.5 rounded-xl font-bold transition-all duration-300 shadow-lg shadow-slate-200 group-hover:shadow-blue-200"
-                        >
-                          View Profile
-                        </button>
+                        {/* Info */}
+                        <div className="p-6 flex flex-col flex-grow">
+                          <div className="flex items-center gap-2 text-slate-600 text-sm mb-6 bg-slate-50 p-3 rounded-xl border border-slate-100">
+                            <BookOpen size={16} className="text-blue-500" />
+                            <span className="truncate font-medium">{mentor.branch || "Engineering"}</span>
+                          </div>
+
+                          <button
+                            onClick={() => navigate(`/mentor/${mentor._id}`)}
+                            className="mt-auto w-full group-hover:bg-blue-600 bg-slate-900 text-white py-3.5 rounded-xl font-bold transition-all duration-300 shadow-lg shadow-slate-200 group-hover:shadow-blue-200"
+                          >
+                            View Profile
+                          </button>
+                        </div>
                       </div>
-                    </motion.div>
+                    </FadeIn>
                   ))
                 )}
             </div>
 
-            <div className="text-center mt-20">
-              <Link to="/mentors" className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-white border border-slate-200 text-slate-700 font-bold hover:bg-slate-50 hover:border-slate-300 transition-all shadow-sm">
-                View All Mentors <ArrowRight size={18} />
-              </Link>
-            </div>
+            <FadeIn delay={0.3}>
+              <div className="text-center mt-20">
+                <Link to="/mentors" className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-white border border-slate-200 text-slate-700 font-bold hover:bg-slate-50 hover:border-slate-300 transition-all shadow-sm">
+                  View All Mentors <ArrowRight size={18} />
+                </Link>
+              </div>
+            </FadeIn>
           </div>
         </section>
 
