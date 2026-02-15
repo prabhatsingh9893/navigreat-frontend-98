@@ -56,7 +56,7 @@ const LiveSession = () => {
           // SAVE SESSION FOR AUTO-REJOIN
           sessionStorage.setItem('currentSession', JSON.stringify({ meetingNumber, passWord, role, username }));
 
-          const leaveUrl = window.location.origin + '/session-ended';
+          const leaveUrl = window.location.origin + '/';
           const sdkKey = import.meta.env.VITE_ZOOM_CLIENT_ID;
 
           const url = `/meeting.html?mn=${meetingNumber}&pwd=${passWord}&sig=${encodeURIComponent(data.signature)}&sdkKey=${sdkKey}&name=${encodeURIComponent(username)}&leaveUrl=${encodeURIComponent(leaveUrl)}`;
