@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 
 const AboutPage = () => {
     return (
-        <div className="pt-20 font-sans bg-white text-gray-800">
+        <div className="pt-20 font-sans bg-white dark:bg-[#0b141a] text-gray-800 dark:text-[#e9edef]">
 
             {/* 1. HERO SECTION */}
             <section className="relative bg-gradient-to-br from-blue-900 via-blue-800 to-indigo-900 py-20 text-center text-white overflow-hidden">
@@ -25,7 +25,7 @@ const AboutPage = () => {
             </section>
 
             {/* 2. STATS / IMPACT */}
-            <section className="py-16 bg-blue-50">
+            <section className="py-16 bg-blue-50 dark:bg-[#111b21]">
                 <div className="container mx-auto px-6">
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                         {[
@@ -33,12 +33,12 @@ const AboutPage = () => {
                             { icon: <Award size={32} />, val: "50+", label: "Top Mentors" },
                             { icon: <Target size={32} />, val: "100%", label: "Verified Expertise" },
                         ].map((stat, idx) => (
-                            <div key={idx} className="bg-white p-8 rounded-3xl shadow-sm text-center transform transition hover:-translate-y-1 hover:shadow-md">
-                                <div className="inline-flex p-4 rounded-full bg-blue-100 text-blue-600 mb-4">
+                            <div key={idx} className="bg-white dark:bg-[#202c33] p-8 rounded-3xl shadow-sm text-center transform transition hover:-translate-y-1 hover:shadow-md">
+                                <div className="inline-flex p-4 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 mb-4">
                                     {stat.icon}
                                 </div>
-                                <h3 className="text-3xl font-bold text-gray-900 mb-1">{stat.val}</h3>
-                                <p className="text-gray-500 font-medium">{stat.label}</p>
+                                <h3 className="text-3xl font-bold text-gray-900 dark:text-white mb-1">{stat.val}</h3>
+                                <p className="text-gray-500 dark:text-[#8696a0] font-medium">{stat.label}</p>
                             </div>
                         ))}
                     </div>
@@ -56,17 +56,17 @@ const AboutPage = () => {
                         />
                     </div>
                     <div className="md:w-1/2">
-                        <h2 className="text-3xl font-bold mb-6 text-gray-900">Why We Started</h2>
-                        <p className="text-gray-600 mb-6 leading-relaxed">
+                        <h2 className="text-3xl font-bold mb-6 text-gray-900 dark:text-white">Why We Started</h2>
+                        <p className="text-gray-600 dark:text-[#8696a0] mb-6 leading-relaxed">
                             It started with a simple observation: Talent is everywhere, but opportunity is not.
                             Many brilliant students fail to crack top exams or land dream jobs simply due to a lack of
                             guidance, not ability.
                         </p>
-                        <p className="text-gray-600 mb-8 leading-relaxed">
+                        <p className="text-gray-600 dark:text-[#8696a0] mb-8 leading-relaxed">
                             We decided to build a platform that removes the barriers. No more cold-emailing seniors
                             or guessing your path. Get 1:1 mentorship from those who have already done it.
                         </p>
-                        <Link to="/mentors" className="inline-flex items-center gap-2 text-blue-600 font-bold hover:gap-3 transition-all">
+                        <Link to="/mentors" className="inline-flex items-center gap-2 text-blue-600 dark:text-[#53bdeb] font-bold hover:gap-3 transition-all">
                             Meet Our Mentors <ArrowRight size={20} />
                         </Link>
                     </div>

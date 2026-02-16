@@ -349,15 +349,15 @@ const DashboardPage = () => {
     );
 
     return (
-        <div className="min-h-screen bg-gray-50 font-sans pb-20 relative">
+        <div className="min-h-screen bg-gray-50 dark:bg-[#0b141a] font-sans pb-20 relative">
 
             {/* --- MODAL 1: EDIT PROFILE --- */}
             {isEditing && (
                 <div className="fixed inset-0 bg-black/60 z-[100] flex items-center justify-center p-4 backdrop-blur-sm">
-                    <div className="bg-white rounded-2xl w-full max-w-2xl shadow-2xl p-6 flex flex-col max-h-[90vh] overflow-y-auto animate-in zoom-in-95 duration-200">
-                        <div className="flex justify-between items-center mb-6 border-b pb-4">
+                    <div className="bg-white dark:bg-[#202c33] dark:text-[#e9edef] rounded-2xl w-full max-w-2xl shadow-2xl p-6 flex flex-col max-h-[90vh] overflow-y-auto animate-in zoom-in-95 duration-200">
+                        <div className="flex justify-between items-center mb-6 border-b dark:border-[#2a3942] pb-4">
                             <h3 className="text-xl font-bold">Edit Profile</h3>
-                            <button onClick={() => setIsEditing(false)} className="hover:bg-gray-100 p-2 rounded-full"><X /></button>
+                            <button onClick={() => setIsEditing(false)} className="hover:bg-gray-100 dark:hover:bg-[#2a3942] p-2 rounded-full"><X /></button>
                         </div>
 
                         <div className="flex justify-center mb-6">
@@ -375,11 +375,11 @@ const DashboardPage = () => {
                         </div>
 
                         <div className="space-y-4">
-                            <input value={editForm.username} onChange={e => setEditForm({ ...editForm, username: e.target.value })} className="w-full border p-3 rounded-xl" placeholder="Full Name" />
-                            <textarea value={editForm.about} onChange={e => setEditForm({ ...editForm, about: e.target.value })} className="w-full border p-3 rounded-xl" rows="4" placeholder="About yourself..." />
+                            <input value={editForm.username} onChange={e => setEditForm({ ...editForm, username: e.target.value })} className="w-full border dark:border-[#2a3942] dark:bg-[#2a3942] dark:text-white p-3 rounded-xl" placeholder="Full Name" />
+                            <textarea value={editForm.about} onChange={e => setEditForm({ ...editForm, about: e.target.value })} className="w-full border dark:border-[#2a3942] dark:bg-[#2a3942] dark:text-white p-3 rounded-xl" rows="4" placeholder="About yourself..." />
                             <div className="grid md:grid-cols-2 gap-4">
-                                <input value={editForm.college} onChange={e => setEditForm({ ...editForm, college: e.target.value })} className="w-full border p-3 rounded-xl" placeholder="College" />
-                                <input value={editForm.branch} onChange={e => setEditForm({ ...editForm, branch: e.target.value })} className="w-full border p-3 rounded-xl" placeholder="Branch" />
+                                <input value={editForm.college} onChange={e => setEditForm({ ...editForm, college: e.target.value })} className="w-full border dark:border-[#2a3942] dark:bg-[#2a3942] dark:text-white p-3 rounded-xl" placeholder="College" />
+                                <input value={editForm.branch} onChange={e => setEditForm({ ...editForm, branch: e.target.value })} className="w-full border dark:border-[#2a3942] dark:bg-[#2a3942] dark:text-white p-3 rounded-xl" placeholder="Branch" />
                             </div>
                         </div>
                         <button onClick={handleSaveProfile} className="mt-6 w-full bg-blue-600 text-white py-3 rounded-xl font-bold hover:bg-blue-700 shadow-lg flex items-center justify-center gap-2"><Save size={18} /> Save Changes</button>
@@ -458,8 +458,8 @@ const DashboardPage = () => {
                     {/* Action Buttons */}
                     <div className="flex gap-4 mb-4 w-full md:w-auto">
                         {user?.role === 'mentor' && (
-                            <button onClick={() => { setEditForm(profile); setIsZoomModal(true); }} className="flex-1 md:flex-none bg-white text-gray-900 border border-gray-200 px-6 py-3 rounded-xl font-bold hover:bg-gray-50 hover:border-blue-300 hover:text-blue-600 transition-all shadow-sm flex items-center justify-center gap-2 group">
-                                <div className="p-1.5 bg-red-100 text-red-600 rounded-lg group-hover:scale-110 transition"><Video size={18} /></div> Setup Class
+                            <button onClick={() => { setEditForm(profile); setIsZoomModal(true); }} className="flex-1 md:flex-none bg-white dark:bg-[#202c33] text-gray-900 dark:text-white border border-gray-200 dark:border-[#2a3942] px-6 py-3 rounded-xl font-bold hover:bg-gray-50 dark:hover:bg-[#2a3942] hover:border-blue-300 hover:text-blue-600 transition-all shadow-sm flex items-center justify-center gap-2 group">
+                                <div className="p-1.5 bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 rounded-lg group-hover:scale-110 transition"><Video size={18} /></div> Setup Class
                             </button>
                         )}
                         <button onClick={() => { setEditForm(profile); setIsEditing(true); }} className="flex-1 md:flex-none bg-blue-600 text-white px-6 py-3 rounded-xl font-bold shadow-lg shadow-blue-200 hover:bg-blue-700 hover:shadow-blue-300 hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2">
@@ -476,24 +476,24 @@ const DashboardPage = () => {
                 <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-8 pb-10">
                     <div className="md:col-span-2 space-y-6">
                         {/* 1. MY REQUESTS */}
-                        <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
-                            <div className="p-6 border-b border-gray-100 flex items-center justify-between">
-                                <h3 className="font-bold text-xl text-gray-800 flex items-center gap-2"><Clock size={22} className="text-blue-600" /> My Booking Requests</h3>
+                        <div className="bg-white dark:bg-[#202c33] rounded-3xl shadow-sm border border-gray-100 dark:border-[#2a3942] overflow-hidden">
+                            <div className="p-6 border-b border-gray-100 dark:border-[#2a3942] flex items-center justify-between">
+                                <h3 className="font-bold text-xl text-gray-800 dark:text-white flex items-center gap-2"><Clock size={22} className="text-blue-600" /> My Booking Requests</h3>
                             </div>
                             <div className="p-0">
                                 {bookings?.length === 0 ? (
                                     <div className="p-8 text-center text-gray-400">You haven't booked any sessions yet.</div>
                                 ) : (
                                     bookings?.map((b) => (
-                                        <div key={b._id} className="p-6 border-b border-gray-100 hover:bg-gray-50 transition">
+                                        <div key={b._id} className="p-6 border-b border-gray-100 dark:border-[#2a3942] hover:bg-gray-50 dark:hover:bg-[#2a3942] transition">
                                             <div className="flex justify-between items-start mb-2">
                                                 <div>
-                                                    <h4 className="font-bold text-gray-900 text-lg">Mentor: {b.mentorName || "Unknown"}</h4>
-                                                    <p className="text-sm text-gray-500">{new Date(b.date).toLocaleDateString()}</p>
+                                                    <h4 className="font-bold text-gray-900 dark:text-white text-lg">Mentor: {b.mentorName || "Unknown"}</h4>
+                                                    <p className="text-sm text-gray-500 dark:text-gray-400">{new Date(b.date).toLocaleDateString()}</p>
                                                 </div>
-                                                <span className="bg-yellow-100 text-yellow-700 text-xs font-bold px-3 py-1 rounded-full uppercase">Pending</span>
+                                                <span className="bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400 text-xs font-bold px-3 py-1 rounded-full uppercase">Pending</span>
                                             </div>
-                                            <p className="text-gray-600 bg-white p-3 border border-gray-200 rounded-lg italic text-sm">"{b.message}"</p>
+                                            <p className="text-gray-600 dark:text-gray-300 bg-white dark:bg-[#0b141a] p-3 border border-gray-200 dark:border-[#2a3942] rounded-lg italic text-sm">"{b.message}"</p>
                                         </div>
                                     ))
                                 )}
@@ -511,12 +511,12 @@ const DashboardPage = () => {
                     </div>
 
                     <div className="space-y-6">
-                        <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-6">
-                            <h3 className="font-bold text-gray-800 mb-4">Quick Actions</h3>
-                            <button onClick={() => navigate('/mentors')} className="w-full bg-gray-50 border border-gray-200 p-4 rounded-xl font-bold text-gray-700 hover:bg-gray-100 flex items-center gap-3 transition mb-3">
+                        <div className="bg-white dark:bg-[#202c33] rounded-3xl shadow-sm border border-gray-100 dark:border-[#2a3942] p-6">
+                            <h3 className="font-bold text-gray-800 dark:text-white mb-4">Quick Actions</h3>
+                            <button onClick={() => navigate('/mentors')} className="w-full bg-gray-50 dark:bg-[#2a3942] border border-gray-200 dark:border-[#2a3942] p-4 rounded-xl font-bold text-gray-700 dark:text-[#e9edef] hover:bg-gray-100 dark:hover:bg-[#111b21] flex items-center gap-3 transition mb-3">
                                 <Users size={20} /> Browse Mentors
                             </button>
-                            <button onClick={() => { setEditForm(profile); setIsEditing(true); }} className="w-full bg-gray-50 border border-gray-200 p-4 rounded-xl font-bold text-gray-700 hover:bg-gray-100 flex items-center gap-3 transition">
+                            <button onClick={() => { setEditForm(profile); setIsEditing(true); }} className="w-full bg-gray-50 dark:bg-[#2a3942] border border-gray-200 dark:border-[#2a3942] p-4 rounded-xl font-bold text-gray-700 dark:text-[#e9edef] hover:bg-gray-100 dark:hover:bg-[#111b21] flex items-center gap-3 transition">
                                 <Settings size={20} /> Profile Settings
                             </button>
                         </div>
@@ -568,14 +568,14 @@ const DashboardPage = () => {
                         {/* Stats Grid */}
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                             {[
-                                { label: "Students", val: "100+", icon: Users, color: "text-blue-600", bg: "bg-blue-50", border: "border-blue-100" },
-                                { label: "Lectures", val: lectures?.length || 0, icon: Video, color: "text-purple-600", bg: "bg-purple-50", border: "border-purple-100" },
-                                { label: "Rating", val: "4.9", icon: Star, color: "text-amber-500", bg: "bg-amber-50", border: "border-amber-100" },
-                                { label: "Experience", val: "2+ Yrs", icon: Clock, color: "text-green-600", bg: "bg-green-50", border: "border-green-100" },
+                                { label: "Students", val: "100+", icon: Users, color: "text-blue-600", bg: "bg-blue-50 dark:bg-blue-900/10", border: "border-blue-100 dark:border-blue-900/30" },
+                                { label: "Lectures", val: lectures?.length || 0, icon: Video, color: "text-purple-600", bg: "bg-purple-50 dark:bg-purple-900/10", border: "border-purple-100 dark:border-purple-900/30" },
+                                { label: "Rating", val: "4.9", icon: Star, color: "text-amber-500", bg: "bg-amber-50 dark:bg-amber-900/10", border: "border-amber-100 dark:border-amber-900/30" },
+                                { label: "Experience", val: "2+ Yrs", icon: Clock, color: "text-green-600", bg: "bg-green-50 dark:bg-green-900/10", border: "border-green-100 dark:border-green-900/30" },
                             ].map((s, i) => (
-                                <div key={i} className={`bg-white p-5 rounded-2xl shadow-sm border ${s.border} flex items-center gap-4 hover:shadow-md hover:scale-[1.02] transition-all duration-300 cursor-default`}>
+                                <div key={i} className={`bg-white dark:bg-[#202c33] p-5 rounded-2xl shadow-sm border ${s.border} flex items-center gap-4 hover:shadow-md hover:scale-[1.02] transition-all duration-300 cursor-default`}>
                                     <div className={`p-3.5 rounded-xl ${s.bg} ${s.color}`}><s.icon size={24} /></div>
-                                    <div><div className="font-extrabold text-2xl text-gray-800 leading-none mb-1">{s.val}</div><div className="text-xs text-gray-500 uppercase font-bold tracking-wide">{s.label}</div></div>
+                                    <div><div className="font-extrabold text-2xl text-gray-800 dark:text-gray-100 leading-none mb-1">{s.val}</div><div className="text-xs text-gray-500 dark:text-gray-400 uppercase font-bold tracking-wide">{s.label}</div></div>
                                 </div>
                             ))}
                         </div>

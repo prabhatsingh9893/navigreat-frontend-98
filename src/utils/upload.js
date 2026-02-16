@@ -9,6 +9,12 @@ export const uploadToCloudinary = async (file) => {
     const token = localStorage.getItem('token');
     if (!token) throw new Error("User not authenticated");
 
+    // Client-side validation: Max 50MB
+    const MAX_SIZE = 50 * 1024 * 1024; // 50MB
+    if (file.size > MAX_SIZE) {
+        throw new Error("File size exceeds the 50MB limit. Please upload a smaller file.");
+    }
+
     const formData = new FormData();
     formData.append('file', file);
 

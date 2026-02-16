@@ -103,25 +103,25 @@ const AdminPage = () => {
     };
 
     if (loading) return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-[#0b141a]">
             <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
         </div>
     );
 
     return (
-        <div className="min-h-screen bg-gray-50 pb-20 pt-24 px-4 sm:px-6 lg:px-8">
+        <div className="min-h-screen bg-gray-50 dark:bg-[#0b141a] pb-20 pt-24 px-4 sm:px-6 lg:px-8">
             <div className="max-w-7xl mx-auto space-y-6">
 
                 {/* Header Section */}
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div>
-                        <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-2">
+                        <h1 className="text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
                             <Shield className="text-blue-600" size={32} /> Admin Panel
                         </h1>
-                        <p className="text-gray-500 mt-1">Manage users, approve mentors, and oversee the platform.</p>
+                        <p className="text-gray-500 dark:text-gray-400 mt-1">Manage users, approve mentors, and oversee the platform.</p>
                     </div>
                     <div className="flex gap-3">
-                        <button onClick={exportCSV} className="flex items-center gap-2 bg-white border border-gray-300 px-4 py-2 rounded-lg text-gray-700 font-medium hover:bg-gray-50 transition">
+                        <button onClick={exportCSV} className="flex items-center gap-2 bg-white dark:bg-[#202c33] dark:text-[#e9edef] border border-gray-300 dark:border-[#2a3942] px-4 py-2 rounded-lg text-gray-700 font-medium hover:bg-gray-50 dark:hover:bg-[#111b21] transition">
                             <Download size={18} /> Export CSV
                         </button>
                     </div>
@@ -136,20 +136,20 @@ const AdminPage = () => {
                 </div>
 
                 {/* Main Content */}
-                <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+                <div className="bg-white dark:bg-[#202c33] rounded-2xl shadow-sm border border-gray-200 dark:border-[#2a3942] overflow-hidden">
                     {/* Tabs & Search */}
-                    <div className="p-4 border-b border-gray-200 flex flex-col md:flex-row justify-between items-center gap-4 bg-gray-50/50">
-                        <div className="flex bg-gray-200/80 p-1 rounded-xl">
+                    <div className="p-4 border-b border-gray-200 dark:border-[#2a3942] flex flex-col md:flex-row justify-between items-center gap-4 bg-gray-50/50 dark:bg-[#202c33]">
+                        <div className="flex bg-gray-200/80 dark:bg-[#0b141a] p-1 rounded-xl">
                             <button
                                 onClick={() => setActiveTab('pending')}
-                                className={`px-4 py-2Rounded-lg text-sm font-bold transition-all rounded-lg ${activeTab === 'pending' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-600 hover:text-gray-900'}`}
+                                className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${activeTab === 'pending' ? 'bg-white dark:bg-[#202c33] text-blue-600 dark:text-blue-400 shadow-sm' : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'}`}
                             >
                                 Pending Verifications
                                 {stats.pending > 0 && <span className="ml-2 bg-red-500 text-white text-[10px] px-1.5 py-0.5 rounded-full">{stats.pending}</span>}
                             </button>
                             <button
                                 onClick={() => setActiveTab('all')}
-                                className={`px-4 py-2Rounded-lg text-sm font-bold transition-all rounded-lg ${activeTab === 'all' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-600 hover:text-gray-900'}`}
+                                className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${activeTab === 'all' ? 'bg-white dark:bg-[#202c33] text-blue-600 dark:text-blue-400 shadow-sm' : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'}`}
                             >
                                 All Users
                             </button>
@@ -162,7 +162,7 @@ const AdminPage = () => {
                                 placeholder="Search by name or email..."
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
-                                className="w-full pl-10 pr-4 py-2 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition"
+                                className="w-full pl-10 pr-4 py-2 rounded-xl border border-gray-200 dark:border-[#2a3942] bg-white dark:bg-[#0b141a] text-gray-900 dark:text-[#e9edef] focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition"
                             />
                         </div>
                     </div>
@@ -171,7 +171,7 @@ const AdminPage = () => {
                     <div className="overflow-x-auto">
                         <table className="w-full text-left border-collapse">
                             <thead>
-                                <tr className="bg-gray-50 border-b border-gray-200 text-xs uppercase text-gray-500 font-bold tracking-wider">
+                                <tr className="bg-gray-50 dark:bg-[#111b21] border-b border-gray-200 dark:border-[#2a3942] text-xs uppercase text-gray-500 dark:text-gray-400 font-bold tracking-wider">
                                     <th className="px-6 py-4">User</th>
                                     <th className="px-6 py-4">Role</th>
                                     <th className="px-6 py-4">Status</th>
@@ -179,23 +179,23 @@ const AdminPage = () => {
                                     <th className="px-6 py-4 text-right">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody className="divide-y divide-gray-100">
+                            <tbody className="divide-y divide-gray-100 dark:divide-[#2a3942]">
                                 {filteredUsers.length === 0 ? (
                                     <tr>
-                                        <td colSpan="5" className="px-6 py-12 text-center text-gray-500">
+                                        <td colSpan="5" className="px-6 py-12 text-center text-gray-500 dark:text-gray-400">
                                             No users found matching your filters.
                                         </td>
                                     </tr>
                                 ) : (
                                     filteredUsers.map(u => (
-                                        <tr key={u._id} className="hover:bg-gray-50/50 transition duration-150">
+                                        <tr key={u._id} className="hover:bg-gray-50/50 dark:hover:bg-[#111b21] transition duration-150">
                                             <td className="px-6 py-4">
                                                 <div className="flex items-center gap-3">
                                                     <Avatar name={u.username} src={u.image} size="w-10 h-10" />
                                                     <div>
-                                                        <div className="font-bold text-gray-900">{u.username}</div>
-                                                        <div className="text-sm text-gray-500">{u.email}</div>
-                                                        <div className="text-xs text-gray-400 flex gap-2 mt-0.5">
+                                                        <div className="font-bold text-gray-900 dark:text-[#e9edef]">{u.username}</div>
+                                                        <div className="text-sm text-gray-500 dark:text-gray-400">{u.email}</div>
+                                                        <div className="text-xs text-gray-400 dark:text-gray-500 flex gap-2 mt-0.5">
                                                             <span>{u.college || "No College"}</span>
                                                             <span>•</span>
                                                             <span>{u.branch || "No Branch"}</span>
@@ -204,14 +204,14 @@ const AdminPage = () => {
                                                 </div>
                                             </td>
                                             <td className="px-6 py-4">
-                                                <span className={`px-2.5 py-1 rounded-full text-xs font-bold uppercase tracking-wide border ${u.role === 'mentor' ? 'bg-purple-50 text-purple-700 border-purple-100' : (u.role === 'admin' ? 'bg-red-50 text-red-700 border-red-100' : 'bg-blue-50 text-blue-700 border-blue-100')}`}>
+                                                <span className={`px-2.5 py-1 rounded-full text-xs font-bold uppercase tracking-wide border ${u.role === 'mentor' ? 'bg-purple-50 dark:bg-purple-900/20 text-purple-700 dark:text-purple-300 border-purple-100 dark:border-purple-800' : (u.role === 'admin' ? 'bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300 border-red-100 dark:border-red-800' : 'bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 border-blue-100 dark:border-blue-800')}`}>
                                                     {u.role}
                                                 </span>
                                             </td>
                                             <td className="px-6 py-4">
                                                 <StatusBadge status={u.verificationStatus} isVerified={u.isVerified} role={u.role} />
                                             </td>
-                                            <td className="px-6 py-4 text-sm text-gray-500">
+                                            <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">
                                                 {new Date(u.createdAt).toLocaleDateString()}
                                             </td>
                                             <td className="px-6 py-4 text-right">
@@ -219,21 +219,21 @@ const AdminPage = () => {
                                                     <div className="flex justify-end gap-2">
                                                         <button
                                                             onClick={() => handleVerify(u._id, 'verified')}
-                                                            className="p-2 bg-green-100 text-green-700 rounded-lg hover:bg-green-200 transition"
+                                                            className="p-2 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded-lg hover:bg-green-200 dark:hover:bg-green-900/50 transition"
                                                             title="Approve"
                                                         >
                                                             <Check size={18} />
                                                         </button>
                                                         <button
                                                             onClick={() => handleVerify(u._id, 'rejected')}
-                                                            className="p-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition"
+                                                            className="p-2 bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 rounded-lg hover:bg-red-200 dark:hover:bg-red-900/50 transition"
                                                             title="Reject"
                                                         >
                                                             <X size={18} />
                                                         </button>
                                                     </div>
                                                 ) : (
-                                                    <span className="text-xs text-gray-400 font-medium">No actions</span>
+                                                    <span className="text-xs text-gray-400 dark:text-gray-600 font-medium">No actions</span>
                                                 )}
                                             </td>
                                         </tr>
@@ -249,13 +249,13 @@ const AdminPage = () => {
 };
 
 const StatCard = ({ label, value, icon: Icon, color }) => (
-    <div className={`bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex items-center gap-4`}>
-        <div className={`p-3 rounded-xl bg-${color}-50 text-${color}-600`}>
+    <div className={`bg-white dark:bg-[#202c33] p-5 rounded-2xl border border-gray-100 dark:border-[#2a3942] shadow-sm flex items-center gap-4`}>
+        <div className={`p-3 rounded-xl bg-${color}-50 dark:bg-${color}-900/20 text-${color}-600 dark:text-${color}-400`}>
             <Icon size={24} />
         </div>
         <div>
-            <div className="text-2xl font-bold text-gray-900 leading-none">{value}</div>
-            <div className="text-xs font-bold text-gray-400 uppercase tracking-wide mt-1">{label}</div>
+            <div className="text-2xl font-bold text-gray-900 dark:text-[#e9edef] leading-none">{value}</div>
+            <div className="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wide mt-1">{label}</div>
         </div>
     </div>
 );

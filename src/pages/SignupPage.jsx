@@ -73,7 +73,7 @@ function SignupPage() {
   };
 
   return (
-    <div className="min-h-screen bg-white flex relative overflow-hidden">
+    <div className="min-h-screen bg-white dark:bg-[#0b141a] flex relative overflow-hidden">
 
       {/* LEFT: Illustrative Side (Desktop Only) */}
       <div className="hidden lg:flex w-1/2 bg-slate-900 relative items-center justify-center overflow-hidden">
@@ -117,8 +117,8 @@ function SignupPage() {
       </div>
 
       {/* RIGHT: Login Form */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-6 bg-slate-50 relative">
-        <Link to="/" className="absolute top-8 left-8 text-slate-500 hover:text-slate-900 flex items-center gap-2 font-medium transition-colors">
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-6 bg-slate-50 dark:bg-[#111b21] relative">
+        <Link to="/" className="absolute top-8 left-8 text-slate-500 dark:text-[#8696a0] hover:text-slate-900 dark:hover:text-white flex items-center gap-2 font-medium transition-colors">
           <ArrowLeft size={20} /> Back to Home
         </Link>
 
@@ -126,75 +126,75 @@ function SignupPage() {
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.4 }}
-          className="w-full max-w-md bg-white p-10 rounded-3xl shadow-xl shadow-slate-200 border border-slate-100"
+          className="w-full max-w-md bg-white dark:bg-[#202c33] p-10 rounded-3xl shadow-xl shadow-slate-200 dark:shadow-black/50 border border-slate-100 dark:border-[#2a3942]"
         >
           <div className="text-center mb-10">
-            <h2 className="text-3xl font-bold text-slate-900">Create Account</h2>
-            <p className="text-slate-500 mt-2">Join us and start achieving your goals.</p>
+            <h2 className="text-3xl font-bold text-slate-900 dark:text-white">Create Account</h2>
+            <p className="text-slate-500 dark:text-[#8696a0] mt-2">Join us and start achieving your goals.</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-5">
 
             <div className="space-y-2">
-              <label className="text-sm font-semibold text-slate-700 ml-1">Full Name</label>
+              <label className="text-sm font-semibold text-slate-700 dark:text-[#e9edef] ml-1">Full Name</label>
               <div className="relative">
-                <UserIcon className="absolute left-4 top-3.5 text-slate-400" size={20} />
+                <UserIcon className="absolute left-4 top-3.5 text-slate-400 dark:text-[#8696a0]" size={20} />
                 <input
                   type="text"
                   name="username"
                   onChange={handleChange}
                   placeholder="John Doe"
                   required
-                  className="w-full pl-12 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-500/10 outline-none transition-all font-medium text-slate-900 placeholder:text-slate-400"
+                  className="w-full pl-12 pr-4 py-3.5 bg-slate-50 dark:bg-[#2a3942] border border-slate-200 dark:border-[#2a3942] rounded-xl focus:border-blue-500 dark:focus:border-[#00a884] focus:bg-white dark:focus:bg-[#202c33] focus:ring-4 focus:ring-blue-500/10 dark:focus:ring-[#00a884]/20 outline-none transition-all font-medium text-slate-900 dark:text-[#e9edef] placeholder:text-slate-400 dark:placeholder:text-[#8696a0]"
                 />
               </div>
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-semibold text-slate-700 ml-1">Email Address</label>
+              <label className="text-sm font-semibold text-slate-700 dark:text-[#e9edef] ml-1">Email Address</label>
               <div className="relative">
-                <Mail className="absolute left-4 top-3.5 text-slate-400" size={20} />
+                <Mail className="absolute left-4 top-3.5 text-slate-400 dark:text-[#8696a0]" size={20} />
                 <input
                   type="email"
                   name="email"
                   onChange={handleChange}
                   placeholder="john@example.com"
                   required
-                  className="w-full pl-12 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-500/10 outline-none transition-all font-medium text-slate-900 placeholder:text-slate-400"
+                  className="w-full pl-12 pr-4 py-3.5 bg-slate-50 dark:bg-[#2a3942] border border-slate-200 dark:border-[#2a3942] rounded-xl focus:border-blue-500 dark:focus:border-[#00a884] focus:bg-white dark:focus:bg-[#202c33] focus:ring-4 focus:ring-blue-500/10 dark:focus:ring-[#00a884]/20 outline-none transition-all font-medium text-slate-900 dark:text-[#e9edef] placeholder:text-slate-400 dark:placeholder:text-[#8696a0]"
                 />
               </div>
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-semibold text-slate-700 ml-1">Password</label>
+              <label className="text-sm font-semibold text-slate-700 dark:text-[#e9edef] ml-1">Password</label>
               <div className="relative">
-                <Lock className="absolute left-4 top-3.5 text-slate-400" size={20} />
+                <Lock className="absolute left-4 top-3.5 text-slate-400 dark:text-[#8696a0]" size={20} />
                 <input
                   type="password"
                   name="password"
                   onChange={handleChange}
                   placeholder="Min 6 characters"
                   required
-                  className="w-full pl-12 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-500/10 outline-none transition-all font-medium text-slate-900 placeholder:text-slate-400"
+                  className="w-full pl-12 pr-4 py-3.5 bg-slate-50 dark:bg-[#2a3942] border border-slate-200 dark:border-[#2a3942] rounded-xl focus:border-blue-500 dark:focus:border-[#00a884] focus:bg-white dark:focus:bg-[#202c33] focus:ring-4 focus:ring-blue-500/10 dark:focus:ring-[#00a884]/20 outline-none transition-all font-medium text-slate-900 dark:text-[#e9edef] placeholder:text-slate-400 dark:placeholder:text-[#8696a0]"
                 />
               </div>
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-semibold text-slate-700 ml-1">I want to apply as</label>
+              <label className="text-sm font-semibold text-slate-700 dark:text-[#e9edef] ml-1">I want to apply as</label>
               <div className="relative">
-                <div className="grid grid-cols-2 bg-slate-100 p-1 rounded-xl">
+                <div className="grid grid-cols-2 bg-slate-100 dark:bg-[#111b21] p-1 rounded-xl">
                   <button
                     type="button"
                     onClick={() => setFormData({ ...formData, role: 'student' })}
-                    className={`py-2.5 rounded-lg text-sm font-bold transition-all ${formData.role === 'student' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                    className={`py-2.5 rounded-lg text-sm font-bold transition-all ${formData.role === 'student' ? 'bg-white dark:bg-[#2a3942] text-blue-600 dark:text-[#53bdeb] shadow-sm' : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-[#e9edef]'}`}
                   >
                     Student
                   </button>
                   <button
                     type="button"
                     onClick={() => setFormData({ ...formData, role: 'mentor' })}
-                    className={`py-2.5 rounded-lg text-sm font-bold transition-all ${formData.role === 'mentor' ? 'bg-white text-purple-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                    className={`py-2.5 rounded-lg text-sm font-bold transition-all ${formData.role === 'mentor' ? 'bg-white dark:bg-[#2a3942] text-purple-600 dark:text-purple-400 shadow-sm' : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-[#e9edef]'}`}
                   >
                     Mentor
                   </button>
@@ -202,13 +202,13 @@ function SignupPage() {
               </div>
             </div>
 
-            <button type="submit" className="w-full bg-blue-600 text-white py-4 rounded-xl font-bold hover:bg-blue-700 active:scale-[0.98] transition-all shadow-lg shadow-blue-500/20 flex items-center justify-center gap-2 group mt-2">
+            <button type="submit" className="w-full bg-blue-600 dark:bg-[#00a884] text-white py-4 rounded-xl font-bold hover:bg-blue-700 dark:hover:bg-[#008f6f] active:scale-[0.98] transition-all shadow-lg shadow-blue-500/20 dark:shadow-green-500/20 flex items-center justify-center gap-2 group mt-2">
               Create Account <ChevronRight size={20} className="group-hover:translate-x-1 transition-transform" />
             </button>
           </form>
 
-          <p className="mt-8 text-center text-slate-600">
-            Already have an account? <Link to="/login" className="text-blue-600 font-bold hover:underline">Log In</Link>
+          <p className="mt-8 text-center text-slate-600 dark:text-[#8696a0]">
+            Already have an account? <Link to="/login" className="text-blue-600 dark:text-[#53bdeb] font-bold hover:underline">Log In</Link>
           </p>
         </motion.div>
       </div>
