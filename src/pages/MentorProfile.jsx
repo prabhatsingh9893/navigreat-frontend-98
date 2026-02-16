@@ -172,8 +172,8 @@ const MentorProfile = () => {
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/60 to-transparent"></div>
 
                 <div className="absolute top-8 left-8 z-30">
-                    <button onClick={() => navigate('/mentors')} className="flex items-center gap-2 text-white/80 hover:text-white transition font-medium bg-black/20 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 hover:bg-black/30">
-                        <ArrowLeft size={18} /> Back to Mentors
+                    <button onClick={() => navigate(-1)} className="flex items-center gap-2 text-white/80 hover:text-white transition font-medium bg-black/20 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 hover:bg-black/30">
+                        <ArrowLeft size={18} /> {mentor?.role === 'mentor' ? 'Back to Mentors' : 'Back'}
                     </button>
                 </div>
             </div>
@@ -231,8 +231,8 @@ const MentorProfile = () => {
                                         </button>
                                     ) : (
                                         <>
-                                            {/* Show Next Session Info if available */}
-                                            {sessions.filter(s => new Date(s.startTime) > new Date()).sort((a, b) => new Date(a.startTime) - new Date(b.startTime))[0] && (
+                                            {/* Show Next Session Info if available - Only for Mentors */}
+                                            {mentor.role === 'mentor' && sessions.filter(s => new Date(s.startTime) > new Date()).sort((a, b) => new Date(a.startTime) - new Date(b.startTime))[0] && (
                                                 <div className="w-full bg-slate-50 border border-slate-200 p-4 rounded-xl flex flex-col items-center justify-center gap-1 mb-2">
                                                     <div className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-1 flex items-center gap-1.5">
                                                         <Calendar size={12} /> Next Session
@@ -246,10 +246,12 @@ const MentorProfile = () => {
                                                 </div>
                                             )}
 
-                                            {/* Always show Book Session Button */}
-                                            <button onClick={handleBookSession} className="w-full bg-slate-900 text-white py-4 rounded-xl font-bold hover:bg-black transition shadow-xl shadow-slate-200 flex items-center justify-center gap-2 group">
-                                                <Zap size={18} className="text-yellow-400 group-hover:scale-110 transition" /> Book Priority Session
-                                            </button>
+                                            {/* Always show Book Session Button - Only for Mentors */}
+                                            {mentor.role === 'mentor' && (
+                                                <button onClick={handleBookSession} className="w-full bg-slate-900 text-white py-4 rounded-xl font-bold hover:bg-black transition shadow-xl shadow-slate-200 flex items-center justify-center gap-2 group">
+                                                    <Zap size={18} className="text-yellow-400 group-hover:scale-110 transition" /> Book Priority Session
+                                                </button>
+                                            )}
                                         </>
                                     )}
                                     <button onClick={() => navigate(`/chat/${mentor._id}`)} className="w-full bg-white border-2 border-slate-100 text-slate-600 py-3.5 rounded-xl font-bold hover:border-blue-500 hover:text-blue-600 transition flex items-center justify-center gap-2">
@@ -262,22 +264,24 @@ const MentorProfile = () => {
                             </div>
                         </motion.div>
 
-                        {/* Quick Stats */}
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.2, duration: 0.5 }}
-                            className="mt-6 grid grid-cols-2 gap-4"
-                        >
-                            <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm text-center">
-                                <div className="text-2xl font-extrabold text-blue-600">{lectures.length}</div>
-                                <div className="text-xs text-slate-400 font-bold uppercase tracking-wider">Lectures</div>
-                            </div>
-                            <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm text-center">
-                                <div className="text-2xl font-extrabold text-purple-600">4.9</div>
-                                <div className="text-xs text-slate-400 font-bold uppercase tracking-wider">Rating</div>
-                            </div>
-                        </motion.div>
+                        {/* Quick Stats - Only for Mentors */}
+                        {mentor.role === 'mentor' && (
+                            <motion.div
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.2, duration: 0.5 }}
+                                className="mt-6 grid grid-cols-2 gap-4"
+                            >
+                                <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm text-center">
+                                    <div className="text-2xl font-extrabold text-blue-600">{lectures.length}</div>
+                                    <div className="text-xs text-slate-400 font-bold uppercase tracking-wider">Lectures</div>
+                                </div>
+                                <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm text-center">
+                                    <div className="text-2xl font-extrabold text-purple-600">4.9</div>
+                                    <div className="text-xs text-slate-400 font-bold uppercase tracking-wider">Rating</div>
+                                </div>
+                            </motion.div>
+                        )}
                     </div>
 
                     {/* === RIGHT CONTENT === */}

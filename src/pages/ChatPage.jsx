@@ -230,6 +230,12 @@ const ChatPage = () => {
         return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     };
 
+    const handleViewProfile = () => {
+        if (targetUser) {
+            navigate(`/mentor/${targetUser._id || targetUser.id}`);
+        }
+    };
+
     return (
         <div className="flex h-[calc(100vh-64px)] mt-16 bg-gray-100 dark:bg-[#111b21]">
             {/* Sidebar */}
@@ -282,15 +288,20 @@ const ChatPage = () => {
                     {/* Header */}
                     <div className="p-3 bg-white dark:bg-[#202c33] border-b border-gray-200 dark:border-[#2a3942] flex items-center gap-3 shadow-sm z-10">
                         <button onClick={() => navigate('/chat')} className="md:hidden p-2 text-gray-600 dark:text-[#e9edef]"><ArrowLeft size={20} /></button>
-                        <div className="w-10 h-10 rounded-full bg-blue-100 dark:bg-[#2a3942] flex items-center justify-center text-blue-600 dark:text-[#00a884] font-bold overflow-hidden border border-gray-200 dark:border-[#2a3942]">
-                            {targetUser?.image ? <img src={targetUser.image} className="w-full h-full object-cover" /> : <UserIcon />}
+
+                        {/* Clickable Profile Section */}
+                        <div onClick={handleViewProfile} className="flex items-center gap-3 cursor-pointer hover:bg-gray-50 dark:hover:bg-[#2a3942] p-1 pr-4 rounded-lg transition">
+                            <div className="w-10 h-10 rounded-full bg-blue-100 dark:bg-[#2a3942] flex items-center justify-center text-blue-600 dark:text-[#00a884] font-bold overflow-hidden border border-gray-200 dark:border-[#2a3942]">
+                                {targetUser?.image ? <img src={targetUser.image} className="w-full h-full object-cover" /> : <UserIcon />}
+                            </div>
+                            <div>
+                                <h3 className="font-bold text-gray-900 dark:text-[#e9edef] hover:underline">{targetUser?.username || "Loading..."}</h3>
+                                <p className="text-xs text-green-500 flex items-center gap-1">
+                                    {isTyping ? <span className="text-blue-500 font-bold animate-pulse">Typing...</span> : "● Online"}
+                                </p>
+                            </div>
                         </div>
-                        <div>
-                            <h3 className="font-bold text-gray-900 dark:text-[#e9edef]">{targetUser?.username || "Loading..."}</h3>
-                            <p className="text-xs text-green-500 flex items-center gap-1">
-                                {isTyping ? <span className="text-blue-500 font-bold animate-pulse">Typing...</span> : "● Online"}
-                            </p>
-                        </div>
+
                     </div>
 
                     {/* Messages */}
