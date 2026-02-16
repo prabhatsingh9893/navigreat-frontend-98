@@ -5,28 +5,27 @@ import { AnimatePresence } from 'framer-motion';
 
 import Header from './components/Header.jsx';
 import Footer from './components/Footer.jsx';
-import HomePage from './pages/HomePage.jsx';
-import AboutPage from './pages/AboutPage.jsx';
-import ContactPage from './pages/ContactPage.jsx';
-import LoginPage from './pages/LoginPage.jsx';
-import SignupPage from './pages/SignupPage.jsx';
-import MentorsPage from './pages/MentorsPage.jsx';
-import MentorSignupPage from './pages/MentorSignupPage.jsx';
-import DashboardPage from './pages/DashboardPage.jsx';
-import MentorProfile from './pages/MentorProfile.jsx';
-import AdminMessagesPage from './pages/AdminMessagesPage.jsx';
-import AdminPage from './pages/AdminPage.jsx'; // ✅ Import Admin Page
-import ChatPage from './pages/ChatPage.jsx';
-import ForgotPasswordPage from './pages/ForgotPasswordPage.jsx';
-import ResetPasswordPage from './pages/ResetPasswordPage.jsx';
 import Loader from './components/Loader';
-import ScrollToTop from './components/ScrollToTop'; // ✅ Scroll Fix
-import AppPrivacy from './pages/AppPrivacy';
-import AppTerms from './pages/AppTerms';
-import NotFoundPage from './pages/NotFoundPage'; // ✅ 404 Page
-import SessionEndedPage from './pages/SessionEndedPage'; // ✅ Auto Rejoin Page
-
-// ✅ LAZY LOAD LIVE SESSION TO PREVENT CSS POLLUTION
+import ScrollToTop from './components/ScrollToTop';
+// ✅ LAZY LOAD ALL PAGES TO REDUCE BUNDLE SIZE
+const HomePage = React.lazy(() => import('./pages/HomePage.jsx'));
+const AboutPage = React.lazy(() => import('./pages/AboutPage.jsx'));
+const ContactPage = React.lazy(() => import('./pages/ContactPage.jsx'));
+const LoginPage = React.lazy(() => import('./pages/LoginPage.jsx'));
+const SignupPage = React.lazy(() => import('./pages/SignupPage.jsx'));
+const MentorsPage = React.lazy(() => import('./pages/MentorsPage.jsx'));
+const MentorSignupPage = React.lazy(() => import('./pages/MentorSignupPage.jsx'));
+const DashboardPage = React.lazy(() => import('./pages/DashboardPage.jsx'));
+const MentorProfile = React.lazy(() => import('./pages/MentorProfile.jsx'));
+const AdminMessagesPage = React.lazy(() => import('./pages/AdminMessagesPage.jsx'));
+const AdminPage = React.lazy(() => import('./pages/AdminPage.jsx'));
+const ChatPage = React.lazy(() => import('./pages/ChatPage.jsx'));
+const ForgotPasswordPage = React.lazy(() => import('./pages/ForgotPasswordPage.jsx'));
+const ResetPasswordPage = React.lazy(() => import('./pages/ResetPasswordPage.jsx'));
+const AppPrivacy = React.lazy(() => import('./pages/AppPrivacy'));
+const AppTerms = React.lazy(() => import('./pages/AppTerms'));
+const NotFoundPage = React.lazy(() => import('./pages/NotFoundPage'));
+const SessionEndedPage = React.lazy(() => import('./pages/SessionEndedPage'));
 const LiveSession = React.lazy(() => import('./pages/LiveSession.jsx'));
 
 // 🔒 Protected Route Component
@@ -52,44 +51,44 @@ function App() {
       <Header />
       <main className="flex-grow">
         <AnimatePresence mode="wait">
-          <Routes location={location} key={location.pathname}>
-            {/* Public Routes */}
-            <Route path="/" element={<HomePage />} />
-            <Route path="/about" element={<AboutPage />} />
-            <Route path="/contact" element={<ContactPage />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/signup" element={<SignupPage />} />
-            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-            <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
-            <Route path="/become-mentor" element={<MentorSignupPage />} />
-            <Route path="/privacy" element={<AppPrivacy />} />
-            <Route path="/terms" element={<AppTerms />} />
+          <Suspense fallback={<div className="h-screen flex items-center justify-center"><Loader text="Loading..." /></div>}>
+            <Routes location={location} key={location.pathname}>
+              {/* Public Routes */}
+              <Route path="/" element={<HomePage />} />
+              <Route path="/about" element={<AboutPage />} />
+              <Route path="/contact" element={<ContactPage />} />
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/signup" element={<SignupPage />} />
+              <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+              <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
+              <Route path="/become-mentor" element={<MentorSignupPage />} />
+              <Route path="/privacy" element={<AppPrivacy />} />
+              <Route path="/terms" element={<AppTerms />} />
 
-            {/* 🔒 Protected Routes (Require Login) */}
-            <Route path="/mentors" element={<ProtectedRoute><MentorsPage /></ProtectedRoute>} />
-            <Route path="/dashboard" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
-            <Route path="/mentor/:id" element={<ProtectedRoute><MentorProfile /></ProtectedRoute>} />
-            <Route path="/chat" element={<ProtectedRoute><ChatPage /></ProtectedRoute>} />
-            <Route path="/chat/:userId" element={<ProtectedRoute><ChatPage /></ProtectedRoute>} />
-            <Route path="/admin" element={<ProtectedRoute><AdminPage /></ProtectedRoute>} /> {/* ✅ Admin Panel Route */}
-            <Route path="/admin/messages" element={<ProtectedRoute><AdminMessagesPage /></ProtectedRoute>} />
+              {/* 🔒 Protected Routes (Require Login) */}
+              <Route path="/mentors" element={<ProtectedRoute><MentorsPage /></ProtectedRoute>} />
+              <Route path="/dashboard" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
+              <Route path="/mentor/:id" element={<ProtectedRoute><MentorProfile /></ProtectedRoute>} />
+              <Route path="/chat" element={<ProtectedRoute><ChatPage /></ProtectedRoute>} />
+              <Route path="/chat/:userId" element={<ProtectedRoute><ChatPage /></ProtectedRoute>} />
+              <Route path="/admin" element={<ProtectedRoute><AdminPage /></ProtectedRoute>} /> {/* ✅ Admin Panel Route */}
+              <Route path="/admin/messages" element={<ProtectedRoute><AdminMessagesPage /></ProtectedRoute>} />
 
-            {/* ✅ ZOOM LIVE SESSION ROUTE WITH SUSPENSE & PROTECTION */}
-            <Route
-              path="/session"
-              element={
-                <ProtectedRoute>
-                  <Suspense fallback={<div className="h-screen flex items-center justify-center"><Loader text="Loading Session..." /></div>}>
+              {/* ✅ ZOOM LIVE SESSION ROUTE WITH SUSPENSE (Nested Suspense handled by generic wrapper now, but keeping for safety) */}
+              <Route
+                path="/session"
+                element={
+                  <ProtectedRoute>
                     <LiveSession />
-                  </Suspense>
-                </ProtectedRoute>
-              }
-            />
-            <Route path="/session-ended" element={<ProtectedRoute><SessionEndedPage /></ProtectedRoute>} />
+                  </ProtectedRoute>
+                }
+              />
+              <Route path="/session-ended" element={<ProtectedRoute><SessionEndedPage /></ProtectedRoute>} />
 
-            {/* 404 PAGE */}
-            <Route path="*" element={<NotFoundPage />} />
-          </Routes>
+              {/* 404 PAGE */}
+              <Route path="*" element={<NotFoundPage />} />
+            </Routes>
+          </Suspense>
         </AnimatePresence>
       </main>
       <Footer />

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const Avatar = ({ src, name, size = "w-10 h-10", fontSize = "text-lg", className = "" }) => {
+const Avatar = ({ src, name, size = "w-10 h-10", fontSize = "text-lg", className = "", ...props }) => {
     const [error, setError] = useState(false);
 
     // Reset error when src changes so we try to load the new image
@@ -22,6 +22,7 @@ const Avatar = ({ src, name, size = "w-10 h-10", fontSize = "text-lg", className
             <div
                 className={`${size} ${bgColor} text-white flex items-center justify-center font-bold ${fontSize} rounded-full border-2 border-white shadow-sm ${className}`}
                 title={name}
+                {...props}
             >
                 {name ? name.charAt(0).toUpperCase() : '?'}
             </div>
@@ -35,6 +36,7 @@ const Avatar = ({ src, name, size = "w-10 h-10", fontSize = "text-lg", className
             onError={() => setError(true)}
             className={`${size} object-cover rounded-full border-2 border-white shadow-sm ${className}`}
             crossOrigin="anonymous" // Attempt to load with CORS to satisfy COEP if server supports it
+            {...props}
         />
     );
 };

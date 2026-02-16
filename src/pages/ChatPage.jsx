@@ -24,6 +24,7 @@ const ChatPage = () => {
     const [targetUser, setTargetUser] = useState(null);
     const [contactList, setContactList] = useState([]);
     const [isTyping, setIsTyping] = useState(false);
+    const [onlineUsers, setOnlineUsers] = useState(new Set()); // ✅ Track Online Users
 
     // 🎙️ Voice Recording State
     const [isRecording, setIsRecording] = useState(false);
@@ -31,7 +32,7 @@ const ChatPage = () => {
     const audioChunksRef = useRef([]);
 
     const scrollRef = useRef();
-    const notificationSound = useRef(new Audio('/sounds/notification.mp3')); // Ensure this file exists or use a CDN
+    const notificationSound = useRef(new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3')); // Beep Sound
     let typingTimeout = null;
 
     // 1. Auth Check & Setup
@@ -44,18 +45,38 @@ const ChatPage = () => {
         const user = JSON.parse(userData);
         setCurrentUser(user);
 
-        const joinRoom = () => {
-            console.log("Joined Room:", user._id || user.id);
-            socket.emit("join_room", user._id || user.id);
+        const registerUser = () => {
+            console.log("Registering Online:", user._id || user.id);
+            socket.emit("register_user", user._id || user.id); // ✅ Emit register_user
         };
 
-        if (socket.connected) joinRoom();
-        socket.on("connect", joinRoom);
+        if (socket.connected) registerUser();
+        socket.on("connect", registerUser);
+
+        // ✅ Online Status Listeners
+        socket.on("get_online_users", (users) => {
+            setOnlineUsers(new Set(users));
+        });
+
+        socket.on("user_online", (userId) => {
+            setOnlineUsers(prev => new Set(prev).add(userId));
+        });
+
+        socket.on("user_offline", (userId) => {
+            setOnlineUsers(prev => {
+                const newSet = new Set(prev);
+                newSet.delete(userId);
+                return newSet;
+            });
+        });
 
         fetchContacts(user.role);
 
         return () => {
-            socket.off("connect", joinRoom);
+            socket.off("connect", registerUser);
+            socket.off("get_online_users");
+            socket.off("user_online");
+            socket.off("user_offline");
         };
     }, [navigate]);
 
@@ -95,13 +116,18 @@ const ChatPage = () => {
                 setMessages((prev) => [...prev, msg]);
                 scrollToBottom();
             } else if (!isMe) {
-                // Toast Notification for other chats
-                toast(`${msg.content.substring(0, 30)}...`, {
-                    icon: '💬',
+                // ✅ Improved Notification
+                // Try to find sender name from contact list or just say "New Message"
+                // contactList might be stale in closure, better to trust the update logic or fetch fresh
+                // For now, generic or improved if possible.
+                // We don't have sender name in 'msg' usually, only ID.
+                toast(`New Message received`, {
+                    icon: '📩',
                     style: { borderRadius: '10px', background: '#333', color: '#fff' }
                 });
-                // Optional: Play Sound
-                // notificationSound.current.play().catch(e => console.log("Audio play failed")); 
+
+                // Play Sound
+                notificationSound.current.play().catch(e => console.log("Audio play failed"));
             }
 
             // B. Update Sidebar (Move to Top + Badge)
@@ -121,6 +147,16 @@ const ChatPage = () => {
                     };
                     newList.splice(index, 1);
                     newList.unshift(updatedContact);
+
+                    // Trigger specific toast with name if found
+                    if (!isMe && !isCurrentChat) {
+                        toast.dismiss(); // Dismiss generic
+                        toast.success(`${contact.username}: ${msg.content.substring(0, 20)}...`, {
+                            icon: '💬',
+                            duration: 4000
+                        });
+                    }
+
                     return newList;
                 } else {
                     fetchContacts(); // Fetch text if new contact
@@ -251,8 +287,11 @@ const ChatPage = () => {
                             onClick={() => navigate(`/chat/${contact._id}`)}
                             className={`p-4 flex items-center gap-3 cursor-pointer hover:bg-blue-50 dark:hover:bg-[#202c33] transition border-b border-gray-50 dark:border-[#2a3942] ${targetUserId === contact._id ? 'bg-blue-50 dark:bg-[#2a3942] border-blue-200 dark:border-[#2a3942]' : ''}`}
                         >
-                            <div className="w-12 h-12 rounded-full bg-gray-200 dark:bg-[#2a3942] overflow-hidden flex-shrink-0 border border-gray-200 dark:border-[#2a3942]">
+                            <div className="w-12 h-12 rounded-full bg-gray-200 dark:bg-[#2a3942] overflow-hidden flex-shrink-0 border border-gray-200 dark:border-[#2a3942] relative">
                                 <img src={contact.image || `https://api.dicebear.com/7.x/initials/svg?seed=${contact.username}`} alt="avatar" className="w-full h-full object-cover" />
+                                {onlineUsers.has(contact._id) && (
+                                    <span className="absolute bottom-0 right-0 w-3.5 h-3.5 bg-green-500 border-2 border-white dark:border-[#111b21] rounded-full"></span>
+                                )}
                             </div>
                             <div className="flex-1 min-w-0">
                                 <div className="flex justify-between items-baseline mb-0.5">
@@ -296,8 +335,16 @@ const ChatPage = () => {
                             </div>
                             <div>
                                 <h3 className="font-bold text-gray-900 dark:text-[#e9edef] hover:underline">{targetUser?.username || "Loading..."}</h3>
-                                <p className="text-xs text-green-500 flex items-center gap-1">
-                                    {isTyping ? <span className="text-blue-500 font-bold animate-pulse">Typing...</span> : "● Online"}
+                                <p className="text-xs flex items-center gap-1 font-medium">
+                                    {isTyping ? (
+                                        <span className="text-blue-500 font-bold animate-pulse">Typing...</span>
+                                    ) : onlineUsers.has(targetUserId) ? (
+                                        <span className="text-green-500 flex items-center gap-1">
+                                            <span className="w-2 h-2 bg-green-500 rounded-full"></span> Online
+                                        </span>
+                                    ) : (
+                                        <span className="text-gray-400">Offline</span>
+                                    )}
                                 </p>
                             </div>
                         </div>

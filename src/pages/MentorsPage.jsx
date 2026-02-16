@@ -155,6 +155,7 @@ function MentorsPage() {
                     size="w-full h-full"
                     fontSize="text-6xl"
                     className="rounded-none group-hover:scale-105 transition-transform duration-700 object-cover"
+                    loading="lazy"
                   />
                   <div className="absolute bottom-6 left-6 z-20 text-white">
                     <h3 className="font-bold text-2xl leading-tight mb-1">{mentor.username}</h3>

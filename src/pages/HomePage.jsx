@@ -8,19 +8,29 @@ import Avatar from '../components/Avatar';
 import PageTransition from '../components/PageTransition';
 import { FadeIn } from '../components/Animations';
 
-// --- ANIMATED COUNTER ---
+// --- ANIMATED COUNTER (Optimized with requestAnimationFrame) ---
 const Counter = ({ end, duration }) => {
   const [count, setCount] = useState(0);
+
   useEffect(() => {
-    let start = 0;
-    const increment = end / (duration / 16);
-    const timer = setInterval(() => {
-      start += increment;
-      if (start >= end) { setCount(end); clearInterval(timer); }
-      else { setCount(Math.ceil(start)); }
-    }, 16);
-    return () => clearInterval(timer);
+    let startTimestamp = null;
+    let animationFrameId;
+
+    const step = (timestamp) => {
+      if (!startTimestamp) startTimestamp = timestamp;
+      const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+
+      setCount(Math.ceil(progress * end));
+
+      if (progress < 1) {
+        animationFrameId = window.requestAnimationFrame(step);
+      }
+    };
+
+    animationFrameId = window.requestAnimationFrame(step);
+    return () => window.cancelAnimationFrame(animationFrameId);
   }, [end, duration]);
+
   return <span>{count}</span>;
 };
 
@@ -55,7 +65,7 @@ function HomePage() {
     fetch(`${API_BASE_URL}/mentors`)
       .then(res => res.json())
       .then(data => {
-        if (data.success && Array.isArray(data.mentors)) setMentors(data.mentors);
+        if (data.success && Array.isArray(data.mentors)) setMentors(data.mentors.slice(0, 3)); // ✅ Limit to Top 3 for Performance
         else setMentors([]);
         setLoading(false);
       })
@@ -75,8 +85,9 @@ function HomePage() {
             <div className={`absolute inset-0 z-10 ${isMobile ? 'bg-white/70 dark:bg-black/80' : 'bg-white/40 dark:bg-black/60'}`} />
 
             <img
-              src="https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&q=80&w=1920"
+              src="https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&q=80&w=1280"
               alt="Hero Background"
+              priority="true"
               className="w-full h-full object-cover"
             />
           </div>
@@ -223,8 +234,9 @@ function HomePage() {
           <div className="absolute inset-0 z-0">
             <div className={`absolute inset-0 z-10 ${isMobile ? 'bg-white/70 dark:bg-black/80' : 'bg-white/40 dark:bg-black/60'}`} />
             <img
-              src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&q=80&w=1920"
+              src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&q=80&w=1280"
               alt="Mentors Background"
+              loading="lazy"
               className="w-full h-full object-cover"
             />
           </div>

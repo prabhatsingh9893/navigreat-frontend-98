@@ -180,26 +180,25 @@ function SignupPage() {
               </div>
             </div>
 
-            <div className="space-y-2">
+            <div className="space-y-4">
               <label className="text-sm font-semibold text-slate-700 dark:text-[#e9edef] ml-1">I want to apply as</label>
-              <div className="relative">
-                <div className="grid grid-cols-2 bg-slate-100 dark:bg-[#111b21] p-1 rounded-xl">
-                  <button
-                    type="button"
-                    onClick={() => setFormData({ ...formData, role: 'student' })}
-                    className={`py-2.5 rounded-lg text-sm font-bold transition-all ${formData.role === 'student' ? 'bg-white dark:bg-[#2a3942] text-blue-600 dark:text-[#53bdeb] shadow-sm' : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-[#e9edef]'}`}
-                  >
-                    Student
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setFormData({ ...formData, role: 'mentor' })}
-                    className={`py-2.5 rounded-lg text-sm font-bold transition-all ${formData.role === 'mentor' ? 'bg-white dark:bg-[#2a3942] text-purple-600 dark:text-purple-400 shadow-sm' : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-[#e9edef]'}`}
-                  >
-                    Mentor
-                  </button>
+
+              <div className="grid grid-cols-2 gap-4">
+                {/* Student Option (Selected) */}
+                <div className="border-2 border-blue-500 bg-blue-50 dark:bg-[#202c33] dark:border-[#53bdeb] p-4 rounded-xl flex items-center justify-center gap-2 cursor-default">
+                  <div className="w-5 h-5 rounded-full border-[6px] border-blue-600 dark:border-[#53bdeb] bg-white"></div>
+                  <span className="font-bold text-blue-700 dark:text-[#53bdeb]">Student</span>
                 </div>
+
+                {/* Mentor Option (Link) */}
+                <Link to="/signup/mentor" className="border border-slate-200 dark:border-[#2a3942] hover:bg-slate-50 dark:hover:bg-[#111b21] p-4 rounded-xl flex items-center justify-center gap-2 transition-all group">
+                  <div className="w-5 h-5 rounded-full border-2 border-slate-300 dark:border-slate-500 group-hover:border-purple-500 transition-colors"></div>
+                  <span className="font-bold text-slate-600 dark:text-slate-400 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">Mentor</span>
+                </Link>
               </div>
+              <p className="text-xs text-slate-500 dark:text-gray-400 px-1">
+                Mentors require a dedicated verification process. <Link to="/signup/mentor" className="text-purple-600 hover:underline">Register here</Link>.
+              </p>
             </div>
 
             <button type="submit" className="w-full bg-blue-600 dark:bg-[#00a884] text-white py-4 rounded-xl font-bold hover:bg-blue-700 dark:hover:bg-[#008f6f] active:scale-[0.98] transition-all shadow-lg shadow-blue-500/20 dark:shadow-green-500/20 flex items-center justify-center gap-2 group mt-2">

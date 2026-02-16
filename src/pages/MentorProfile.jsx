@@ -92,8 +92,8 @@ const MentorProfile = () => {
             const foundLiveSession = sessions.find(session => {
                 const start = new Date(session.startTime);
                 const end = new Date(session.endTime);
-                const startBuffer = 5 * 60 * 1000;
-                const endBuffer = 10 * 60 * 1000;
+                const startBuffer = 15 * 60 * 1000; // Allow joining 15 mins early
+                const endBuffer = 60 * 60 * 1000; // Allow joining up to 60 mins late (overrun)
                 const bufferStart = new Date(start.getTime() - startBuffer);
                 const bufferEnd = new Date(end.getTime() + endBuffer);
                 return now >= bufferStart && now <= bufferEnd;
@@ -164,7 +164,7 @@ const MentorProfile = () => {
     if (!mentor) return <div className="text-center py-20 text-red-500 font-bold">Mentor Not Found</div>;
 
     return (
-        <div className="bg-white min-h-screen relative font-sans">
+        <div className="bg-white dark:bg-[#0b141a] min-h-screen relative font-sans transition-colors duration-300">
 
             {/* Header / Cover */}
             <div className="h-96 relative bg-slate-900 overflow-hidden">
@@ -187,7 +187,7 @@ const MentorProfile = () => {
                             initial={{ opacity: 0, y: 30 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.5 }}
-                            className="bg-white rounded-3xl shadow-xl shadow-slate-200/50 p-6 border border-slate-100 relative overflow-hidden"
+                            className="bg-white dark:bg-[#202c33] rounded-3xl shadow-xl shadow-slate-200/50 dark:shadow-black/50 p-6 border border-slate-100 dark:border-[#2a3942] relative overflow-hidden"
                         >
                             {/* LIVE Indicator */}
                             {isLiveNow && (
@@ -197,7 +197,7 @@ const MentorProfile = () => {
                             <div className="flex flex-col items-center text-center">
                                 {/* Image Ring */}
                                 <div className="relative w-40 h-40 mb-5 z-20 cursor-pointer" onClick={isLiveNow ? handleJoinClass : null}>
-                                    <div className={`p-1.5 rounded-full h-full w-full bg-white ${isLiveNow ? 'ring-4 ring-red-500 ring-offset-4 ring-offset-white animate-pulse' : 'ring-1 ring-slate-100 shadow-lg'}`}>
+                                    <div className={`p-1.5 rounded-full h-full w-full bg-white dark:bg-[#202c33] ${isLiveNow ? 'ring-4 ring-red-500 ring-offset-4 ring-offset-white dark:ring-offset-[#202c33] animate-pulse' : 'ring-1 ring-slate-100 dark:ring-[#2a3942] shadow-lg'}`}>
                                         <img
                                             src={mentor.image || `https://api.dicebear.com/7.x/initials/svg?seed=${mentor.username}&size=512`}
                                             alt={mentor.username}
@@ -205,19 +205,19 @@ const MentorProfile = () => {
                                         />
                                     </div>
                                     {isLiveNow ? (
-                                        <div className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 bg-red-600 text-white px-3 py-1 rounded-full text-[10px] font-bold border-4 border-white tracking-widest shadow-lg animate-bounce uppercase">LIVE NOW</div>
+                                        <div className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 bg-red-600 text-white px-3 py-1 rounded-full text-[10px] font-bold border-4 border-white dark:border-[#202c33] tracking-widest shadow-lg animate-bounce uppercase">LIVE NOW</div>
                                     ) : (
-                                        <div className="absolute bottom-2 right-2 bg-green-500 text-white p-1.5 rounded-full border-4 border-white shadow-md"><CheckCircle size={16} fill="currentColor" /></div>
+                                        <div className="absolute bottom-2 right-2 bg-green-500 text-white p-1.5 rounded-full border-4 border-white dark:border-[#202c33] shadow-md"><CheckCircle size={16} fill="currentColor" /></div>
                                     )}
                                 </div>
 
-                                <h1 className="text-3xl font-extrabold text-slate-900 capitalize mb-2">{mentor.username}</h1>
+                                <h1 className="text-3xl font-extrabold text-slate-900 dark:text-white capitalize mb-2">{mentor.username}</h1>
 
                                 <div className="flex items-center justify-center gap-2 mb-6">
-                                    <span className="px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-bold border border-blue-100 flex items-center gap-1">
+                                    <span className="px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 text-xs font-bold border border-blue-100 dark:border-blue-800 flex items-center gap-1">
                                         <Briefcase size={12} /> {mentor.role || "Mentor"}
                                     </span>
-                                    <span className="px-3 py-1 rounded-full bg-purple-50 text-purple-700 text-xs font-bold border border-purple-100 flex items-center gap-1">
+                                    <span className="px-3 py-1 rounded-full bg-purple-50 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 text-xs font-bold border border-purple-100 dark:border-purple-800 flex items-center gap-1">
                                         <MapPin size={12} /> {mentor.college?.split(',')[0]}
                                     </span>
                                 </div>
@@ -233,14 +233,14 @@ const MentorProfile = () => {
                                         <>
                                             {/* Show Next Session Info if available - Only for Mentors */}
                                             {mentor.role === 'mentor' && sessions.filter(s => new Date(s.startTime) > new Date()).sort((a, b) => new Date(a.startTime) - new Date(b.startTime))[0] && (
-                                                <div className="w-full bg-slate-50 border border-slate-200 p-4 rounded-xl flex flex-col items-center justify-center gap-1 mb-2">
-                                                    <div className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-1 flex items-center gap-1.5">
+                                                <div className="w-full bg-slate-50 dark:bg-[#111b21] border border-slate-200 dark:border-[#2a3942] p-4 rounded-xl flex flex-col items-center justify-center gap-1 mb-2">
+                                                    <div className="text-xs font-bold text-slate-500 dark:text-[#8696a0] uppercase tracking-widest mb-1 flex items-center gap-1.5">
                                                         <Calendar size={12} /> Next Session
                                                     </div>
-                                                    <div className="text-xl font-bold text-slate-800">
+                                                    <div className="text-xl font-bold text-slate-800 dark:text-[#e9edef]">
                                                         {new Date(sessions.filter(s => new Date(s.startTime) > new Date()).sort((a, b) => new Date(a.startTime) - new Date(b.startTime))[0].startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                                     </div>
-                                                    <div className="text-sm font-medium text-blue-600">
+                                                    <div className="text-sm font-medium text-blue-600 dark:text-[#53bdeb]">
                                                         {new Date(sessions.filter(s => new Date(s.startTime) > new Date()).sort((a, b) => new Date(a.startTime) - new Date(b.startTime))[0].startTime).toLocaleDateString([], { month: 'long', day: 'numeric', weekday: 'short' })}
                                                     </div>
                                                 </div>
@@ -248,16 +248,16 @@ const MentorProfile = () => {
 
                                             {/* Always show Book Session Button - Only for Mentors */}
                                             {mentor.role === 'mentor' && (
-                                                <button onClick={handleBookSession} className="w-full bg-slate-900 text-white py-4 rounded-xl font-bold hover:bg-black transition shadow-xl shadow-slate-200 flex items-center justify-center gap-2 group">
+                                                <button onClick={handleBookSession} className="w-full bg-slate-900 dark:bg-[#00a884] text-white py-4 rounded-xl font-bold hover:bg-black dark:hover:bg-[#008f6f] transition shadow-xl shadow-slate-200 dark:shadow-green-900/20 flex items-center justify-center gap-2 group">
                                                     <Zap size={18} className="text-yellow-400 group-hover:scale-110 transition" /> Book Priority Session
                                                 </button>
                                             )}
                                         </>
                                     )}
-                                    <button onClick={() => navigate(`/chat/${mentor._id}`)} className="w-full bg-white border-2 border-slate-100 text-slate-600 py-3.5 rounded-xl font-bold hover:border-blue-500 hover:text-blue-600 transition flex items-center justify-center gap-2">
+                                    <button onClick={() => navigate(`/chat/${mentor._id}`)} className="w-full bg-white dark:bg-[#202c33] border-2 border-slate-100 dark:border-[#2a3942] text-slate-600 dark:text-[#e9edef] py-3.5 rounded-xl font-bold hover:border-blue-500 dark:hover:border-[#00a884] hover:text-blue-600 dark:hover:text-[#00a884] transition flex items-center justify-center gap-2">
                                         <MessageSquare size={18} /> Chat with Mentor
                                     </button>
-                                    <button className="w-full bg-white border-2 border-slate-100 text-slate-600 py-3.5 rounded-xl font-bold hover:border-purple-500 hover:text-purple-600 transition flex items-center justify-center gap-2">
+                                    <button className="w-full bg-white dark:bg-[#202c33] border-2 border-slate-100 dark:border-[#2a3942] text-slate-600 dark:text-[#e9edef] py-3.5 rounded-xl font-bold hover:border-purple-500 dark:hover:border-purple-400 hover:text-purple-600 dark:hover:text-purple-400 transition flex items-center justify-center gap-2">
                                         <Share2 size={18} /> Share Profile
                                     </button>
                                 </div>
@@ -272,12 +272,12 @@ const MentorProfile = () => {
                                 transition={{ delay: 0.2, duration: 0.5 }}
                                 className="mt-6 grid grid-cols-2 gap-4"
                             >
-                                <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm text-center">
-                                    <div className="text-2xl font-extrabold text-blue-600">{lectures.length}</div>
+                                <div className="bg-white dark:bg-[#202c33] p-4 rounded-2xl border border-slate-100 dark:border-[#2a3942] shadow-sm text-center">
+                                    <div className="text-2xl font-extrabold text-blue-600 dark:text-blue-400">{lectures.length}</div>
                                     <div className="text-xs text-slate-400 font-bold uppercase tracking-wider">Lectures</div>
                                 </div>
-                                <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm text-center">
-                                    <div className="text-2xl font-extrabold text-purple-600">4.9</div>
+                                <div className="bg-white dark:bg-[#202c33] p-4 rounded-2xl border border-slate-100 dark:border-[#2a3942] shadow-sm text-center">
+                                    <div className="text-2xl font-extrabold text-purple-600 dark:text-purple-400">4.9</div>
                                     <div className="text-xs text-slate-400 font-bold uppercase tracking-wider">Rating</div>
                                 </div>
                             </motion.div>
@@ -289,10 +289,10 @@ const MentorProfile = () => {
                         {/* Live Banner Mobile */}
                         {isLiveNow && (
                             <div className="bg-gradient-to-r from-red-600 to-orange-600 rounded-2xl p-1 mb-6 shadow-xl shadow-red-200 animate-in slide-in-from-top-4 duration-500 lg:hidden">
-                                <div className="bg-white rounded-xl p-4 flex flex-row items-center justify-between gap-4">
+                                <div className="bg-white dark:bg-[#202c33] rounded-xl p-4 flex flex-row items-center justify-between gap-4">
                                     <div className="flex items-center gap-3">
-                                        <div className="bg-red-50 p-2.5 rounded-full text-red-600 animate-pulse"><Video size={20} /></div>
-                                        <div><h3 className="font-bold text-gray-900 text-sm">Live Session Active!</h3></div>
+                                        <div className="bg-red-50 dark:bg-red-900/30 p-2.5 rounded-full text-red-600 dark:text-red-400 animate-pulse"><Video size={20} /></div>
+                                        <div><h3 className="font-bold text-gray-900 dark:text-white text-sm">Live Session Active!</h3></div>
                                     </div>
                                     <button onClick={handleJoinClass} className="bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-bold shadow-md">Join</button>
                                 </div>
@@ -303,19 +303,19 @@ const MentorProfile = () => {
                             initial={{ opacity: 0, x: 20 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ duration: 0.5 }}
-                            className="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden min-h-[600px]"
+                            className="bg-white dark:bg-[#202c33] rounded-3xl shadow-sm border border-slate-100 dark:border-[#2a3942] overflow-hidden min-h-[600px]"
                         >
                             <div className="p-8">
                                 <div className="flex flex-col space-y-8">
 
                                     {/* About Section */}
                                     <div>
-                                        <h3 className="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
-                                            <div className="p-2 bg-blue-50 rounded-lg text-blue-600"><UserIcon size={20} /></div>
+                                        <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+                                            <div className="p-2 bg-blue-50 dark:bg-blue-900/30 rounded-lg text-blue-600 dark:text-blue-400"><UserIcon size={20} /></div>
                                             About Me
                                         </h3>
-                                        <div className="bg-slate-50/50 p-6 rounded-2xl border border-slate-100">
-                                            <p className="text-slate-600 leading-8 text-lg whitespace-pre-wrap font-medium">
+                                        <div className="bg-slate-50/50 dark:bg-[#111b21]/50 p-6 rounded-2xl border border-slate-100 dark:border-[#2a3942]">
+                                            <p className="text-slate-600 dark:text-[#e9edef] leading-8 text-lg whitespace-pre-wrap font-medium">
                                                 {mentor.about || "No bio added yet."}
                                             </p>
                                         </div>
@@ -323,17 +323,17 @@ const MentorProfile = () => {
 
                                     {/* Schedule Section */}
                                     <div>
-                                        <h3 className="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
-                                            <div className="p-2 bg-purple-50 rounded-lg text-purple-600"><Calendar size={20} /></div>
+                                        <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+                                            <div className="p-2 bg-purple-50 dark:bg-purple-900/30 rounded-lg text-purple-600 dark:text-purple-400"><Calendar size={20} /></div>
                                             Upcoming Schedule
                                         </h3>
 
                                         <div className="relative">
                                             {/* Timeline Line */}
-                                            <div className="absolute left-4 top-4 bottom-4 w-0.5 bg-slate-100"></div>
+                                            <div className="absolute left-4 top-4 bottom-4 w-0.5 bg-slate-100 dark:bg-[#2a3942]"></div>
 
                                             {sessions.filter(s => new Date(s.endTime) > new Date()).length === 0 ? (
-                                                <div className="text-center py-10 bg-slate-50 rounded-2xl border border-dashed border-slate-200">
+                                                <div className="text-center py-10 bg-slate-50 dark:bg-[#111b21] rounded-2xl border border-dashed border-slate-200 dark:border-[#2a3942]">
                                                     <p className="text-slate-400 font-medium">No upcoming sessions scheduled.</p>
                                                 </div>
                                             ) : (
@@ -352,17 +352,17 @@ const MentorProfile = () => {
                                                         return (
                                                             <div key={session._id || session.id} className={`relative pl-12 transition-all hover:pl-14 duration-300 group`}>
                                                                 {/* Timeline Dot */}
-                                                                <div className={`absolute left-[11px] top-6 w-3 h-3 rounded-full border-2 border-white shadow-sm z-10 ${isSessionLive ? 'bg-red-500 animate-pulse ring-4 ring-red-100' : 'bg-blue-500'}`}></div>
+                                                                <div className={`absolute left-[11px] top-6 w-3 h-3 rounded-full border-2 border-white dark:border-[#202c33] shadow-sm z-10 ${isSessionLive ? 'bg-red-500 animate-pulse ring-4 ring-red-100 dark:ring-red-900/30' : 'bg-blue-500 dark:bg-blue-400'}`}></div>
 
-                                                                <div className={`bg-white p-5 rounded-2xl border ${isSessionLive ? 'border-red-200 shadow-red-100 ring-1 ring-red-100' : 'border-slate-100 hover:border-slate-300'} shadow-sm transition-all group-hover:shadow-md flex flex-col sm:flex-row sm:items-center justify-between gap-4`}>
+                                                                <div className={`bg-white dark:bg-[#202c33] p-5 rounded-2xl border ${isSessionLive ? 'border-red-200 dark:border-red-900/50 shadow-red-100 dark:shadow-red-900/20 ring-1 ring-red-100 dark:ring-red-900/30' : 'border-slate-100 dark:border-[#2a3942] hover:border-slate-300 dark:hover:border-[#37404a]'} shadow-sm transition-all group-hover:shadow-md flex flex-col sm:flex-row sm:items-center justify-between gap-4`}>
                                                                     <div>
-                                                                        <h4 className="font-bold text-slate-800 text-lg mb-1">{session.title}</h4>
+                                                                        <h4 className="font-bold text-slate-800 dark:text-[#e9edef] text-lg mb-1">{session.title}</h4>
                                                                         <div className="flex items-center gap-3 text-sm">
-                                                                            <span className={`font-bold ${isSessionLive ? 'text-red-600' : 'text-slate-500'}`}>
+                                                                            <span className={`font-bold ${isSessionLive ? 'text-red-600 dark:text-red-400' : 'text-slate-500 dark:text-[#8696a0]'}`}>
                                                                                 {isSessionLive ? '🔴 HAPPENING NOW' : dateString}
                                                                             </span>
-                                                                            {!isSessionLive && <span className="w-1 h-1 bg-slate-300 rounded-full"></span>}
-                                                                            {!isSessionLive && <span className="text-slate-400 font-medium">{timeString}</span>}
+                                                                            {!isSessionLive && <span className="w-1 h-1 bg-slate-300 dark:bg-[#37404a] rounded-full"></span>}
+                                                                            {!isSessionLive && <span className="text-slate-400 dark:text-[#8696a0] font-medium">{timeString}</span>}
                                                                         </div>
                                                                     </div>
                                                                     {isSessionLive && (
@@ -382,15 +382,15 @@ const MentorProfile = () => {
                                     {/* Lectures Section */}
                                     {lectures.length > 0 && (
                                         <div>
-                                            <h3 className="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
-                                                <div className="p-2 bg-orange-50 rounded-lg text-orange-600"><Video size={20} /></div>
+                                            <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+                                                <div className="p-2 bg-orange-50 dark:bg-orange-900/30 rounded-lg text-orange-600 dark:text-orange-400"><Video size={20} /></div>
                                                 Recorded Sessions
                                             </h3>
                                             <div className="grid md:grid-cols-2 gap-6">
                                                 {lectures.map((lecture) => {
                                                     const videoId = getYouTubeID(lecture.url);
                                                     return (
-                                                        <div key={lecture._id} className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden group hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                                                        <div key={lecture._id} className="bg-white dark:bg-[#202c33] rounded-2xl shadow-sm border border-slate-100 dark:border-[#2a3942] overflow-hidden group hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
                                                             {videoId ? (
                                                                 <div className="relative aspect-video bg-black/5 group-hover:bg-black/0 transition">
                                                                     <iframe
@@ -405,13 +405,13 @@ const MentorProfile = () => {
                                                                     ></iframe>
                                                                 </div>
                                                             ) : (
-                                                                <div className="h-40 bg-slate-50 flex items-center justify-center text-slate-400 font-medium">
+                                                                <div className="h-40 bg-slate-50 dark:bg-[#111b21] flex items-center justify-center text-slate-400 font-medium">
                                                                     Video Unavailable
                                                                 </div>
                                                             )}
                                                             <div className="p-4">
-                                                                <h4 className="font-bold text-slate-800 leading-snug line-clamp-2 mb-3 group-hover:text-blue-600 transition">{lecture.title}</h4>
-                                                                <a href={lecture.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-xs font-bold text-slate-400 hover:text-red-500 uppercase tracking-wide transition">
+                                                                <h4 className="font-bold text-slate-800 dark:text-[#e9edef] leading-snug line-clamp-2 mb-3 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition">{lecture.title}</h4>
+                                                                <a href={lecture.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-xs font-bold text-slate-400 dark:text-[#8696a0] hover:text-red-500 dark:hover:text-red-400 uppercase tracking-wide transition">
                                                                     <ExternalLink size={12} /> Watch on YouTube
                                                                 </a>
                                                             </div>
