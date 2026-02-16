@@ -473,6 +473,45 @@ const DashboardPage = () => {
             {user?.role === 'student' ? (
                 <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-8 pb-10">
                     <div className="md:col-span-2 space-y-6">
+
+                        {/* 0. STUDENT STATS GRID */}
+                        <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
+                            {[
+                                { label: "Requests Sent", val: bookings?.length || 0, icon: Users, color: "text-blue-600", bg: "bg-blue-50 dark:bg-blue-900/10", border: "border-blue-100 dark:border-blue-900/30" },
+                                { label: "University", val: profile.college || "Not Set", icon: GraduationCap, color: "text-purple-600", bg: "bg-purple-50 dark:bg-purple-900/10", border: "border-purple-100 dark:border-purple-900/30" },
+                                { label: "Branch", val: profile.branch || "Not Set", icon: BadgeCheck, color: "text-amber-500", bg: "bg-amber-50 dark:bg-amber-900/10", border: "border-amber-100 dark:border-amber-900/30" },
+                            ].map((s, i) => (
+                                <div key={i} className={`bg-white dark:bg-[#202c33] p-5 rounded-2xl shadow-sm border ${s.border} flex items-center gap-4 hover:shadow-md hover:scale-[1.02] transition-all duration-300 cursor-default`}>
+                                    <div className={`p-3.5 rounded-xl ${s.bg} ${s.color}`}><s.icon size={24} /></div>
+                                    <div className="min-w-0">
+                                        <div className="font-extrabold text-lg md:text-xl text-gray-800 dark:text-gray-100 leading-tight mb-1 truncate">{s.val}</div>
+                                        <div className="text-xs text-gray-500 dark:text-gray-400 uppercase font-bold tracking-wide">{s.label}</div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+
+                        {/* 0.5. ABOUT ME SECTION */}
+                        <div className="bg-white dark:bg-[#202c33] p-8 rounded-3xl shadow-sm border border-gray-100 dark:border-[#2a3942] relative overflow-hidden">
+                            <div className="absolute top-0 right-0 p-8 opacity-5 dark:opacity-[0.02]"><BadgeCheck size={120} /></div>
+                            <h2 className="text-2xl font-bold mb-6 flex items-center gap-3 text-gray-800 dark:text-white relative z-10">
+                                <span className="bg-blue-100 dark:bg-blue-900/30 p-2 rounded-lg text-blue-600 dark:text-blue-400"><BadgeCheck size={24} /></span> About Me
+                            </h2>
+                            <div className="relative z-10">
+                                <p className="text-gray-600 dark:text-gray-300 leading-loose text-lg whitespace-pre-wrap font-medium">
+                                    {profile.about?.trim() ? profile.about : <span className="italic text-gray-400">Write something about yourself to let mentors know you better...</span>}
+                                </p>
+                                <div className="mt-8 flex flex-wrap gap-3">
+                                    <div className="px-5 py-2.5 bg-gray-50 dark:bg-[#0b141a] rounded-xl border border-gray-200 dark:border-[#2a3942] text-sm font-bold text-gray-600 dark:text-gray-300 flex items-center gap-2 hover:bg-gray-100 dark:hover:bg-[#111b21] transition">
+                                        <GraduationCap size={18} className="text-gray-400" /> {profile.college || "University Not Set"}
+                                    </div>
+                                    <div className="px-5 py-2.5 bg-gray-50 dark:bg-[#0b141a] rounded-xl border border-gray-200 dark:border-[#2a3942] text-sm font-bold text-gray-600 dark:text-gray-300 flex items-center gap-2 hover:bg-gray-100 dark:hover:bg-[#111b21] transition">
+                                        <div className="w-2 h-2 rounded-full bg-green-500"></div> {profile.branch || "Branch Not Set"}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         {/* 1. MY REQUESTS */}
                         <div className="bg-white dark:bg-[#202c33] rounded-3xl shadow-sm border border-gray-100 dark:border-[#2a3942] overflow-hidden">
                             <div className="p-6 border-b border-gray-100 dark:border-[#2a3942] flex items-center justify-between">
