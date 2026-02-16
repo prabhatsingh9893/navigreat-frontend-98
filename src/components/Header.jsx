@@ -115,7 +115,7 @@ const Header = () => {
           <img
             src={logo}
             alt="NaviGreat Logo"
-            className="h-20 w-auto object-contain transition duration-300 pointer-events-none mix-blend-multiply dark:mix-blend-normal dark:brightness-110"
+            className="h-20 w-auto object-contain transition duration-300 pointer-events-none mix-blend-multiply dark:invert dark:mix-blend-screen"
           />
         </Link>
 
@@ -140,8 +140,8 @@ const Header = () => {
               <button
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                 className={`flex items-center gap-3 focus:outline-none px-3 py-2 rounded-xl transition border border-transparent ${isHome && !scrolled
-                    ? 'hover:bg-white/10 hover:border-white/20'
-                    : 'hover:bg-gray-50 dark:hover:bg-gray-800 hover:border-gray-200 dark:hover:border-gray-700'
+                  ? 'hover:bg-white/10 hover:border-white/20'
+                  : 'hover:bg-gray-50 dark:hover:bg-gray-800 hover:border-gray-200 dark:hover:border-gray-700'
                   }`}
               >
                 <div className="text-right hidden lg:block">
