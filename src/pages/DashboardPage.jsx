@@ -465,9 +465,7 @@ const DashboardPage = () => {
                         <button onClick={() => { setEditForm(profile); setIsEditing(true); }} className="flex-1 md:flex-none bg-blue-600 text-white px-6 py-3 rounded-xl font-bold shadow-lg shadow-blue-200 hover:bg-blue-700 hover:shadow-blue-300 hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2">
                             <Edit2 size={18} /> Edit Profile
                         </button>
-                        {user?.role === 'mentor' && (
-                            <button onClick={() => navigate(`/mentor/${user._id || user.id}`)} className="bg-gray-800 text-white px-4 py-3 rounded-xl hover:bg-black transition shadow-lg hover:shadow-xl hover:-translate-y-0.5"><Share2 size={20} /></button>
-                        )}
+                        <button onClick={() => navigate(`/mentor/${user._id || user.id}`)} className="bg-gray-800 text-white px-4 py-3 rounded-xl hover:bg-black transition shadow-lg hover:shadow-xl hover:-translate-y-0.5" title="View Public Profile"><Share2 size={20} /></button>
                     </div>
                 </div>
             </div>
