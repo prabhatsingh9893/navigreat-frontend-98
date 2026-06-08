@@ -4,6 +4,7 @@ import App from './App.jsx'
 import './index.css'
 import { HashRouter } from 'react-router-dom'
 import { initSecurity } from './utils/security'
+import { ThemeProvider } from './context/ThemeContext.jsx'
 
 // Initialize Client-side Security Controls
 initSecurity();
@@ -11,7 +12,9 @@ initSecurity();
 ReactDOM.createRoot(document.getElementById('root')).render(
   //<React.StrictMode>
   <HashRouter>
-    <App />
+    <ThemeProvider>
+      <App />
+    </ThemeProvider>
   </HashRouter>
   //</React.StrictMode>,
 )

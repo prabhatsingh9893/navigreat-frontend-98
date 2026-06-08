@@ -9,12 +9,14 @@ import logo from '../assets/startup-logo.png';
 import { signOut } from 'firebase/auth';
 import { auth } from '../firebaseConfig';
 
+import { useTheme } from '../context/ThemeContext';
+
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [user, setUser] = useState(null);
 
-  const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
+  const { theme, toggleTheme } = useTheme();
   const [scrolled, setScrolled] = useState(false);
 
   const navigate = useNavigate();
@@ -49,20 +51,6 @@ const Header = () => {
       window.removeEventListener('userUpdated', updateHeaderUser);
     };
   }, [location]);
-
-  // Theme Logic
-  useEffect(() => {
-    if (theme === 'dark') {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-    localStorage.setItem('theme', theme);
-  }, [theme]);
-
-  const toggleTheme = () => {
-    setTheme(prev => prev === 'light' ? 'dark' : 'light');
-  };
 
 
   useEffect(() => {

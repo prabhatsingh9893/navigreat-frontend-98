@@ -5,6 +5,8 @@ import { API_BASE_URL } from '../config';
 import Avatar from '../components/Avatar';
 import { motion } from 'framer-motion';
 
+import { MentorCardSkeleton } from '../components/SkeletonLoader';
+
 function MentorsPage() {
   const [mentors, setMentors] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
@@ -122,17 +124,7 @@ function MentorsPage() {
           {loading ? (
             // Loading Skeleton
             [1, 2, 3, 4, 5, 6].map((n) => (
-              <div key={n} className="bg-white dark:bg-[#202c33] rounded-3xl shadow-sm border border-gray-100 dark:border-[#2a3942] overflow-hidden h-[450px]">
-                <div className="h-48 bg-gray-200 dark:bg-[#2a3942] animate-pulse"></div>
-                <div className="p-8 space-y-4">
-                  <div className="h-8 bg-gray-200 dark:bg-[#2a3942] rounded-lg w-3/4 animate-pulse"></div>
-                  <div className="h-4 bg-gray-200 dark:bg-[#2a3942] rounded w-1/2 animate-pulse"></div>
-                  <div className="space-y-2 mt-6">
-                    <div className="h-4 bg-gray-100 dark:bg-[#2a3942] rounded w-full animate-pulse"></div>
-                    <div className="h-4 bg-gray-100 dark:bg-[#2a3942] rounded w-5/6 animate-pulse"></div>
-                  </div>
-                </div>
-              </div>
+              <MentorCardSkeleton key={n} />
             ))
           ) : filteredMentors.length > 0 ? (
             filteredMentors.map((mentor) => (

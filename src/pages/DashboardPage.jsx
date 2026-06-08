@@ -10,6 +10,7 @@ import {
 import toast from 'react-hot-toast';
 import Avatar from '../components/Avatar'; // ✅ Import Avatar Component
 import ReviewModal from '../components/ReviewModal'; // ✅ Import ReviewModal
+import { MetricSkeleton, SessionRowSkeleton } from '../components/SkeletonLoader';
 
 // API URL Constant
 import { API_BASE_URL } from '../config';
@@ -350,9 +351,49 @@ const DashboardPage = () => {
     };
 
     if (loading) return (
-        <div className="h-screen flex flex-col items-center justify-center gap-4 text-blue-600">
-            <Loader2 className="animate-spin" size={48} />
-            <p className="font-bold animate-pulse">Loading Dashboard...</p>
+        <div className="min-h-screen bg-gray-50 dark:bg-[#0b141a] font-sans pb-20 relative">
+            <div className="h-72 bg-gradient-to-r from-slate-900 via-blue-900 to-slate-900 relative shadow-2xl overflow-hidden animate-pulse">
+                <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
+            </div>
+
+            <div className="max-w-7xl mx-auto px-6 -mt-32 relative z-10">
+                <div className="flex flex-col md:flex-row items-end gap-8 mb-12 animate-pulse">
+                    <div className="w-48 h-48 rounded-full bg-slate-200 dark:bg-slate-700 border-[6px] border-white dark:border-[#0b141a] shadow-2xl"></div>
+                    <div className="flex-1 mb-2 space-y-3">
+                        <div className="h-8 bg-slate-200 dark:bg-slate-700 rounded-lg w-1/3 animate-pulse"></div>
+                        <div className="h-5 bg-slate-200 dark:bg-slate-700 rounded-lg w-1/4 animate-pulse"></div>
+                    </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div className="md:col-span-2 space-y-6">
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            <MetricSkeleton />
+                            <MetricSkeleton />
+                            <MetricSkeleton />
+                        </div>
+                        <div className="bg-white dark:bg-slate-800 p-8 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-700 space-y-4">
+                            <div className="h-6 bg-slate-200 dark:bg-slate-700 rounded-lg w-1/5 animate-pulse"></div>
+                            <div className="h-4 bg-slate-200 dark:bg-slate-700 rounded w-full animate-pulse"></div>
+                            <div className="h-4 bg-slate-200 dark:bg-slate-700 rounded w-full animate-pulse"></div>
+                            <div className="h-4 bg-slate-200 dark:bg-slate-700 rounded w-3/4 animate-pulse"></div>
+                        </div>
+                        <div className="bg-white dark:bg-slate-800 p-8 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-700 space-y-4">
+                            <div className="h-6 bg-slate-200 dark:bg-slate-700 rounded-lg w-1/4 animate-pulse"></div>
+                            <SessionRowSkeleton />
+                            <SessionRowSkeleton />
+                            <SessionRowSkeleton />
+                        </div>
+                    </div>
+
+                    <div className="space-y-6">
+                        <div className="bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-700 space-y-4">
+                            <div className="h-6 bg-slate-200 dark:bg-slate-700 rounded-lg w-1/3 animate-pulse"></div>
+                            <div className="h-32 bg-slate-200 dark:bg-slate-700 rounded-2xl animate-pulse"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     );
 
