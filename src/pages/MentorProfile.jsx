@@ -151,12 +151,38 @@ const MentorProfile = () => {
         }
     };
 
-    const handleJoinClass = () => {
-        if (mentor?.meetingId && mentor?.passcode) {
-            navigate('/session', { state: { meetingNumber: mentor.meetingId, passWord: mentor.passcode, mentorId: mentor._id } });
-            toast.success("Joining Live Class...");
-        } else {
-            toast.error("Meeting details not found.");
+    const handleJoinClass = async () => {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            toast.error("Please login to join the live class!");
+            navigate('/login');
+            return;
+        }
+
+        const loadingToast = toast.loading("Verifying session authorization...");
+        try {
+            const res = await fetch(`${API_BASE_URL}/sessions/join/${mentor._id || mentor.id}`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            const data = await res.json();
+            toast.dismiss(loadingToast);
+
+            if (data.success && data.meetingId && data.passcode) {
+                navigate('/session', {
+                    state: {
+                        meetingNumber: data.meetingId,
+                        passWord: data.passcode,
+                        mentorId: mentor._id || mentor.id
+                    }
+                });
+                toast.success("Joining Live Class...");
+            } else {
+                toast.error(data.message || "Failed to retrieve meeting details.");
+            }
+        } catch (err) {
+            toast.dismiss(loadingToast);
+            console.error("Join Class Error:", err);
+            toast.error("Network Error: Could not connect to join session.");
         }
     };
 
