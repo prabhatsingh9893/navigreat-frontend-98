@@ -20,7 +20,14 @@ const ChatPage = () => {
     const navigate = useNavigate();
     const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState("");
-    const [currentUser, setCurrentUser] = useState(null);
+    const [currentUser, setCurrentUser] = useState(() => {
+        const userData = localStorage.getItem('userData');
+        try {
+            return userData ? JSON.parse(userData) : null;
+        } catch (e) {
+            return null;
+        }
+    });
     const [targetUser, setTargetUser] = useState(null);
     const [contactList, setContactList] = useState([]);
     const [isTyping, setIsTyping] = useState(false);
@@ -33,21 +40,35 @@ const ChatPage = () => {
 
     const scrollRef = useRef();
     const notificationSound = useRef(new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3')); // Beep Sound
-    let typingTimeout = null;
+    const typingTimeoutRef = useRef(null);
 
-    // 1. Auth Check & Setup
+    // Utils & Helpers defined early to prevent accessed-before-declared issues
+    const scrollToBottom = () => {
+        scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+    };
+
+    const fetchContacts = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            const res = await fetch(`${API_BASE_URL}/contacts`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            const data = await res.json();
+            if (data.success) setContactList(data.contacts);
+        } catch (error) {
+            console.error("Error fetching contacts:", error);
+        }
+    };
+
     useEffect(() => {
-        const userData = localStorage.getItem('userData');
-        if (!userData) {
+        if (!currentUser) {
             navigate('/login');
             return;
         }
-        const user = JSON.parse(userData);
-        setCurrentUser(user);
 
         const registerUser = () => {
-            console.log("Registering Online:", user._id || user.id);
-            socket.emit("register_user", user._id || user.id); // ✅ Emit register_user
+            console.log("Registering Online:", currentUser._id || currentUser.id);
+            socket.emit("register_user", currentUser._id || currentUser.id); // ✅ Emit register_user
         };
 
         if (socket.connected) registerUser();
@@ -70,7 +91,9 @@ const ChatPage = () => {
             });
         });
 
-        fetchContacts(user.role);
+        setTimeout(() => {
+            fetchContacts();
+        }, 0);
 
         return () => {
             socket.off("connect", registerUser);
@@ -78,7 +101,8 @@ const ChatPage = () => {
             socket.off("user_online");
             socket.off("user_offline");
         };
-    }, [navigate]);
+    }, [navigate, currentUser]);
+
 
     // 2. Fetch Target User Info & Messages
     useEffect(() => {
@@ -176,19 +200,7 @@ const ChatPage = () => {
         };
     }, [targetUserId, currentUser]);
 
-    // 4. Utils
-    const fetchContacts = async () => {
-        try {
-            const token = localStorage.getItem('token');
-            const res = await fetch(`${API_BASE_URL}/contacts`, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
-            const data = await res.json();
-            if (data.success) setContactList(data.contacts);
-        } catch (error) {
-            console.error("Error fetching contacts:", error);
-        }
-    };
+
 
     // 🎙️ RECORDING LOGIC
     const startRecording = async () => {
@@ -253,9 +265,7 @@ const ChatPage = () => {
         setNewMessage("");
     };
 
-    const scrollToBottom = () => {
-        scrollRef.current?.scrollIntoView({ behavior: "smooth" });
-    };
+
 
     useEffect(() => {
         scrollToBottom();
@@ -359,7 +369,7 @@ const ChatPage = () => {
                                     <MessageSquare size={32} className="text-blue-400" />
                                 </div>
                                 <p className="text-sm font-medium">No messages yet</p>
-                                <p className="text-xs">Say "Hi" to start the conversation! 👋</p>
+                                <p className="text-xs">Say &quot;Hi&quot; to start the conversation! 👋</p>
                             </div>
                         ) : (
                             messages.map((msg, index) => {
@@ -403,8 +413,8 @@ const ChatPage = () => {
                                 onChange={(e) => {
                                     setNewMessage(e.target.value);
                                     socket.emit("typing", targetUserId);
-                                    if (typingTimeout) clearTimeout(typingTimeout);
-                                    typingTimeout = setTimeout(() => socket.emit("stop_typing", targetUserId), 2000);
+                                    if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
+                                    typingTimeoutRef.current = setTimeout(() => socket.emit("stop_typing", targetUserId), 2000);
                                 }}
                                 onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
                                 placeholder={isRecording ? "Recording audio..." : "Type a message..."}

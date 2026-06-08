@@ -92,7 +92,7 @@ function SignupPage() {
             </div>
             <h1 className="text-5xl font-extrabold tracking-tight leading-tight mb-6">Start Your <br />Journey Today.</h1>
             <p className="text-lg text-blue-100/80 leading-relaxed">
-              Whether you're looking for guidance or ready to guide others, you're in the right place.
+              Whether you&apos;re looking for guidance or ready to guide others, you&apos;re in the right place.
             </p>
           </motion.div>
 

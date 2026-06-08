@@ -8,6 +8,13 @@
     <!-- Zoom CSS (3.6.0) -->
     <link type="text/css" rel="stylesheet" href="https://source.zoom.us/3.6.0/css/bootstrap.css" />
     <link type="text/css" rel="stylesheet" href="https://source.zoom.us/3.6.0/css/react-select.css" />
+
+    <!-- ✅ PRELOAD SCRIPTS FOR FASTER JOINING -->
+    <link rel="preload" href="https://source.zoom.us/3.6.0/lib/vendor/react.min.js" as="script">
+    <link rel="preload" href="https://source.zoom.us/3.6.0/lib/vendor/react-dom.min.js" as="script">
+    <link rel="preload" href="https://source.zoom.us/3.6.0/lib/vendor/redux.min.js" as="script">
+    <link rel="preload" href="https://source.zoom.us/zoom-meeting-3.6.0.min.js" as="script">
+
     <style>
         body {
             margin: 0;
@@ -130,11 +137,17 @@
 
             console.log("Using SDK Key:", sdkKey);
 
+            // UPDATE STATUS
+            const statusEl = document.getElementById('status-text');
+            if (statusEl) statusEl.innerText = "Optimizing Connection...";
+
             // Note: 3.6.0 might behave better with empty second arg or specific path
             ZoomMtg.setZoomJSLib('https://source.zoom.us/3.6.0/lib', '/av');
 
             ZoomMtg.prepareWebSDK();
             ZoomMtg.i18n.load('en-US');
+
+            if (statusEl) statusEl.innerText = "Initializing Secure Video Engine...";
 
             ZoomMtg.init({
                 leaveUrl: leaveUrl,
@@ -142,9 +155,11 @@
                 isSupportChat: true, // ✅ ENABLES CHAT
                 disablePreview: false, // ✅ SHOWS PREVIEW
                 isLockBottom: false, // ✅ Allow bottom bar to float on mobile
-                screenShare: false, // ✅ Disable screen share to save space on mobile
+                screenShare: true, // ✅ Enable screen share for Mentors
                 success: function () {
                     console.log("Zoom Init Success");
+                    if (statusEl) statusEl.innerText = "Connecting to Mentor...";
+
                     ZoomMtg.join({
                         signature: signature,
                         meetingNumber: parseInt(meetingNumber, 10),
@@ -155,6 +170,7 @@
                         tk: '', // Token if needed, else empty
                         success: function (res) {
                             console.log("Join Success", res);
+                            if (statusEl) statusEl.innerText = "Connected! Entering Room...";
 
                             // setTimeout(() => {
                             //    if (window.innerWidth < 768) {
@@ -172,7 +188,7 @@
                                 // 3 = MEETING_STATUS_DISCONNECTED (Includes "Ended by Host")
                                 if (data.meetingStatus === 3) {
                                     console.log("Meeting ended, redirecting...");
-                                    window.location.href = leaveUrl;
+                                    window.top.location.href = leaveUrl;
                                 }
                             });
                         },

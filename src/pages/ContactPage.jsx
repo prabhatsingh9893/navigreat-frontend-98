@@ -91,7 +91,7 @@ function ContactPage() {
               Get in Touch
             </span>
             <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white mb-6 leading-tight">
-              We'd love to hear from you.
+              We&apos;d love to hear from you.
             </h1>
             <p className="text-lg text-gray-600 dark:text-[#8696a0]">
               Have a question about our mentorship program? Want to partner with us?

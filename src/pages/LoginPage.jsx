@@ -300,7 +300,7 @@ function LoginPage() {
           </div>
 
           <p className="mt-8 text-center text-slate-600 dark:text-[#8696a0]">
-            Don't have an account? <Link to="/signup" className="text-blue-600 dark:text-[#53bdeb] font-bold hover:underline">Create Account</Link>
+            Don&apos;t have an account? <Link to="/signup" className="text-blue-600 dark:text-[#53bdeb] font-bold hover:underline">Create Account</Link>
           </p>
         </motion.div>
       </div>

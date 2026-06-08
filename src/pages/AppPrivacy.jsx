@@ -13,7 +13,7 @@ const AppPrivacy = () => {
                         <div className="prose prose-slate max-w-none">
                             <h3 className="text-xl font-bold text-slate-800 mt-6 mb-2">1. Introduction</h3>
                             <p className="mb-4 text-slate-600">
-                                Welcome to <strong>NaviGreat</strong> ("we," "our," or "us"). We are committed to protecting your personal information and your right to privacy.
+                                Welcome to <strong>NaviGreat</strong> (&quot;we,&quot; &quot;our,&quot; or &quot;us&quot;). We are committed to protecting your personal information and your right to privacy.
                                 If you have any questions or concerns about this policy, or our practices with regards to your personal information, please contact us at support@navigreat.com.
                             </p>
 

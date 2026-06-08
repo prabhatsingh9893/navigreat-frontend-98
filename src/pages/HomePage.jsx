@@ -87,7 +87,6 @@ function HomePage() {
             <img
               src="https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&q=80&w=1280"
               alt="Hero Background"
-              priority="true"
               className="w-full h-full object-cover"
             />
           </div>
