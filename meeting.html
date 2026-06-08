@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Navigreat Live Session</title>
+    <!-- Zoom CSS (3.6.0) -->
+    <link type="text/css" rel="stylesheet" href="https://source.zoom.us/3.6.0/css/bootstrap.css" />
+    <link type="text/css" rel="stylesheet" href="https://source.zoom.us/3.6.0/css/react-select.css" />
+
+    <!-- ✅ PRELOAD SCRIPTS FOR FASTER JOINING -->
+    <link rel="preload" href="https://source.zoom.us/3.6.0/lib/vendor/react.min.js" as="script">
+    <link rel="preload" href="https://source.zoom.us/3.6.0/lib/vendor/react-dom.min.js" as="script">
+    <link rel="preload" href="https://source.zoom.us/3.6.0/lib/vendor/redux.min.js" as="script">
+    <link rel="preload" href="https://source.zoom.us/zoom-meeting-3.6.0.min.js" as="script">
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: black;
+            overflow: hidden;
+        }
+
+        #zmmtg-root {
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background: black;
+            z-index: 10000;
+        }
+
+        #loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #1a1a1a;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 5000;
+            font-family: sans-serif;
+            gap: 1rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="loading-overlay">
+        <h1>Navigreat Secure Meeting</h1>
+        <div id="status-text">Connecting to Zoom...</div>
+    </div>
+    <div id="zmmtg-root"></div>
+
+    <!-- 1. Buffer Polyfill (Browser-Ready) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/buffer/6.0.3/buffer.min.js"></script>
+    <script>
+        console.log("Setting up Polyfills...");
+
+        // Define Process Environment for Zoom SDK
+        window.process = {
+            env: { NODE_ENV: 'production' },
+            browser: true,
+            nextTick: function (cb) { setTimeout(cb, 0); }
+        };
+
+        // Attach Buffer to Window
+        if (window.buffer && window.buffer.Buffer) {
+            window.Buffer = window.buffer.Buffer;
+        } else if (typeof Buffer !== 'undefined') {
+            window.Buffer = Buffer;
+        } else {
+            console.warn("Buffer not found in global scope. Waiting for script load...");
+        }
+    </script>
+
+    <!-- Zoom Dependencies (3.6.0) -->
+    <script src="https://source.zoom.us/3.6.0/lib/vendor/react.min.js"></script>
+    <script src="https://source.zoom.us/3.6.0/lib/vendor/react-dom.min.js"></script>
+    <script src="https://source.zoom.us/3.6.0/lib/vendor/redux.min.js"></script>
+    <script src="https://source.zoom.us/3.6.0/lib/vendor/redux-thunk.min.js"></script>
+    <script src="https://source.zoom.us/3.6.0/lib/vendor/lodash.min.js"></script>
+    <script src="https://source.zoom.us/zoom-meeting-3.6.0.min.js"></script>
+
+    <script>
+        // Fallback: Hide overlay after 15 seconds if Zoom is silent
+        setTimeout(() => {
+            const overlay = document.getElementById('loading-overlay');
+            if (overlay) overlay.style.display = 'none';
+        }, 15000);
+
+        // Parse Parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const meetingNumber = urlParams.get('mn');
+        const passWord = urlParams.get('pwd');
+        const signature = urlParams.get('sig');
+        const sdkKey = urlParams.get('sdkKey');
+        const userName = urlParams.get('name') || 'Navigreat User';
+        const userEmail = urlParams.get('email') || '';
+        const leaveUrl = urlParams.get('leaveUrl') || '/';
+
+        if (ZoomMtg) {
+            console.log("Initializing Zoom 3.6.0...");
+
+            // --- 🔍 JWT DEBUGGER ---
+            try {
+                const parts = signature.split('.');
+                if (parts.length === 3) {
+                    const payload = JSON.parse(atob(parts[1]));
+                    console.group("🔍 Signature Debug Check");
+                    console.log("JWT Payload:", payload);
+                    console.log("Params to Join:", {
+                        mn: parseInt(meetingNumber, 10),
+                        role: 1, // We derived this, but check logic if your role variable is used
+                        sdkKey: sdkKey
+                    });
+
+                    if (payload.sdkKey !== sdkKey) console.error("❌ SDK KEY MISMATCH! Backend uses " + payload.sdkKey + " but Frontend uses " + sdkKey);
+                    else console.log("✅ SDK Keys Match");
+
+                    if (payload.mn !== parseInt(meetingNumber, 10)) console.error("❌ MEETING NUMBER MISMATCH! Payload: " + payload.mn + ", Join: " + parseInt(meetingNumber, 10));
+                    else console.log("✅ Meeting Numbers Match");
+
+                    console.groupEnd();
+                }
+            } catch (e) {
+                console.error("Failed to decode debug signature:", e);
+            }
+            // -----------------------
+
+            console.log("Using SDK Key:", sdkKey);
+
+            // UPDATE STATUS
+            const statusEl = document.getElementById('status-text');
+            if (statusEl) statusEl.innerText = "Optimizing Connection...";
+
+            // Note: 3.6.0 might behave better with empty second arg or specific path
+            ZoomMtg.setZoomJSLib('https://source.zoom.us/3.6.0/lib', '/av');
+
+            ZoomMtg.prepareWebSDK();
+            ZoomMtg.i18n.load('en-US');
+
+            if (statusEl) statusEl.innerText = "Initializing Secure Video Engine...";
+
+            ZoomMtg.init({
+                leaveUrl: leaveUrl,
+                isSupportAV: true,
+                isSupportChat: true, // ✅ ENABLES CHAT
+                disablePreview: false, // ✅ SHOWS PREVIEW
+                isLockBottom: false, // ✅ Allow bottom bar to float on mobile
+                screenShare: true, // ✅ Enable screen share for Mentors
+                success: function () {
+                    console.log("Zoom Init Success");
+                    if (statusEl) statusEl.innerText = "Connecting to Mentor...";
+
+                    ZoomMtg.join({
+                        signature: signature,
+                        meetingNumber: parseInt(meetingNumber, 10),
+                        userName: userName,
+                        sdkKey: sdkKey,
+                        userEmail: userEmail,
+                        passWord: passWord,
+                        tk: '', // Token if needed, else empty
+                        success: function (res) {
+                            console.log("Join Success", res);
+                            if (statusEl) statusEl.innerText = "Connected! Entering Room...";
+
+                            // setTimeout(() => {
+                            //    if (window.innerWidth < 768) {
+                            //        ZoomMtg.showChat(true);
+                            //        console.log("Mobile Chat Auto-Opened");
+                            //    }
+                            // }, 1000);
+
+                            const overlay = document.getElementById('loading-overlay');
+                            if (overlay) overlay.style.display = 'none';
+
+                            // ✅ FORCE REDIRECT ON MEETING END
+                            ZoomMtg.inMeetingServiceListener('onMeetingStatus', function (data) {
+                                console.log('Meeting Status Change:', data);
+                                // 3 = MEETING_STATUS_DISCONNECTED (Includes "Ended by Host")
+                                if (data.meetingStatus === 3) {
+                                    console.log("Meeting ended, redirecting...");
+                                    window.top.location.href = leaveUrl;
+                                }
+                            });
+                        },
+                        error: function (res) {
+                            console.error("Join Error", JSON.stringify(res, null, 2));
+                            alert("Join Failed: " + (res.errorMessage || res.errorCode || JSON.stringify(res)));
+                        }
+                    });
+                },
+                error: function (res) {
+                    console.error("Init Error", JSON.stringify(res, null, 2));
+                    alert("Zoom Init Failed: " + JSON.stringify(res));
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>
