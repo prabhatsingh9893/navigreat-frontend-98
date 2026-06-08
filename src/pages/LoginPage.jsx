@@ -30,6 +30,13 @@ function LoginPage() {
   const [statusMessage, setStatusMessage] = useState("");
   const navigate = useNavigate();
 
+  // Redirect if already logged in
+  useEffect(() => {
+    if (localStorage.getItem('token')) {
+      navigate('/dashboard');
+    }
+  }, [navigate]);
+
   // --- Helper: Verify Logic for both Popup and Redirect ---
   const verifyWithBackend = async (user) => {
     if (!user) return;
