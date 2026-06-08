@@ -91,7 +91,7 @@ const LiveSession = () => {
       {role === 1 && <ScreenRecorder />}
 
       {/* Safe Mode: Join via App */}
-      <div className="absolute top-4 left-4 z-[60] flex gap-2">
+      <div className="absolute bottom-24 left-4 z-[60] flex gap-2">
         <button
           onClick={() => navigate('/dashboard')}
           className="bg-red-600/90 hover:bg-red-600 text-white px-4 py-2 rounded-full text-xs font-bold backdrop-blur-md transition shadow-lg"
@@ -99,12 +99,17 @@ const LiveSession = () => {
           Exit
         </button>
         {meetingUrl && (
-          <a
-            href={`zoommtg://zoom.us/join?action=join&confno=${meetingNumber}&pwd=${passWord}&uname=${encodeURIComponent(username)}`}
+          <button
+            onClick={() => {
+              const deepLink = `zoommtg://zoom.us/join?action=join&confno=${meetingNumber}&pwd=${passWord}&uname=${encodeURIComponent(username)}`;
+              window.location.href = deepLink;
+              toast.success("Opening Zoom App... Closing web session in 3s to prevent echo.", { duration: 4000 });
+              setTimeout(() => navigate('/dashboard'), 3000);
+            }}
             className="bg-blue-600/90 hover:bg-blue-600 text-white px-4 py-2 rounded-full text-xs font-bold backdrop-blur-md transition shadow-lg flex items-center gap-1"
           >
             <span>Open in Zoom App</span>
-          </a>
+          </button>
         )}
       </div>
 

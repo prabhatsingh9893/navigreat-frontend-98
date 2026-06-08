@@ -13,8 +13,8 @@ const AppTerms = () => {
                         <div className="prose prose-slate max-w-none">
                             <h3 className="text-xl font-bold text-slate-800 mt-6 mb-2">1. Agreement to Terms</h3>
                             <p className="mb-4 text-slate-600">
-                                These Terms of Use constitute a legally binding agreement made between you, whether personally or on behalf of an entity (“you”) and <strong>NaviGreat</strong> ("Company", “we”, “us”, or “our”),
-                                concerning your access to and use of the <strong>NaviGreat</strong> website as well as any other media form, media channel, mobile website or mobile application related, linked, or otherwise connected thereto (collectively, the “Site”).
+                                These Terms of Use constitute a legally binding agreement made between you, whether personally or on behalf of an entity (&ldquo;you&rdquo;) and <strong>NaviGreat</strong> (&quot;Company&quot;, &ldquo;we&rdquo;, &ldquo;us&rdquo;, or &ldquo;our&rdquo;),
+                                concerning your access to and use of the <strong>NaviGreat</strong> website as well as any other media form, media channel, mobile website or mobile application related, linked, or otherwise connected thereto (collectively, the &ldquo;Site&rdquo;).
                             </p>
 
                             <h3 className="text-xl font-bold text-slate-800 mt-6 mb-2">2. Intellectual Property Rights</h3>

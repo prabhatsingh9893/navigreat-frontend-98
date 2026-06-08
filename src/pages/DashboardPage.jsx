@@ -19,9 +19,17 @@ const DashboardPage = () => {
     const navigate = useNavigate();
     const location = useLocation(); // ✅ Location Hook
     const [reviewMentorId, setReviewMentorId] = useState(null); // Review Modal State
+    const [lastSession, setLastSession] = useState(null); // ✅ Rejoin State
 
-    // --- 0. Post-Meeting Check ---
+    // --- 0. Active Session & Post-Meeting Check ---
     useEffect(() => {
+        // Check for active session to rejoin
+        const savedSession = sessionStorage.getItem('currentSession');
+        if (savedSession) {
+            try { setLastSession(JSON.parse(savedSession)); }
+            catch (e) { sessionStorage.removeItem('currentSession'); }
+        }
+
         const params = new URLSearchParams(location.search);
         if (params.get('meeting_ended')) {
             toast.success("Meeting Concluded Successfully!", { icon: '✅' });
@@ -401,7 +409,7 @@ const DashboardPage = () => {
                         <div className="space-y-4 mb-6">
                             <div className="bg-blue-50 p-4 rounded-xl text-sm text-blue-700 space-y-2">
                                 <p>Enter your <b>Zoom Personal Meeting ID</b>.</p>
-                                <p className="font-bold text-red-600">⚠️ Please DISABLE "Waiting Room" in your Zoom Settings so students can join automatically.</p>
+                                <p className="font-bold text-red-600">⚠️ Please DISABLE &quot;Waiting Room&quot; in your Zoom Settings so students can join automatically.</p>
                             </div>
                             <div className="relative">
                                 <input value={editForm.meetingId} onChange={e => setEditForm({ ...editForm, meetingId: e.target.value })} className="w-full border-2 border-gray-200 p-3 rounded-xl focus:border-red-500 outline-none font-mono text-lg pr-10" placeholder="Zoom ID" />
@@ -512,6 +520,36 @@ const DashboardPage = () => {
                             </div>
                         </div>
 
+                        {/* 0.5. ACTIVE SESSION REJOIN CARD */}
+                        {lastSession && (
+                            <div className="bg-gradient-to-r from-green-500 to-emerald-600 p-6 rounded-3xl shadow-lg border border-green-400 mb-6 flex items-center justify-between gap-4 animate-in slide-in-from-top duration-300">
+                                <div className="text-white">
+                                    <h3 className="font-bold text-xl flex items-center gap-2">
+                                        <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse border-2 border-white"></div>
+                                        Active Session Detected
+                                    </h3>
+                                    <p className="text-green-50 text-sm mt-1">Class ID: {lastSession.meetingNumber}</p>
+                                </div>
+                                <div className="flex gap-2">
+                                    <button
+                                        onClick={() => {
+                                            sessionStorage.removeItem('currentSession');
+                                            setLastSession(null);
+                                        }}
+                                        className="bg-white/20 text-white px-4 py-2 rounded-xl text-sm font-bold hover:bg-white/30 transition"
+                                    >
+                                        Dismiss
+                                    </button>
+                                    <button
+                                        onClick={() => navigate('/session', { state: lastSession })}
+                                        className="bg-white text-green-700 px-6 py-2 rounded-xl font-bold shadow-lg hover:bg-green-50 transition flex items-center gap-2"
+                                    >
+                                        <Video size={18} /> Rejoin Now
+                                    </button>
+                                </div>
+                            </div>
+                        )}
+
                         {/* 1. MY REQUESTS */}
                         <div className="bg-white dark:bg-[#202c33] rounded-3xl shadow-sm border border-gray-100 dark:border-[#2a3942] overflow-hidden">
                             <div className="p-6 border-b border-gray-100 dark:border-[#2a3942] flex items-center justify-between">
@@ -519,7 +557,7 @@ const DashboardPage = () => {
                             </div>
                             <div className="p-0">
                                 {bookings?.length === 0 ? (
-                                    <div className="p-8 text-center text-gray-400">You haven't booked any sessions yet.</div>
+                                    <div className="p-8 text-center text-gray-400">You haven&apos;t booked any sessions yet.</div>
                                 ) : (
                                     bookings?.map((b) => (
                                         <div key={b._id} className="p-6 border-b border-gray-100 dark:border-[#2a3942] hover:bg-gray-50 dark:hover:bg-[#2a3942] transition">
@@ -530,7 +568,7 @@ const DashboardPage = () => {
                                                 </div>
                                                 <span className="bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400 text-xs font-bold px-3 py-1 rounded-full uppercase">Pending</span>
                                             </div>
-                                            <p className="text-gray-600 dark:text-gray-300 bg-white dark:bg-[#0b141a] p-3 border border-gray-200 dark:border-[#2a3942] rounded-lg italic text-sm">"{b.message}"</p>
+                                            <p className="text-gray-600 dark:text-gray-300 bg-white dark:bg-[#0b141a] p-3 border border-gray-200 dark:border-[#2a3942] rounded-lg italic text-sm">&quot;{b.message}&quot;</p>
                                         </div>
                                     ))
                                 )}
@@ -758,7 +796,7 @@ const DashboardPage = () => {
                                                 </span>
                                             </div>
                                             {b.message ? (
-                                                <p className="text-sm text-gray-600 leading-relaxed bg-gray-50 p-2 rounded-lg border border-gray-100">"{b.message}"</p>
+                                                <p className="text-sm text-gray-600 leading-relaxed bg-gray-50 p-2 rounded-lg border border-gray-100">&quot;{b.message}&quot;</p>
                                             ) : <span className="text-xs text-gray-400 italic">No message attached</span>}
 
                                             <div className="mt-3 flex gap-2">

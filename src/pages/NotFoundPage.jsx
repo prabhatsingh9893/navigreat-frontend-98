@@ -9,7 +9,7 @@ const NotFoundPage = () => {
                 <h1 className="text-9xl font-extrabold text-gray-200 mb-4 select-none">404</h1>
                 <h2 className="text-3xl font-bold text-gray-800 mb-2">Page Not Found</h2>
                 <p className="text-gray-500 mb-8">
-                    Oops! The page you are looking for doesn't exist or has been moved.
+                    Oops! The page you are looking for doesn&apos;t exist or has been moved.
                 </p>
 
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">

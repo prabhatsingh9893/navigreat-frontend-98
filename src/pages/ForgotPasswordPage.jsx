@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { toast } from 'react-hot-toast'; // Ensure react-hot-toast is installed
 import { API_BASE_URL } from '../config';
 import { Mail, ArrowRight, CheckCircle } from 'lucide-react';
@@ -74,7 +74,7 @@ const ForgotPasswordPage = () => {
                             <CheckCircle size={32} />
                         </div>
                         <h3 className="text-xl font-bold text-white mb-2">Check your Email</h3>
-                        <p className="text-gray-300">We've sent a password reset link to <b>{email}</b>.</p>
+                        <p className="text-gray-300">We&apos;ve sent a password reset link to <b>{email}</b>.</p>
                     </div>
                 )}
 

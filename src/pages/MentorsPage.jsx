@@ -179,7 +179,7 @@ function MentorsPage() {
                       </span>
                     </div>
                     <p className="text-gray-500 dark:text-[#8696a0] text-sm line-clamp-2 leading-relaxed">
-                      "{mentor.about || "I am ready to guide juniors to achieve their dreams. Let's connect and discuss your future path."}"
+                      &quot;{mentor.about || "I am ready to guide juniors to achieve their dreams. Let&apos;s connect and discuss your future path."}&quot;
                     </p>
                   </div>
 
@@ -200,7 +200,7 @@ function MentorsPage() {
                 <Frown size={56} className="text-gray-400 dark:text-gray-500 relative z-10" />
               </div>
               <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">No mentors found</h3>
-              <p className="text-gray-500 dark:text-gray-400 max-w-md mx-auto mb-8">We couldn't find anyone matching "{searchTerm}". Try searching for a different name, college, or branch.</p>
+              <p className="text-gray-500 dark:text-gray-400 max-w-md mx-auto mb-8">We couldn&apos;t find anyone matching &quot;{searchTerm}&quot;. Try searching for a different name, college, or branch.</p>
               <button
                 onClick={() => setSearchTerm('')}
                 className="bg-blue-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-blue-700 transition shadow-lg shadow-blue-200"
