@@ -70,7 +70,6 @@ function LoginPage() {
         setVerifying(false);
         console.error("[vLoginFinal] Backend Error:", data);
         toast.error(data.message || "Login Verification Failed");
-        alert("Login Failed: " + (data.message || "Unknown Backend Error"));
       }
     } catch (error) {
       setVerifying(false);
@@ -164,7 +163,6 @@ function LoginPage() {
       if (error.code === 'auth/popup-blocked' || error.code === 'auth/popup-closed-by-user') {
         setVerifying(false);
         toast.error("Popup Blocked. Please allow popups for this site.");
-        alert("Please allow popups for this website to sign in with Google.");
       } else {
         setVerifying(false); // Reset
         toast.error("Login Error: " + error.message);
@@ -182,7 +180,7 @@ function LoginPage() {
       {/* LEFT: Illustrative Side (Desktop Only) */}
       <div className="hidden lg:flex w-1/2 bg-slate-900 relative items-center justify-center overflow-hidden">
         <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1543269865-cbf427effbad?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80')] bg-cover bg-center opacity-20"></div>
-        <div className="absolute inset-0 bg-gradient-to-tr from-blue-900/80 to-purple-900/80"></div>
+        <div className="absolute inset-0 bg-gradient-to-tr from-indigo-900/90 to-violet-900/90"></div>
 
         <div className="relative z-10 p-12 text-white max-w-lg">
           <motion.div
@@ -191,7 +189,7 @@ function LoginPage() {
             transition={{ delay: 0.2 }}
             className="mb-8"
           >
-            <div className="inline-flex items-center gap-2 px-3 py-1 bg-blue-500/20 border border-blue-400/30 rounded-full text-blue-200 text-sm font-medium mb-6">
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-indigo-500/20 border border-indigo-400/30 rounded-full text-indigo-200 text-sm font-medium mb-6">
               <Sparkles size={14} /> Future awaits
             </div>
             <h1 className="text-5xl font-extrabold tracking-tight leading-tight mb-6">Welcome to <br />NaviGreat.</h1>
@@ -222,8 +220,8 @@ function LoginPage() {
       </div>
 
       {/* RIGHT: Login Form */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-6 bg-slate-50 dark:bg-[#111b21] relative">
-        <Link to="/" className="absolute top-8 left-8 text-slate-500 dark:text-[#8696a0] hover:text-slate-900 dark:hover:text-white flex items-center gap-2 font-medium transition-colors">
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-6 bg-slate-50 dark:bg-[#080d14] relative">
+        <Link to="/" className="absolute top-8 left-8 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white flex items-center gap-2 font-medium transition-colors">
           <ArrowLeft size={20} /> Back to Home
         </Link>
 
@@ -231,61 +229,61 @@ function LoginPage() {
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.4 }}
-          className="w-full max-w-md bg-white dark:bg-[#202c33] p-10 rounded-3xl shadow-xl shadow-slate-200 dark:shadow-black/50 border border-slate-100 dark:border-[#2a3942]"
+          className="w-full max-w-md bg-white dark:bg-[#0d1520] p-10 rounded-3xl shadow-xl shadow-slate-200 dark:shadow-black/60 border border-slate-100 dark:border-slate-800"
         >
           <div className="text-center mb-10">
             <h2 className="text-3xl font-bold text-slate-900 dark:text-white">Welcome Back</h2>
-            <p className="text-slate-500 dark:text-[#8696a0] mt-2">Please enter your details to sign in.</p>
+            <p className="text-slate-500 dark:text-slate-400 mt-2">Please enter your details to sign in.</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
-              <label className="text-sm font-semibold text-slate-700 dark:text-[#e9edef] ml-1">Email Address</label>
+              <label className="text-sm font-semibold text-slate-700 dark:text-slate-200 ml-1">Email Address</label>
               <div className="relative">
-                <Mail className="absolute left-4 top-3.5 text-slate-400 dark:text-[#8696a0]" size={20} />
+                <Mail className="absolute left-4 top-3.5 text-slate-400 dark:text-slate-500" size={20} />
                 <input
                   type="email"
                   name="email"
                   onChange={handleChange}
                   placeholder="Enter your email"
                   required
-                  className="w-full pl-12 pr-4 py-3.5 bg-slate-50 dark:bg-[#2a3942] border border-slate-200 dark:border-[#2a3942] rounded-xl focus:border-blue-500 dark:focus:border-[#00a884] focus:bg-white dark:focus:bg-[#202c33] focus:ring-4 focus:ring-blue-500/10 dark:focus:ring-[#00a884]/20 outline-none transition-all font-medium text-slate-900 dark:text-[#e9edef] placeholder:text-slate-400 dark:placeholder:text-[#8696a0]"
+                  className="w-full pl-12 pr-4 py-3.5 bg-slate-50 dark:bg-[#151f2e] border border-slate-200 dark:border-slate-800 rounded-xl focus:border-indigo-500 dark:focus:border-indigo-500 focus:bg-white dark:focus:bg-[#0d1520] focus:ring-4 focus:ring-indigo-500/10 dark:focus:ring-indigo-500/20 outline-none transition-all font-medium text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500"
                 />
               </div>
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-semibold text-slate-700 dark:text-[#e9edef] ml-1">Password</label>
+              <label className="text-sm font-semibold text-slate-700 dark:text-slate-200 ml-1">Password</label>
               <div className="relative">
-                <Lock className="absolute left-4 top-3.5 text-slate-400 dark:text-[#8696a0]" size={20} />
+                <Lock className="absolute left-4 top-3.5 text-slate-400 dark:text-slate-500" size={20} />
                 <input
                   type="password"
                   name="password"
                   onChange={handleChange}
                   placeholder="Enter your password"
                   required
-                  className="w-full pl-12 pr-4 py-3.5 bg-slate-50 dark:bg-[#2a3942] border border-slate-200 dark:border-[#2a3942] rounded-xl focus:border-blue-500 dark:focus:border-[#00a884] focus:bg-white dark:focus:bg-[#202c33] focus:ring-4 focus:ring-blue-500/10 dark:focus:ring-[#00a884]/20 outline-none transition-all font-medium text-slate-900 dark:text-[#e9edef] placeholder:text-slate-400 dark:placeholder:text-[#8696a0]"
+                  className="w-full pl-12 pr-4 py-3.5 bg-slate-50 dark:bg-[#151f2e] border border-slate-200 dark:border-slate-800 rounded-xl focus:border-indigo-500 dark:focus:border-indigo-500 focus:bg-white dark:focus:bg-[#0d1520] focus:ring-4 focus:ring-indigo-500/10 dark:focus:ring-indigo-500/20 outline-none transition-all font-medium text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500"
                 />
               </div>
               <div className="text-right pt-1">
-                <Link to="/forgot-password" className="text-sm font-medium text-blue-600 dark:text-[#53bdeb] hover:text-blue-700 hover:underline">Forgot Password?</Link>
+                <Link to="/forgot-password" className="text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 hover:underline">Forgot Password?</Link>
               </div>
             </div>
 
-            <button type="submit" className="w-full bg-blue-600 dark:bg-[#00a884] text-white py-4 rounded-xl font-bold hover:bg-blue-700 dark:hover:bg-[#008f6f] active:scale-[0.98] transition-all shadow-lg shadow-blue-500/20 dark:shadow-green-500/20 flex items-center justify-center gap-2 group">
+            <button type="submit" className="w-full btn-primary py-4 rounded-xl text-base group">
               Sign In <ChevronRight size={20} className="group-hover:translate-x-1 transition-transform" />
             </button>
           </form>
 
           <div className="my-8 flex items-center gap-4">
-            <div className="h-px bg-slate-200 dark:bg-[#2a3942] flex-1"></div>
-            <span className="text-slate-400 dark:text-[#8696a0] text-sm font-medium uppercase tracking-wider">Or continue with</span>
-            <div className="h-px bg-slate-200 dark:bg-[#2a3942] flex-1"></div>
+            <div className="h-px bg-slate-200 dark:bg-slate-800 flex-1"></div>
+            <span className="text-slate-400 dark:text-slate-500 text-sm font-medium uppercase tracking-wider">Or continue with</span>
+            <div className="h-px bg-slate-200 dark:bg-slate-800 flex-1"></div>
           </div>
 
           <button
             onClick={handleGoogleLogin}
-            className="w-full bg-white dark:bg-[#202c33] border border-slate-200 dark:border-[#2a3942] text-slate-700 dark:text-[#e9edef] py-3.5 rounded-xl font-bold hover:bg-slate-50 dark:hover:bg-[#2a3942] hover:border-slate-300 dark:hover:border-[#2a3942] transition-all flex items-center justify-center gap-3 group"
+            className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-200 py-3.5 rounded-xl font-bold hover:bg-slate-50 dark:hover:bg-slate-800 hover:border-indigo-300 dark:hover:border-indigo-600 transition-all flex items-center justify-center gap-3 group"
           >
             <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" className="w-5 h-5 group-hover:scale-110 transition-transform" />
             Sign in with Google
@@ -300,14 +298,14 @@ function LoginPage() {
                 setStatusMessage("Redirecting...");
                 await signInWithRedirect(auth, provider);
               }}
-              className="text-xs text-slate-400 dark:text-[#8696a0] hover:text-blue-600 dark:hover:text-[#53bdeb] font-medium transition-colors"
+              className="text-xs text-slate-400 dark:text-slate-500 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium transition-colors"
             >
               Having specific trouble? Use Alternate Login
             </button>
           </div>
 
-          <p className="mt-8 text-center text-slate-600 dark:text-[#8696a0]">
-            Don&apos;t have an account? <Link to="/signup" className="text-blue-600 dark:text-[#53bdeb] font-bold hover:underline">Create Account</Link>
+          <p className="mt-8 text-center text-slate-600 dark:text-slate-400">
+            Don&apos;t have an account? <Link to="/signup" className="text-indigo-600 dark:text-indigo-400 font-bold hover:underline">Create Account</Link>
           </p>
         </motion.div>
       </div>

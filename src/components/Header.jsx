@@ -1,282 +1,445 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Menu, X, LogOut, LayoutDashboard, ChevronDown, User as UserIcon, Mail, Sun, Moon } from 'lucide-react';
-import Avatar from '../components/Avatar'; // ✅ Import Avatar
-
-// 👇 1. Import your new Logo here
+import {
+  Menu, X, LogOut, LayoutDashboard, ChevronDown,
+  Mail, Sun, Moon, GraduationCap, MessageSquare, Shield
+} from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import Avatar from '../components/Avatar';
 import logo from '../assets/startup-logo.png';
-
 import { signOut } from 'firebase/auth';
 import { auth } from '../firebaseConfig';
-
 import { useTheme } from '../context/ThemeContext';
 
-const Header = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [user, setUser] = useState(null);
+/* ─── Nav Links ─── */
+const NAV_LINKS = [
+  { to: '/',        label: 'Home'         },
+  { to: '/mentors', label: 'Find Mentors' },
+  { to: '/about',   label: 'About'        },
+  { to: '/contact', label: 'Contact'      },
+];
 
-  const { theme, toggleTheme } = useTheme();
+/* ─── Logo with image ─── */
+const Logo = () => (
+  <Link to="/" className="flex items-center group select-none">
+    <img
+      src={logo}
+      alt="NaviGreat"
+      className="h-12 w-auto object-contain pointer-events-none transition-all duration-300 mix-blend-multiply dark:mix-blend-screen dark:invert"
+    />
+  </Link>
+);
+
+/* ─── Active underline indicator ─── */
+const ActiveDot = () => (
+  <motion.span
+    layoutId="nav-underline"
+    className="absolute -bottom-px left-3 right-3 h-0.5 rounded-full"
+    style={{ background: 'linear-gradient(90deg, #4f46e5, #7c3aed)' }}
+    transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+  />
+);
+
+/* ══════════════════════════════════════════
+   HEADER COMPONENT
+   ══════════════════════════════════════════ */
+const Header = () => {
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [user, setUser]   = useState(null);
   const [scrolled, setScrolled] = useState(false);
 
-  const navigate = useNavigate();
-  const location = useLocation();
-  const dropdownRef = useRef(null);
+  const { theme, toggleTheme } = useTheme();
+  const navigate  = useNavigate();
+  const location  = useLocation();
+  const dropRef   = useRef(null);
 
+  /* scroll detection */
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    const onScroll = () => setScrolled(window.scrollY > 10);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
+  /* user sync */
   useEffect(() => {
-    const updateHeaderUser = () => {
-      const storedUser = localStorage.getItem('userData');
-      if (storedUser) {
-        setUser(JSON.parse(storedUser));
-      } else {
-        setUser(null);
-      }
+    const sync = () => {
+      const raw = localStorage.getItem('userData');
+      setUser(raw ? JSON.parse(raw) : null);
     };
-
-    // Initial check
-    updateHeaderUser();
-
-    // Listen for custom event
-    window.addEventListener('userUpdated', updateHeaderUser);
-
-    return () => {
-      window.removeEventListener('userUpdated', updateHeaderUser);
-    };
+    sync();
+    window.addEventListener('userUpdated', sync);
+    return () => window.removeEventListener('userUpdated', sync);
   }, [location]);
 
-
+  /* close dropdown on outside click */
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setIsDropdownOpen(false);
-      }
+    const handler = (e) => {
+      if (dropRef.current && !dropRef.current.contains(e.target)) setDropdownOpen(false);
     };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
   }, []);
 
-  const handleLogout = async () => {
-    try {
-      await signOut(auth); // ✅ Ensure Firebase session is cleared
-    } catch (error) {
-      console.error("Firebase Logout Error:", error);
-    }
+  /* lock body scroll when mobile menu open */
+  useEffect(() => {
+    document.body.style.overflow = mobileOpen ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
+  }, [mobileOpen]);
 
+  /* close mobile on route change */
+  useEffect(() => { setMobileOpen(false); }, [location]);
+
+  const handleLogout = async () => {
+    try { await signOut(auth); } catch {}
     localStorage.removeItem('userData');
     localStorage.removeItem('token');
     setUser(null);
+    setDropdownOpen(false);
     navigate('/login');
-    setIsDropdownOpen(false);
   };
 
-  // Dynamic Header Classes - Transparent on Home when at top, else Solid/Blur
-  const isHome = location.pathname === '/';
-  const headerClasses = `fixed w-full z-50 transition-all duration-300 ${isHome && !scrolled
-    ? 'bg-transparent shadow-none border-b border-transparent'
-    : 'bg-white/80 backdrop-blur-md dark:bg-slate-900/90 shadow-sm border-b border-gray-100 dark:border-gray-800'
-    }`;
+  const isHome   = location.pathname === '/';
+  const isTransparent = isHome && !scrolled;
 
-  // Text Color Logic: White on transparent home header, else Standard
-  const textColorClass = isHome && !scrolled
-    ? 'text-white/90 hover:text-white drop-shadow-sm'
-    : 'text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400';
+  /* ── header background ── */
+  const navBg = isTransparent
+    ? 'bg-transparent'
+    : 'bg-white/90 dark:bg-[#0d1117]/90 backdrop-blur-xl border-b border-slate-200/60 dark:border-white/[0.06]';
 
-  const iconColorClass = isHome && !scrolled
-    ? 'text-white/90 hover:bg-white/10'
-    : 'text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800';
+  /* ── link text colour ── */
+  const linkColor = isTransparent
+    ? 'text-white/80 hover:text-white'
+    : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white';
+
+  const activeLinkColor = isTransparent
+    ? 'text-white font-semibold'
+    : 'text-slate-900 dark:text-white font-semibold';
 
   return (
-    <header className={headerClasses}>
-      <div className="w-full px-4 md:px-8 flex justify-between items-center">
+    <>
+      {/* ════════════ DESKTOP HEADER ════════════ */}
+      <header
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${navBg}`}
+        style={{ boxShadow: scrolled ? '0 1px 0 rgba(0,0,0,0.06)' : 'none' }}
+      >
+        <div className="max-w-7xl mx-auto px-5 md:px-8 h-[64px] flex items-center justify-between gap-8">
 
-        {/* 👇 2. UPDATED LOGO SECTION */}
-        <Link to="/" className="flex items-center gap-3 group">
-          {/* Image Logo - Blend Mode for Seamless Background */}
-          <img
-            src={logo}
-            alt="NaviGreat Logo"
-            className="h-20 w-auto object-contain transition duration-300 pointer-events-none mix-blend-multiply dark:invert dark:mix-blend-screen"
-          />
-        </Link>
+          {/* LEFT – Logo */}
+          <Logo />
 
-        {/* Desktop Menu */}
-        <nav className="hidden md:flex items-center space-x-8">
-          <Link to="/" className={`${textColorClass} font-medium transition-colors`}>Home</Link>
-          <Link to="/about" className={`${textColorClass} font-medium transition-colors`}>About</Link>
-          <Link to="/contact" className={`${textColorClass} font-medium transition-colors`}>Contact</Link>
-
-          {/* Theme Toggle */}
-          <button
-            onClick={toggleTheme}
-            className={`p-2 rounded-full transition-all ${iconColorClass}`}
-            title="Toggle Theme"
-          >
-            {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
-          </button>
-
-          {/* User Dropdown Section */}
-          {user ? (
-            <div className="relative" ref={dropdownRef}>
-              <button
-                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                className={`flex items-center gap-3 focus:outline-none px-3 py-2 rounded-xl transition border border-transparent ${isHome && !scrolled
-                  ? 'hover:bg-white/10 hover:border-white/20'
-                  : 'hover:bg-gray-50 dark:hover:bg-gray-800 hover:border-gray-200 dark:hover:border-gray-700'
+          {/* CENTER – Nav links (desktop) */}
+          <nav className="hidden md:flex items-center gap-1 flex-1 justify-center">
+            {NAV_LINKS.map(({ to, label }) => {
+              const active = location.pathname === to;
+              return (
+                <Link
+                  key={to}
+                  to={to}
+                  className={`relative px-3 py-1.5 text-sm font-medium rounded-md transition-all duration-150 ${
+                    active ? activeLinkColor : linkColor
                   }`}
-              >
-                <div className="text-right hidden lg:block">
-                  <p className={`text-sm font-bold leading-none ${isHome && !scrolled ? 'text-white drop-shadow-sm' : 'text-gray-800 dark:text-gray-200'}`}>Hi, {user.username}</p>
-                  <p className={`text-xs font-medium capitalize ${isHome && !scrolled ? 'text-blue-200' : 'text-blue-600 dark:text-blue-400'}`}>{user.role}</p>
-                </div>
-                <div className={`w-10 h-10 rounded-full overflow-hidden border-2 shadow-sm ${isHome && !scrolled ? 'border-white/50' : 'border-blue-100 dark:border-blue-900'}`}>
-                  <Avatar
-                    src={user.image}
-                    name={user.username}
-                    size="w-full h-full"
-                    className="text-xs"
-                  />
-                </div>
-                <ChevronDown size={16} className={`transition-transform duration-200 ${isDropdownOpen ? 'rotate-180' : ''} ${isHome && !scrolled ? 'text-white/80' : 'text-gray-400 dark:text-gray-500'}`} />
-              </button>
+                >
+                  {label}
+                  {active && <ActiveDot />}
+                </Link>
+              );
+            })}
+          </nav>
 
-              {isDropdownOpen && (
-                <div className="absolute right-0 mt-2 w-60 bg-white dark:bg-slate-800 rounded-xl shadow-xl border border-gray-100 dark:border-gray-700 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-                  <div className="px-5 py-4 border-b border-gray-50 dark:border-gray-700 bg-gray-50/50 dark:bg-slate-800/50">
-                    <p className="text-xs text-gray-500 dark:text-gray-400 font-medium uppercase tracking-wide">Signed in as</p>
-                    <p className="text-sm font-bold text-gray-800 dark:text-gray-200 truncate">{user.email}</p>
-                  </div>
-                  <div className="p-2">
-                    <Link
-                      to="/dashboard"
-                      onClick={() => setIsDropdownOpen(false)}
-                      className="flex items-center gap-3 px-4 py-2.5 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/30 hover:text-blue-600 dark:hover:text-blue-400 rounded-lg transition group"
-                    >
-                      <LayoutDashboard size={18} />
-                      <span className="font-medium">My Dashboard</span>
-                    </Link>
+          {/* RIGHT – Actions */}
+          <div className="hidden md:flex items-center gap-1.5">
 
-                    <Link
-                      to="/dashboard"
-                      onClick={() => setIsDropdownOpen(false)}
-                      className="flex items-center gap-3 px-4 py-2.5 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/30 hover:text-blue-600 dark:hover:text-blue-400 rounded-lg transition group"
-                    >
-                      <UserIcon size={18} />
-                      <span className="font-medium">Edit Profile</span>
-                    </Link>
+            {/* Theme toggle */}
+            <button
+              onClick={toggleTheme}
+              className={`p-2 rounded-lg transition-all ${
+                isTransparent
+                  ? 'text-white/70 hover:text-white hover:bg-white/10'
+                  : 'text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/[0.06]'
+              }`}
+              aria-label="Toggle theme"
+            >
+              {theme === 'light' ? <Moon size={18} /> : <Sun size={18} />}
+            </button>
 
-                    {/* ADMIN PANEL LINK */}
-                    {user.role === 'admin' && (
-                      <Link
-                        to="/admin"
-                        onClick={() => setIsDropdownOpen(false)}
-                        className="flex items-center gap-3 px-4 py-2.5 text-gray-700 dark:text-gray-300 hover:bg-green-50 dark:hover:bg-green-900/30 hover:text-green-600 dark:hover:text-green-400 rounded-lg transition group"
-                      >
-                        <div className="w-[18px] h-[18px] flex items-center justify-center rounded bg-green-100 dark:bg-green-900/50 text-green-600 dark:text-green-400">
-                          <LayoutDashboard size={12} />
-                        </div>
-                        <span className="font-medium">Admin Panel</span>
-                      </Link>
-                    )}
-
-                    {/* MESSAGES/CHAT LINK */}
-                    <Link
-                      to="/chat"
-                      onClick={() => setIsDropdownOpen(false)}
-                      className="flex items-center gap-3 px-4 py-2.5 text-gray-700 dark:text-gray-300 hover:bg-purple-50 dark:hover:bg-purple-900/30 hover:text-purple-600 dark:hover:text-purple-400 rounded-lg transition group"
-                    >
-                      <Mail size={18} />
-                      <span className="font-medium">Messages</span>
-                    </Link>
-                  </div>
-                  <div className="p-2 border-t border-gray-50 dark:border-gray-700">
-                    <button
-                      onClick={handleLogout}
-                      className="w-full flex items-center gap-3 px-4 py-2.5 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition text-left group"
-                    >
-                      <LogOut size={18} />
-                      <span className="font-medium">Logout</span>
-                    </button>
-                  </div>
-                </div>
-              )}
-            </div>
-          ) : (
-            <div className="flex items-center gap-4">
-              <Link to="/login" className={`${textColorClass} font-medium transition-colors`}>Login</Link>
-              <Link to="/signup" className="bg-blue-600 text-white px-6 py-2.5 rounded-full font-bold hover:bg-blue-700 dark:hover:bg-blue-600 transition shadow-lg shadow-blue-500/30">
-                Get Started
-              </Link>
-            </div>
-          )}
-        </nav>
-
-        {/* Mobile Menu Button */}
-        <button className="md:hidden text-gray-600 dark:text-gray-300" onClick={() => setIsOpen(!isOpen)}>
-          {isOpen ? <X size={28} /> : <Menu size={28} />}
-        </button>
-      </div>
-
-      {/* Mobile Menu */}
-      {isOpen && (
-        <div className="md:hidden bg-white dark:bg-slate-900 border-t dark:border-gray-800 p-4 absolute w-full shadow-xl">
-          <div className="flex flex-col space-y-4">
-            {/* Mobile Theme Toggle */}
-            <div className="flex justify-between items-center px-2">
-              <span className="text-gray-600 dark:text-gray-300 font-medium">Appearance</span>
-              <button
-                onClick={toggleTheme}
-                className="p-2 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 transition-all border border-gray-200 dark:border-gray-700"
-              >
-                {theme === 'light' ?
-                  <div className="flex items-center gap-2 text-sm"><Moon size={16} /> Dark Mode</div> :
-                  <div className="flex items-center gap-2 text-sm"><Sun size={16} /> Light Mode</div>
-                }
-              </button>
-            </div>
-            <div className="h-px bg-gray-100 dark:bg-gray-800 my-2"></div>
-
-            <Link to="/" className="text-gray-600 dark:text-gray-300 font-medium" onClick={() => setIsOpen(false)}>Home</Link>
-            <Link to="/about" className="text-gray-600 dark:text-gray-300 font-medium" onClick={() => setIsOpen(false)}>About</Link>
-            <Link to="/contact" className="text-gray-600 dark:text-gray-300 font-medium" onClick={() => setIsOpen(false)}>Contact</Link>
+            {/* Separator */}
+            <div className={`w-px h-5 mx-1 ${isTransparent ? 'bg-white/20' : 'bg-slate-200 dark:bg-white/[0.08]'}`} />
 
             {user ? (
-              <>
-                <Link to="/dashboard" className="text-blue-600 dark:text-blue-400 font-bold flex items-center gap-2" onClick={() => setIsOpen(false)}>
-                  <LayoutDashboard size={18} /> My Dashboard
-                </Link>
-                {user.role === 'admin' && (
-                  <Link to="/admin" className="text-green-600 dark:text-green-400 font-bold flex items-center gap-2" onClick={() => setIsOpen(false)}>
-                    <LayoutDashboard size={18} /> Admin Panel
-                  </Link>
-                )}
-                <Link to="/chat" className="text-purple-600 dark:text-purple-400 font-bold flex items-center gap-2" onClick={() => setIsOpen(false)}>
-                  <Mail size={18} /> Messages
-                </Link>
-                <button onClick={handleLogout} className="text-red-500 font-bold flex items-center gap-2 text-left">
-                  <LogOut size={18} /> Logout
+              /* ── User dropdown ── */
+              <div className="relative" ref={dropRef}>
+                <button
+                  onClick={() => setDropdownOpen(v => !v)}
+                  className={`flex items-center gap-2 px-2 py-1.5 rounded-lg transition-all ${
+                    isTransparent
+                      ? 'hover:bg-white/10'
+                      : 'hover:bg-slate-100 dark:hover:bg-white/[0.06]'
+                  }`}
+                >
+                  {/* Avatar */}
+                  <div className="w-7 h-7 rounded-full overflow-hidden ring-2 ring-indigo-500/40 flex-shrink-0">
+                    <Avatar src={user.image} name={user.username} size="w-full h-full" className="text-[10px]" />
+                  </div>
+                  {/* Name + role */}
+                  <div className="text-left hidden lg:block">
+                    <p className={`text-[13px] font-semibold leading-tight ${isTransparent ? 'text-white' : 'text-slate-800 dark:text-slate-100'}`}>
+                      {user.username?.split(' ')[0]}
+                    </p>
+                    <p className={`text-[11px] capitalize ${isTransparent ? 'text-white/60' : 'text-slate-400 dark:text-slate-500'}`}>
+                      {user.role}
+                    </p>
+                  </div>
+                  <ChevronDown
+                    size={14}
+                    className={`transition-transform duration-200 flex-shrink-0 ${dropdownOpen ? 'rotate-180' : ''} ${
+                      isTransparent ? 'text-white/50' : 'text-slate-400'
+                    }`}
+                  />
                 </button>
-              </>
+
+                {/* Dropdown */}
+                <AnimatePresence>
+                  {dropdownOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 6, scale: 0.97 }}
+                      animate={{ opacity: 1, y: 0,  scale: 1    }}
+                      exit   ={{ opacity: 0, y: 6, scale: 0.97 }}
+                      transition={{ duration: 0.12, ease: 'easeOut' }}
+                      className="absolute right-0 top-full mt-2 w-56 origin-top-right"
+                    >
+                      <div className="bg-white dark:bg-[#161b22] rounded-xl shadow-xl shadow-black/10 dark:shadow-black/50 border border-slate-200/60 dark:border-white/[0.08] overflow-hidden">
+                        {/* User info */}
+                        <div className="px-4 py-3 border-b border-slate-100 dark:border-white/[0.06]">
+                          <p className="text-[13px] font-semibold text-slate-900 dark:text-white truncate">{user.username}</p>
+                          <p className="text-xs text-slate-400 dark:text-slate-500 truncate mt-0.5">{user.email}</p>
+                        </div>
+
+                        {/* Menu */}
+                        <div className="p-1">
+                          <DropItem to="/dashboard" icon={<LayoutDashboard size={15}/>} onClick={() => setDropdownOpen(false)}>
+                            Dashboard
+                          </DropItem>
+                          <DropItem to="/chat" icon={<MessageSquare size={15}/>} onClick={() => setDropdownOpen(false)}>
+                            Messages
+                          </DropItem>
+                          {user.role === 'admin' && (
+                            <DropItem to="/admin" icon={<Shield size={15}/>} onClick={() => setDropdownOpen(false)}>
+                              Admin Panel
+                            </DropItem>
+                          )}
+                        </div>
+
+                        {/* Logout */}
+                        <div className="p-1 border-t border-slate-100 dark:border-white/[0.06]">
+                          <button
+                            onClick={handleLogout}
+                            className="w-full flex items-center gap-2.5 px-3 py-2 text-[13px] font-medium text-red-500 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-lg transition-colors"
+                          >
+                            <LogOut size={15} /> Sign out
+                          </button>
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
             ) : (
-              <>
-                <div className="border-t dark:border-gray-800 pt-4 flex flex-col gap-3">
-                  <Link to="/login" className="text-gray-600 dark:text-gray-300 text-center py-2 border dark:border-gray-700 rounded-lg" onClick={() => setIsOpen(false)}>Login</Link>
-                  <Link to="/signup" className="bg-blue-600 text-white text-center py-2 rounded-lg font-bold" onClick={() => setIsOpen(false)}>Sign Up</Link>
-                </div>
-              </>
+              /* ── Auth buttons ── */
+              <div className="flex items-center gap-2">
+                <Link
+                  to="/login"
+                  className={`px-3.5 py-1.5 text-sm font-medium rounded-lg transition-all ${
+                    isTransparent
+                      ? 'text-white/80 hover:text-white hover:bg-white/10'
+                      : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/[0.06]'
+                  }`}
+                >
+                  Log in
+                </Link>
+                <Link
+                  to="/signup"
+                  className="px-4 py-1.5 text-sm font-semibold text-white rounded-lg transition-all hover:opacity-90 hover:shadow-lg hover:shadow-indigo-500/20 active:scale-[0.98]"
+                  style={{ background: 'linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)' }}
+                >
+                  Get started
+                </Link>
+              </div>
             )}
           </div>
+
+          {/* RIGHT – Hamburger (mobile) */}
+          <button
+            onClick={() => setMobileOpen(v => !v)}
+            className={`md:hidden p-2 rounded-lg transition-colors ${
+              isTransparent
+                ? 'text-white/80 hover:bg-white/10 hover:text-white'
+                : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/[0.06]'
+            }`}
+            aria-label="Toggle menu"
+          >
+            {mobileOpen ? <X size={22} /> : <Menu size={22} />}
+          </button>
         </div>
-      )}
-    </header>
+      </header>
+
+      {/* ════════════ MOBILE DRAWER ════════════ */}
+      <AnimatePresence>
+        {mobileOpen && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              key="backdrop"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm md:hidden"
+              onClick={() => setMobileOpen(false)}
+            />
+
+            {/* Drawer */}
+            <motion.div
+              key="drawer"
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={{ type: 'spring', stiffness: 350, damping: 35 }}
+              className="fixed top-0 right-0 bottom-0 z-50 w-[280px] bg-white dark:bg-[#0d1117] shadow-2xl flex flex-col md:hidden"
+            >
+              {/* Drawer top */}
+              <div className="h-14 flex items-center justify-between px-5 border-b border-slate-100 dark:border-white/[0.06]">
+                <Logo />
+                <button
+                  onClick={() => setMobileOpen(false)}
+                  className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/[0.06] transition-colors"
+                >
+                  <X size={20} />
+                </button>
+              </div>
+
+              {/* Scrollable content */}
+              <div className="flex-1 overflow-y-auto px-3 py-4 space-y-0.5">
+
+                {/* User card */}
+                {user && (
+                  <div className="flex items-center gap-3 px-3 py-3 mb-3 rounded-xl bg-slate-50 dark:bg-white/[0.04] border border-slate-100 dark:border-white/[0.06]">
+                    <div className="w-9 h-9 rounded-full overflow-hidden ring-2 ring-indigo-500/30 flex-shrink-0">
+                      <Avatar src={user.image} name={user.username} size="w-full h-full" className="text-xs" />
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-sm font-semibold text-slate-900 dark:text-white truncate">{user.username}</p>
+                      <p className="text-xs text-indigo-500 capitalize">{user.role}</p>
+                    </div>
+                  </div>
+                )}
+
+                {/* Nav links */}
+                {NAV_LINKS.map(({ to, label }) => {
+                  const active = location.pathname === to;
+                  return (
+                    <Link
+                      key={to}
+                      to={to}
+                      onClick={() => setMobileOpen(false)}
+                      className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+                        active
+                          ? 'bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400'
+                          : 'text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/[0.04] hover:text-slate-900 dark:hover:text-white'
+                      }`}
+                    >
+                      {active && <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 flex-shrink-0" />}
+                      {label}
+                    </Link>
+                  );
+                })}
+
+                {/* Divider */}
+                <div className="h-px bg-slate-100 dark:bg-white/[0.06] my-3" />
+
+                {user ? (
+                  <>
+                    <MobileItem to="/dashboard" icon={<LayoutDashboard size={16}/>} onClick={() => setMobileOpen(false)}>
+                      Dashboard
+                    </MobileItem>
+                    <MobileItem to="/chat" icon={<MessageSquare size={16}/>} onClick={() => setMobileOpen(false)}>
+                      Messages
+                    </MobileItem>
+                    {user.role === 'admin' && (
+                      <MobileItem to="/admin" icon={<Shield size={16}/>} onClick={() => setMobileOpen(false)}>
+                        Admin Panel
+                      </MobileItem>
+                    )}
+                    <button
+                      onClick={handleLogout}
+                      className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-red-500 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors mt-1"
+                    >
+                      <LogOut size={16} /> Sign out
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <Link
+                      to="/login"
+                      onClick={() => setMobileOpen(false)}
+                      className="block w-full text-center py-2.5 px-4 text-sm font-semibold text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-white/[0.1] rounded-xl hover:bg-slate-50 dark:hover:bg-white/[0.04] transition-colors"
+                    >
+                      Log in
+                    </Link>
+                    <Link
+                      to="/signup"
+                      onClick={() => setMobileOpen(false)}
+                      className="block w-full text-center py-2.5 px-4 text-sm font-semibold text-white rounded-xl transition-all hover:opacity-90 mt-2"
+                      style={{ background: 'linear-gradient(135deg, #4f46e5, #7c3aed)' }}
+                    >
+                      Get started free
+                    </Link>
+                  </>
+                )}
+              </div>
+
+              {/* Footer: theme toggle */}
+              <div className="px-4 py-4 border-t border-slate-100 dark:border-white/[0.06]">
+                <button
+                  onClick={toggleTheme}
+                  className="w-full flex items-center justify-between px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-white/[0.04] text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/[0.08] transition-colors"
+                >
+                  <span>Appearance</span>
+                  <div className="flex items-center gap-2 text-slate-400">
+                    {theme === 'light' ? <Moon size={15} /> : <Sun size={15} />}
+                    <span className="text-xs">{theme === 'light' ? 'Dark mode' : 'Light mode'}</span>
+                  </div>
+                </button>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+    </>
   );
 };
+
+/* ─── Helpers ─── */
+const DropItem = ({ to, icon, onClick, children }) => (
+  <Link
+    to={to}
+    onClick={onClick}
+    className="flex items-center gap-2.5 px-3 py-2 text-[13px] font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-white/[0.04] rounded-lg transition-colors"
+  >
+    <span className="text-slate-400 dark:text-slate-500">{icon}</span>
+    {children}
+  </Link>
+);
+
+const MobileItem = ({ to, icon, onClick, children }) => (
+  <Link
+    to={to}
+    onClick={onClick}
+    className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/[0.04] hover:text-slate-900 dark:hover:text-white transition-colors"
+  >
+    <span className="text-slate-400 dark:text-slate-500">{icon}</span>
+    {children}
+  </Link>
+);
 
 export default Header;

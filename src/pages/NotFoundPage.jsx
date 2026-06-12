@@ -1,34 +1,52 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Home, ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Home, Search } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 const NotFoundPage = () => {
-    return (
-        <div className="h-screen flex flex-col items-center justify-center bg-gray-50 text-center px-4">
-            <div className="bg-white p-10 rounded-3xl shadow-xl max-w-lg w-full border border-gray-100">
-                <h1 className="text-9xl font-extrabold text-gray-200 mb-4 select-none">404</h1>
-                <h2 className="text-3xl font-bold text-gray-800 mb-2">Page Not Found</h2>
-                <p className="text-gray-500 mb-8">
-                    Oops! The page you are looking for doesn&apos;t exist or has been moved.
-                </p>
+  return (
+    <div className="min-h-screen bg-slate-50 dark:bg-[#080d14] flex items-center justify-center p-6 relative overflow-hidden">
+      {/* Background orbs */}
+      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-indigo-200/30 dark:bg-indigo-900/20 rounded-full blur-3xl" />
+      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-violet-200/30 dark:bg-violet-900/20 rounded-full blur-3xl" />
 
-                <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                    <Link
-                        to="/"
-                        className="flex items-center justify-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-xl font-bold hover:bg-blue-700 transition shadow-lg hover:shadow-blue-200"
-                    >
-                        <Home size={20} /> Back to Home
-                    </Link>
-                    <button
-                        onClick={() => window.history.back()}
-                        className="flex items-center justify-center gap-2 bg-gray-100 text-gray-700 px-6 py-3 rounded-xl font-bold hover:bg-gray-200 transition"
-                    >
-                        <ArrowLeft size={20} /> Go Back
-                    </button>
-                </div>
+      <div className="relative z-10 text-center max-w-lg">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5 }}
+        >
+          {/* 404 number */}
+          <div className="relative mb-8">
+            <h1 className="text-[160px] font-black leading-none text-slate-100 dark:text-slate-800 select-none">
+              404
+            </h1>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="w-24 h-24 rounded-3xl bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center shadow-2xl shadow-indigo-500/30">
+                <Search size={44} className="text-white" />
+              </div>
             </div>
-        </div>
-    );
+          </div>
+
+          <h2 className="text-3xl font-extrabold text-slate-900 dark:text-white mb-4">
+            Page Not Found
+          </h2>
+          <p className="text-slate-500 dark:text-slate-400 text-lg leading-relaxed mb-10">
+            Oops! The page you're looking for doesn't exist or has been moved.
+          </p>
+
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link to="/" className="btn-primary px-8 py-4 rounded-2xl text-base">
+              <Home size={18} /> Go Home
+            </Link>
+            <button onClick={() => window.history.back()} className="btn-secondary px-8 py-4 rounded-2xl text-base">
+              <ArrowLeft size={18} /> Go Back
+            </button>
+          </div>
+        </motion.div>
+      </div>
+    </div>
+  );
 };
 
 export default NotFoundPage;

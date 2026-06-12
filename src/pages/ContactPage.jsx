@@ -4,6 +4,7 @@ import { API_BASE_URL } from '../config';
 import PageTransition from '../components/PageTransition';
 import { FadeIn } from '../components/Animations';
 import { motion } from 'framer-motion';
+import toast from 'react-hot-toast';
 
 function ContactPage() {
   const [formData, setFormData] = useState({
@@ -32,14 +33,14 @@ function ContactPage() {
       const result = await response.json();
 
       if (result.success) {
-        alert("✅ Message Sent Successfully!");
+        toast.success('Message sent successfully! We will get back to you soon.');
         setFormData({ name: '', email: '', subject: '', message: '' });
       } else {
-        alert("❌ Failed to send.");
+        toast.error('Failed to send message. Please try again.');
       }
     } catch (error) {
-      console.error("Error:", error);
-      alert("❌ Server Error: Is your backend running?");
+      console.error('Error:', error);
+      toast.error('Server error. Please check your connection.');
     } finally {
       setIsSubmitting(false);
     }
@@ -76,24 +77,29 @@ function ContactPage() {
   ];
 
   return (
-    <PageTransition className="pt-20 bg-gray-50 dark:bg-[#0b141a] min-h-screen">
+    <PageTransition className="pt-20 bg-slate-50 dark:bg-[#080d14] min-h-screen">
 
       {/* 1. HERO SECTION */}
-      <section className="relative py-20 px-6 bg-white dark:bg-[#111b21] border-b border-gray-200 dark:border-[#2a3942] overflow-hidden">
-        <div className="absolute inset-0 opacity-30 pointer-events-none">
-          <div className="absolute -top-24 -right-24 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl"></div>
-          <div className="absolute top-1/2 -left-24 w-72 h-72 bg-purple-500/20 rounded-full blur-3xl"></div>
-        </div>
-
-        <div className="container mx-auto text-center relative z-10 max-w-3xl">
+      <section className="relative py-28 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-indigo-900 via-violet-900 to-purple-900" />
+        <div className="absolute top-0 left-0 w-96 h-96 bg-indigo-500/30 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
+        <div className="absolute bottom-0 right-0 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl translate-x-1/3 translate-y-1/3" />
+        <div className="absolute inset-0 opacity-10"
+          style={{
+            backgroundImage: `linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)`,
+            backgroundSize: '50px 50px'
+          }}
+        />
+        <div className="container mx-auto text-center relative z-10 max-w-3xl px-6">
           <FadeIn>
-            <span className="inline-block py-1 px-3 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-300 text-xs font-bold tracking-wider mb-4 uppercase">
+            <span className="inline-block py-1.5 px-4 rounded-full bg-white/10 border border-white/20 text-indigo-200 text-sm font-bold tracking-wider mb-6">
               Get in Touch
             </span>
-            <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white mb-6 leading-tight">
+            <h1 className="text-5xl md:text-6xl font-extrabold text-white mb-6 leading-tight tracking-tight">
               We&apos;d love to hear from you.
             </h1>
-            <p className="text-lg text-gray-600 dark:text-[#8696a0]">
+            <p className="text-xl text-indigo-200/90 leading-relaxed">
               Have a question about our mentorship program? Want to partner with us?
               Fill out the form below or reach out directly.
             </p>
@@ -209,12 +215,12 @@ function ContactPage() {
                     <button
                       type="submit"
                       disabled={isSubmitting}
-                      className="w-full md:w-auto px-8 py-4 bg-blue-600 hover:bg-blue-700 dark:bg-[#00a884] dark:hover:bg-[#008f6f] text-white font-bold rounded-xl shadow-lg shadow-blue-500/25 dark:shadow-green-500/20 transform hover:-translate-y-1 transition-all duration-300 disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                      className="btn-primary px-8 py-4 rounded-xl disabled:opacity-60 disabled:cursor-not-allowed"
                     >
-                      {isSubmitting ? 'Sending...' : (
-                        <>
-                          Send Message <Send size={18} />
-                        </>
+                      {isSubmitting ? (
+                        <><div className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" /> Sending...</>
+                      ) : (
+                        <>Send Message <Send size={18} /></>
                       )}
                     </button>
                   </form>
