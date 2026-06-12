@@ -11,6 +11,7 @@ import { API_BASE_URL } from '../config';
 import Avatar from '../components/Avatar';
 import PageTransition from '../components/PageTransition';
 import { FadeIn } from '../components/Animations';
+import { useTheme } from '../context/ThemeContext';
 
 // Animated Counter
 const Counter = ({ end, duration = 2000 }) => {
@@ -181,6 +182,7 @@ const testimonials = [
 ];
 
 function HomePage() {
+  const { theme } = useTheme();
   const [mentors, setMentors] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
@@ -204,17 +206,20 @@ function HomePage() {
         {/* ====== 1. HERO SECTION ====== */}
         <section className="relative min-h-screen flex items-center overflow-hidden">
           {/* Mesh gradient background */}
-          <div className="absolute inset-0 bg-mesh-hero" />
+          <div className="absolute inset-0 bg-mesh-light dark:bg-mesh-hero" />
           {/* Floating orbs */}
-          <div className="absolute top-1/4 -left-32 w-96 h-96 bg-indigo-600/30 rounded-full blur-[100px] animate-float-slow" />
-          <div className="absolute bottom-1/4 -right-32 w-96 h-96 bg-violet-600/20 rounded-full blur-[100px] animate-float" style={{ animationDelay: '2s' }} />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-purple-600/10 rounded-full blur-[120px]" />
+          <div className="absolute top-1/4 -left-32 w-96 h-96 bg-indigo-300/40 dark:bg-indigo-600/30 rounded-full blur-[100px] animate-float-slow" />
+          <div className="absolute bottom-1/4 -right-32 w-96 h-96 bg-violet-300/35 dark:bg-violet-600/20 rounded-full blur-[100px] animate-float" style={{ animationDelay: '2s' }} />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-purple-300/25 dark:bg-purple-600/10 rounded-full blur-[120px]" />
 
           {/* Grid pattern overlay */}
-          <div className="absolute inset-0 opacity-10"
+          <div className="absolute inset-0 opacity-[0.15] dark:opacity-10"
             style={{
-              backgroundImage: `linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
-                                linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)`,
+              backgroundImage: theme === 'dark'
+                ? `linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
+                   linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)`
+                : `linear-gradient(rgba(99,102,241,0.07) 1px, transparent 1px),
+                   linear-gradient(90deg, rgba(99,102,241,0.07) 1px, transparent 1px)`,
               backgroundSize: '60px 60px'
             }}
           />
@@ -228,8 +233,8 @@ function HomePage() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6 }}
                 >
-                  <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white/90 text-sm font-semibold mb-8">
-                    <Sparkles size={14} className="text-yellow-400" />
+                  <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-50/80 dark:bg-white/10 backdrop-blur-md border border-indigo-100 dark:border-white/20 text-indigo-950 dark:text-white/90 text-sm font-semibold mb-8">
+                    <Sparkles size={14} className="text-yellow-500 dark:text-yellow-400" />
                     <span>India's #1 Mentorship Platform for Engineers</span>
                     <div className="dot-glow ml-1" />
                   </div>
@@ -239,7 +244,7 @@ function HomePage() {
                   initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 0.1 }}
-                  className="text-5xl md:text-6xl xl:text-7xl font-extrabold text-white leading-[1.1] tracking-tight mb-6"
+                  className="text-5xl md:text-6xl xl:text-7xl font-extrabold text-slate-900 dark:text-white leading-[1.1] tracking-tight mb-6"
                 >
                   Unlock Your
                   <br />
@@ -250,7 +255,7 @@ function HomePage() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 0.2 }}
-                  className="text-lg md:text-xl text-slate-300/90 leading-relaxed max-w-xl mx-auto lg:mx-0 mb-10"
+                  className="text-lg md:text-xl text-slate-600 dark:text-slate-300/90 leading-relaxed max-w-xl mx-auto lg:mx-0 mb-10"
                 >
                   Stop guessing your career path. Connect with verified seniors from IITs & NITs who've already walked the road — and won.
                 </motion.p>
@@ -270,7 +275,7 @@ function HomePage() {
                   </Link>
                   <Link
                     to="/signup"
-                    className="bg-white/10 backdrop-blur-md text-white border border-white/20 px-8 py-4 rounded-2xl font-bold hover:bg-white/20 transition-all hover:-translate-y-1 flex items-center justify-center gap-2 text-base"
+                    className="bg-slate-100 hover:bg-slate-200/80 dark:bg-white/10 backdrop-blur-md text-slate-800 dark:text-white border border-slate-200 dark:border-white/20 px-8 py-4 rounded-2xl font-bold transition-all hover:-translate-y-1 flex items-center justify-center gap-2 text-base"
                   >
                     Become a Mentor
                   </Link>
@@ -285,19 +290,19 @@ function HomePage() {
                 >
                   <div className="flex -space-x-3">
                     {['A', 'R', 'S', 'P'].map((letter, i) => (
-                      <div key={i} className="w-9 h-9 rounded-full bg-gradient-to-br from-indigo-400 to-violet-500 border-2 border-slate-900 flex items-center justify-center text-white text-xs font-bold shadow-lg">
+                      <div key={i} className="w-9 h-9 rounded-full bg-gradient-to-br from-indigo-400 to-violet-500 border-2 border-white dark:border-slate-900 flex items-center justify-center text-white text-xs font-bold shadow-lg">
                         {letter}
                       </div>
                     ))}
                   </div>
-                  <div className="text-sm text-slate-300">
-                    <span className="text-white font-bold">500+</span> students already winning
+                  <div className="text-sm text-slate-600 dark:text-slate-300">
+                    <span className="text-slate-900 dark:text-white font-bold">500+</span> students already winning
                   </div>
                   <div className="flex items-center gap-1">
                     {[1,2,3,4,5].map(i => (
                       <Star key={i} size={14} className="text-yellow-400 fill-yellow-400" />
                     ))}
-                    <span className="text-slate-300 text-sm ml-1">5.0</span>
+                    <span className="text-slate-500 dark:text-slate-300 text-sm ml-1">5.0</span>
                   </div>
                 </motion.div>
               </div>
@@ -319,24 +324,24 @@ function HomePage() {
                     <img
                       src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=560&q=80"
                       alt="Students getting mentored"
-                      className="rounded-3xl w-[420px] object-cover shadow-2xl shadow-black/50 border border-white/10"
+                      className="rounded-3xl w-[420px] object-cover shadow-2xl shadow-slate-200/80 dark:shadow-black/50 border border-slate-200 dark:border-white/10"
                     />
                     {/* Glow border */}
-                    <div className="absolute inset-0 rounded-3xl ring-1 ring-white/10" />
+                    <div className="absolute inset-0 rounded-3xl ring-1 ring-slate-200 dark:ring-white/10" />
                   </motion.div>
 
                   {/* Floating card 1 */}
                   <motion.div
                     animate={{ y: [0, -12, 0] }}
                     transition={{ repeat: Infinity, duration: 3.5, ease: 'easeInOut' }}
-                    className="absolute -left-14 top-12 bg-white/10 backdrop-blur-xl border border-white/20 p-4 rounded-2xl shadow-2xl flex items-center gap-3 z-20"
+                    className="absolute -left-14 top-12 bg-white/95 dark:bg-white/10 backdrop-blur-xl border border-slate-200/80 dark:border-white/20 p-4 rounded-2xl shadow-xl shadow-indigo-900/8 dark:shadow-black/40 flex items-center gap-3 z-20"
                   >
-                    <div className="bg-green-400/20 p-2.5 rounded-xl">
-                      <CheckCircle size={22} className="text-green-400" />
+                    <div className="bg-emerald-100/70 dark:bg-emerald-400/20 p-2.5 rounded-xl">
+                      <CheckCircle size={22} className="text-emerald-600 dark:text-emerald-400" />
                     </div>
                     <div>
-                      <p className="font-bold text-white text-sm">IIT Delhi</p>
-                      <p className="text-white/60 text-xs">Verified Mentor</p>
+                      <p className="font-bold text-slate-800 dark:text-white text-sm">IIT Delhi</p>
+                      <p className="text-slate-500 dark:text-white/60 text-xs">Verified Mentor</p>
                     </div>
                   </motion.div>
 
@@ -344,14 +349,14 @@ function HomePage() {
                   <motion.div
                     animate={{ y: [0, 12, 0] }}
                     transition={{ repeat: Infinity, duration: 4, ease: 'easeInOut', delay: 1 }}
-                    className="absolute -right-14 bottom-16 bg-white/10 backdrop-blur-xl border border-white/20 p-4 rounded-2xl shadow-2xl flex items-center gap-3 z-20"
+                    className="absolute -right-14 bottom-16 bg-white/95 dark:bg-white/10 backdrop-blur-xl border border-slate-200/80 dark:border-white/20 p-4 rounded-2xl shadow-xl shadow-indigo-900/8 dark:shadow-black/40 flex items-center gap-3 z-20"
                   >
-                    <div className="bg-yellow-400/20 p-2.5 rounded-xl">
-                      <Star size={22} className="text-yellow-400 fill-yellow-400" />
+                    <div className="bg-amber-100/70 dark:bg-amber-400/20 p-2.5 rounded-xl">
+                      <Star size={22} className="text-amber-600 dark:text-amber-400 fill-amber-600 dark:fill-amber-400" />
                     </div>
                     <div>
-                      <p className="font-bold text-white text-sm">5.0 Rated</p>
-                      <p className="text-white/60 text-xs">Student Choice</p>
+                      <p className="font-bold text-slate-800 dark:text-white text-sm">5.0 Rated</p>
+                      <p className="text-slate-500 dark:text-white/60 text-xs">Student Choice</p>
                     </div>
                   </motion.div>
 
@@ -359,11 +364,11 @@ function HomePage() {
                   <motion.div
                     animate={{ y: [0, -8, 0] }}
                     transition={{ repeat: Infinity, duration: 5, ease: 'easeInOut', delay: 0.5 }}
-                    className="absolute -right-10 top-8 bg-white/10 backdrop-blur-xl border border-white/20 px-4 py-3 rounded-2xl shadow-2xl z-20"
+                    className="absolute -right-10 top-8 bg-white/95 dark:bg-white/10 backdrop-blur-xl border border-slate-200/80 dark:border-white/20 px-4 py-3 rounded-2xl shadow-xl shadow-indigo-900/8 dark:shadow-black/40 z-20"
                   >
                     <div className="flex items-center gap-2">
                       <div className="dot-glow" />
-                      <span className="text-white text-xs font-semibold">12 sessions live now</span>
+                      <span className="text-slate-800 dark:text-white text-xs font-semibold">12 sessions live now</span>
                     </div>
                   </motion.div>
                 </div>

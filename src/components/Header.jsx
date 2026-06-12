@@ -146,12 +146,12 @@ const Header = () => {
 
   /* ── link text colour ── */
   const linkColor = isTransparent
-    ? 'text-white/80 hover:text-white'
-    : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white';
+    ? 'text-slate-700 dark:text-white/80 hover:text-indigo-600 dark:hover:text-white'
+    : 'text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-white';
 
   const activeLinkColor = isTransparent
-    ? 'text-white font-semibold'
-    : 'text-slate-900 dark:text-white font-semibold';
+    ? 'text-indigo-600 dark:text-white font-semibold'
+    : 'text-indigo-600 dark:text-white font-semibold';
 
   return (
     <>
@@ -192,7 +192,7 @@ const Header = () => {
               onClick={toggleTheme}
               className={`p-2 rounded-lg transition-all ${
                 isTransparent
-                  ? 'text-white/70 hover:text-white hover:bg-white/10'
+                  ? 'text-slate-500 dark:text-white/70 hover:text-slate-800 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/10'
                   : 'text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/[0.06]'
               }`}
               aria-label="Toggle theme"
@@ -201,7 +201,7 @@ const Header = () => {
             </button>
 
             {/* Separator */}
-            <div className={`w-px h-5 mx-1 ${isTransparent ? 'bg-white/20' : 'bg-slate-200 dark:bg-white/[0.08]'}`} />
+            <div className={`w-px h-5 mx-1 ${isTransparent ? 'bg-slate-200/80 dark:bg-white/20' : 'bg-slate-200 dark:bg-white/[0.08]'}`} />
 
             {user ? (
               /* ── User dropdown ── */
@@ -210,7 +210,7 @@ const Header = () => {
                   onClick={() => setDropdownOpen(v => !v)}
                   className={`flex items-center gap-2 px-2 py-1.5 rounded-lg transition-all ${
                     isTransparent
-                      ? 'hover:bg-white/10'
+                      ? 'hover:bg-slate-100 dark:hover:bg-white/10'
                       : 'hover:bg-slate-100 dark:hover:bg-white/[0.06]'
                   }`}
                 >
@@ -220,17 +220,17 @@ const Header = () => {
                   </div>
                   {/* Name + role */}
                   <div className="text-left hidden lg:block">
-                    <p className={`text-[13px] font-semibold leading-tight ${isTransparent ? 'text-white' : 'text-slate-800 dark:text-slate-100'}`}>
+                    <p className={`text-[13px] font-semibold leading-tight ${isTransparent ? 'text-slate-800 dark:text-white' : 'text-slate-800 dark:text-slate-100'}`}>
                       {user.username?.split(' ')[0]}
                     </p>
-                    <p className={`text-[11px] capitalize ${isTransparent ? 'text-white/60' : 'text-slate-400 dark:text-slate-500'}`}>
+                    <p className={`text-[11px] capitalize ${isTransparent ? 'text-slate-500 dark:text-white/60' : 'text-slate-400 dark:text-slate-500'}`}>
                       {user.role}
                     </p>
                   </div>
                   <ChevronDown
                     size={14}
                     className={`transition-transform duration-200 flex-shrink-0 ${dropdownOpen ? 'rotate-180' : ''} ${
-                      isTransparent ? 'text-white/50' : 'text-slate-400'
+                      isTransparent ? 'text-slate-500 dark:text-white/50' : 'text-slate-400'
                     }`}
                   />
                 </button>
@@ -288,8 +288,8 @@ const Header = () => {
                   to="/login"
                   className={`px-3.5 py-1.5 text-sm font-medium rounded-lg transition-all ${
                     isTransparent
-                      ? 'text-white/80 hover:text-white hover:bg-white/10'
-                      : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/[0.06]'
+                      ? 'text-slate-700 dark:text-white/80 hover:text-indigo-600 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/10'
+                      : 'text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/[0.06]'
                   }`}
                 >
                   Log in
@@ -310,7 +310,7 @@ const Header = () => {
             onClick={() => setMobileOpen(v => !v)}
             className={`md:hidden p-2 rounded-lg transition-colors ${
               isTransparent
-                ? 'text-white/80 hover:bg-white/10 hover:text-white'
+                ? 'text-slate-600 dark:text-white/80 hover:bg-slate-100 dark:hover:bg-white/10 hover:text-slate-900 dark:hover:text-white'
                 : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/[0.06]'
             }`}
             aria-label="Toggle menu"
