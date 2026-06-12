@@ -1,6 +1,7 @@
 // src/firebaseConfig.js
 import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
+import { getMessaging } from "firebase/messaging";
 
 // 👇 अपना Firebase वाला कोड यहाँ पेस्ट करें 👇
 const firebaseConfig = {
@@ -15,5 +16,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
+const messaging = getMessaging(app);
 
-export { auth, provider };
+export { auth, provider, messaging, app };

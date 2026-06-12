@@ -1,7 +1,10 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, useEffect } from 'react';
 import { Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast'; // 👉 1. IMPORT ADDED
 import { AnimatePresence } from 'framer-motion';
+import { getToken } from 'firebase/messaging';
+import { messaging } from './firebaseConfig';
+import { API_BASE_URL } from './config';
 
 import Header from './components/Header.jsx';
 import Footer from './components/Footer.jsx';
@@ -39,6 +42,38 @@ const ProtectedRoute = ({ children }) => {
 
 function App() {
   const location = useLocation();
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      const setupNotifications = async () => {
+        try {
+          const permission = await Notification.requestPermission();
+          if (permission === 'granted') {
+            const vapidKey = import.meta.env.VITE_FIREBASE_VAPID_KEY || undefined;
+            const fcmToken = await getToken(messaging, { vapidKey });
+
+            if (fcmToken) {
+              await fetch(`${API_BASE_URL}/users/save-fcm-token`, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ fcmToken })
+              });
+              console.log("FCM Token registered successfully!");
+            }
+          }
+        } catch (error) {
+          console.warn("FCM push registration skipped or failed:", error);
+        }
+      };
+
+      const timer = setTimeout(setupNotifications, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, []);
 
   return (
     <div className="w-full max-w-full overflow-x-hidden min-h-screen flex flex-col">
