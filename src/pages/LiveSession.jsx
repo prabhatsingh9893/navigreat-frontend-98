@@ -59,7 +59,7 @@ const LiveSession = () => {
           // SAVE SESSION FOR AUTO-REJOIN
           sessionStorage.setItem('currentSession', JSON.stringify({ meetingNumber, passWord, role, username }));
 
-          const leaveUrl = window.location.origin + '/dashboard?meeting_ended=true&mentorId=' + (sessionState.mentorId || '');
+          const leaveUrl = window.location.origin + '/#/dashboard?meeting_ended=true&mentorId=' + (sessionState.mentorId || '');
           // Use Backend's Key to ensure match with Signature
           const sdkKey = data.sdkKey || import.meta.env.VITE_ZOOM_CLIENT_ID;
 

@@ -74,7 +74,7 @@ function MentorSignupPage() {
           localStorage.setItem('token', responseData.token);
           localStorage.setItem('userData', JSON.stringify(responseData.user));
           setTimeout(() => {
-            window.location.href = '/dashboard';
+            window.location.href = '/#/dashboard';
           }, 1500);
         } else {
           navigate('/login');
