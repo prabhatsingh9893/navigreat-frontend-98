@@ -77,25 +77,27 @@
 }
 
 /* Premium gradient backgrounds */
-.bg-mesh-hero {
-  background-color: #0f0c29;
-  background-image:
-    radial-gradient(at 40% 20%, hsla(228, 92%, 46%, 0.3) 0px, transparent 50%),
-    radial-gradient(at 80% 0%, hsla(270, 80%, 55%, 0.2) 0px, transparent 50%),
-    radial-gradient(at 0% 50%, hsla(205, 100%, 50%, 0.15) 0px, transparent 50%),
-    radial-gradient(at 80% 50%, hsla(320, 70%, 50%, 0.1) 0px, transparent 50%),
-    radial-gradient(at 0% 100%, hsla(250, 100%, 60%, 0.2) 0px, transparent 50%);
-}
+@layer utilities {
+  .bg-mesh-hero {
+    background-color: #0f0c29;
+    background-image:
+      radial-gradient(at 40% 20%, hsla(228, 92%, 46%, 0.3) 0px, transparent 50%),
+      radial-gradient(at 80% 0%, hsla(270, 80%, 55%, 0.2) 0px, transparent 50%),
+      radial-gradient(at 0% 50%, hsla(205, 100%, 50%, 0.15) 0px, transparent 50%),
+      radial-gradient(at 80% 50%, hsla(320, 70%, 50%, 0.1) 0px, transparent 50%),
+      radial-gradient(at 0% 100%, hsla(250, 100%, 60%, 0.2) 0px, transparent 50%);
+  }
 
-.bg-mesh-light {
-  background-color: #f4f6fc;
-  background-image:
-    radial-gradient(at 0% 0%, hsla(244, 100%, 95%, 0.85) 0px, transparent 50%),
-    radial-gradient(at 50% 0%, hsla(262, 100%, 95%, 0.75) 0px, transparent 50%),
-    radial-gradient(at 100% 0%, hsla(187, 100%, 94%, 0.85) 0px, transparent 50%),
-    radial-gradient(at 0% 50%, hsla(220, 100%, 95%, 0.7) 0px, transparent 50%),
-    radial-gradient(at 80% 50%, hsla(316, 100%, 95%, 0.7) 0px, transparent 50%),
-    radial-gradient(at 50% 100%, hsla(240, 100%, 96%, 0.8) 0px, transparent 50%);
+  .bg-mesh-light {
+    background-color: #f4f6fc;
+    background-image:
+      radial-gradient(at 0% 0%, hsla(244, 100%, 95%, 0.85) 0px, transparent 50%),
+      radial-gradient(at 50% 0%, hsla(262, 100%, 95%, 0.75) 0px, transparent 50%),
+      radial-gradient(at 100% 0%, hsla(187, 100%, 94%, 0.85) 0px, transparent 50%),
+      radial-gradient(at 0% 50%, hsla(220, 100%, 95%, 0.7) 0px, transparent 50%),
+      radial-gradient(at 80% 50%, hsla(316, 100%, 95%, 0.7) 0px, transparent 50%),
+      radial-gradient(at 50% 100%, hsla(240, 100%, 96%, 0.8) 0px, transparent 50%);
+  }
 }
 
 /* Gradient text utilities */
