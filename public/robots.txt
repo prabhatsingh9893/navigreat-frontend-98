@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://navigreat98.me/sitemap.xml
