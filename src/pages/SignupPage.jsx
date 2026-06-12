@@ -191,13 +191,13 @@ function SignupPage() {
                 </div>
 
                 {/* Mentor Option (Link) */}
-                <Link to="/signup/mentor" className="border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-[#111b21] p-4 rounded-xl flex items-center justify-center gap-2 transition-all group">
+                <Link to="/become-mentor" className="border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-[#111b21] p-4 rounded-xl flex items-center justify-center gap-2 transition-all group">
                   <div className="w-5 h-5 rounded-full border-2 border-slate-300 dark:border-slate-500 group-hover:border-purple-500 transition-colors"></div>
                   <span className="font-bold text-slate-600 dark:text-slate-400 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">Mentor</span>
                 </Link>
               </div>
               <p className="text-xs text-slate-500 dark:text-slate-400 px-1">
-                Mentors require a dedicated verification process. <Link to="/signup/mentor" className="text-purple-600 dark:text-purple-400 hover:underline">Register here</Link>.
+                Mentors require a dedicated verification process. <Link to="/become-mentor" className="text-purple-600 dark:text-purple-400 hover:underline">Register here</Link>.
               </p>
             </div>
 

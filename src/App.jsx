@@ -97,6 +97,7 @@ function App() {
               <Route path="/forgot-password" element={<ForgotPasswordPage />} />
               <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
               <Route path="/become-mentor" element={<MentorSignupPage />} />
+              <Route path="/signup/mentor" element={<MentorSignupPage />} />
               <Route path="/privacy" element={<AppPrivacy />} />
               <Route path="/terms" element={<AppTerms />} />
 
