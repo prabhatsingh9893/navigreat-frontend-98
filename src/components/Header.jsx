@@ -21,45 +21,10 @@ const NAV_LINKS = [
 
 /* ─── Logo with image ─── */
 const Logo = () => {
-  const [logoSrc, setLogoSrc] = useState(logo);
-
-  useEffect(() => {
-    const img = new Image();
-    img.src = logo;
-    img.onload = () => {
-      try {
-        const canvas = document.createElement('canvas');
-        canvas.width = img.width;
-        canvas.height = img.height;
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(img, 0, 0);
-
-        const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-        const data = imgData.data;
-
-        // Convert white and near-white pixels to transparent
-        for (let i = 0; i < data.length; i += 4) {
-          const r = data[i];
-          const g = data[i + 1];
-          const b = data[i + 2];
-          // Using a 235 threshold to ensure clean anti-aliasing transparency
-          if (r > 235 && g > 235 && b > 235) {
-            data[i + 3] = 0;
-          }
-        }
-
-        ctx.putImageData(imgData, 0, 0);
-        setLogoSrc(canvas.toDataURL());
-      } catch (err) {
-        console.error("Failed to process logo background transparency:", err);
-      }
-    };
-  }, []);
-
   return (
     <Link to="/" className="flex items-center group select-none">
       <img
-        src={logoSrc}
+        src={logo}
         alt="NaviGreat"
         className="h-12 w-auto object-contain pointer-events-none transition-all duration-300"
       />
