@@ -26,7 +26,7 @@ const Logo = () => {
       <img
         src={logo}
         alt="NaviGreat"
-        className="h-12 w-auto object-contain pointer-events-none transition-all duration-300"
+        className="h-12 w-auto object-contain pointer-events-none transition-all duration-300 dark:brightness-125 dark:drop-shadow-[0_0_12px_rgba(255,255,255,0.24)]"
       />
     </Link>
   );
