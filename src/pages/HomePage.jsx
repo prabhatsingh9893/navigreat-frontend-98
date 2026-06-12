@@ -38,21 +38,26 @@ const TypewriterText = ({ words }) => {
 
   useEffect(() => {
     const current = words[wordIndex];
-    const speed = isDeleting ? 60 : 100;
-    const timeout = setTimeout(() => {
-      if (!isDeleting) {
-        setDisplayed(current.substring(0, displayed.length + 1));
-        if (displayed.length + 1 === current.length) {
-          setTimeout(() => setIsDeleting(true), 1800);
-        }
-      } else {
-        setDisplayed(current.substring(0, displayed.length - 1));
-        if (displayed.length === 0) {
-          setIsDeleting(false);
-          setWordIndex((prev) => (prev + 1) % words.length);
-        }
-      }
-    }, speed);
+    let timeout;
+
+    if (!isDeleting && displayed === current) {
+      // Pause before deleting
+      timeout = setTimeout(() => setIsDeleting(true), 1800);
+    } else if (isDeleting && displayed === '') {
+      // Pause before typing next word
+      setIsDeleting(false);
+      setWordIndex((prev) => (prev + 1) % words.length);
+    } else {
+      // Typing or deleting characters
+      const speed = isDeleting ? 60 : 100;
+      timeout = setTimeout(() => {
+        const nextContent = isDeleting 
+          ? current.substring(0, displayed.length - 1)
+          : current.substring(0, displayed.length + 1);
+        setDisplayed(nextContent);
+      }, speed);
+    }
+
     return () => clearTimeout(timeout);
   }, [displayed, isDeleting, wordIndex, words]);
 
