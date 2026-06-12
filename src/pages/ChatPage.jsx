@@ -10,7 +10,6 @@ const SOCKET_URL = API_BASE_URL.replace('/api', '');
 const socket = io(SOCKET_URL, {
     autoConnect: true,
     reconnection: true,
-    reconnectionAttempts: 5,
     reconnectionDelay: 3000,
     transports: ["websocket", "polling"]
 });
@@ -32,6 +31,7 @@ const ChatPage = () => {
     const [contactList, setContactList] = useState([]);
     const [isTyping, setIsTyping] = useState(false);
     const [onlineUsers, setOnlineUsers] = useState(new Set()); // ✅ Track Online Users
+    const [isConnected, setIsConnected] = useState(socket.connected);
 
     // 🎙️ Voice Recording State
     const [isRecording, setIsRecording] = useState(false);
@@ -66,13 +66,24 @@ const ChatPage = () => {
             return;
         }
 
-        const registerUser = () => {
+        const handleConnect = () => {
+            setIsConnected(true);
             console.log("Registering Online:", currentUser._id || currentUser.id);
             socket.emit("register_user", currentUser._id || currentUser.id); // ✅ Emit register_user
         };
 
-        if (socket.connected) registerUser();
-        socket.on("connect", registerUser);
+        const handleDisconnect = () => {
+            setIsConnected(false);
+        };
+
+        if (socket.connected) {
+            handleConnect();
+        } else {
+            setIsConnected(false);
+        }
+
+        socket.on("connect", handleConnect);
+        socket.on("disconnect", handleDisconnect);
 
         // ✅ Online Status Listeners
         socket.on("get_online_users", (users) => {
@@ -96,7 +107,8 @@ const ChatPage = () => {
         }, 0);
 
         return () => {
-            socket.off("connect", registerUser);
+            socket.off("connect", handleConnect);
+            socket.off("disconnect", handleDisconnect);
             socket.off("get_online_users");
             socket.off("user_online");
             socket.off("user_offline");
@@ -242,6 +254,10 @@ const ChatPage = () => {
 
     const sendAudioMessage = (base64Audio) => {
         if (!targetUserId) return;
+        if (!socket.connected) {
+            toast.error("Not connected to chat server. Please wait for reconnection...");
+            return;
+        }
         const msgData = {
             sender: currentUser._id || currentUser.id,
             receiver: targetUserId,
@@ -255,6 +271,10 @@ const ChatPage = () => {
 
     const sendMessage = async () => {
         if (!newMessage.trim() || !targetUserId) return;
+        if (!socket.connected) {
+            toast.error("Not connected to chat server. Please wait for reconnection...");
+            return;
+        }
         const msgData = {
             sender: currentUser._id || currentUser.id,
             receiver: targetUserId,
@@ -287,7 +307,12 @@ const ChatPage = () => {
             {/* Sidebar */}
             <div className={`${targetUserId ? 'hidden md:flex' : 'flex'} w-full md:w-1/3 bg-white dark:bg-[#0d1520] border-r border-slate-200 dark:border-slate-800/80 flex-col`}>
                 <div className="p-4 border-b border-slate-150 dark:border-slate-800/80 bg-slate-50/50 dark:bg-[#0d1520] flex justify-between items-center">
-                    <h2 className="text-xl font-bold text-slate-800 dark:text-slate-200">Messages</h2>
+                    <div className="flex items-center gap-2">
+                        <h2 className="text-xl font-bold text-slate-800 dark:text-slate-200">Messages</h2>
+                        {!isConnected && (
+                            <span className="w-2.5 h-2.5 bg-amber-500 rounded-full animate-pulse" title="Connecting to server..."></span>
+                        )}
+                    </div>
                     <span className="text-xs bg-indigo-50 dark:bg-indigo-950/40 text-indigo-650 dark:text-indigo-400 border border-indigo-100 dark:border-indigo-900/30 px-2.5 py-1 rounded-full font-bold">{contactList.length} Contacts</span>
                 </div>
                 <div className="flex-1 overflow-y-auto">
@@ -335,30 +360,39 @@ const ChatPage = () => {
                     <div className="absolute inset-0 opacity-5 dark:opacity-[0.02] pointer-events-none" style={{ backgroundImage: "url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png')" }}></div>
 
                     {/* Header */}
-                    <div className="p-3 bg-white dark:bg-[#0d1520] border-b border-slate-200 dark:border-slate-800/80 flex items-center gap-3 shadow-sm z-10">
-                        <button onClick={() => navigate('/chat')} className="md:hidden p-2 text-slate-600 dark:text-slate-200"><ArrowLeft size={20} /></button>
+                    <div className="p-3 bg-white dark:bg-[#0d1520] border-b border-slate-200 dark:border-slate-800/80 flex items-center justify-between shadow-sm z-10">
+                        <div className="flex items-center gap-3">
+                            <button onClick={() => navigate('/chat')} className="md:hidden p-2 text-slate-600 dark:text-slate-200"><ArrowLeft size={20} /></button>
 
-                        {/* Clickable Profile Section */}
-                        <div onClick={handleViewProfile} className="flex items-center gap-3 cursor-pointer hover:bg-slate-50 dark:hover:bg-[#151f2e] p-1 pr-4 rounded-lg transition">
-                            <div className="w-10 h-10 rounded-full bg-indigo-50 dark:bg-[#151f2e] flex items-center justify-center text-indigo-600 dark:text-indigo-400 font-bold overflow-hidden border border-slate-200 dark:border-slate-800">
-                                {targetUser?.image ? <img src={targetUser.image} className="w-full h-full object-cover" /> : <UserIcon />}
-                            </div>
-                            <div>
-                                <h3 className="font-bold text-slate-900 dark:text-slate-100 hover:underline">{targetUser?.username || "Loading..."}</h3>
-                                <p className="text-xs flex items-center gap-1 font-medium">
-                                    {isTyping ? (
-                                        <span className="text-indigo-500 font-bold animate-pulse">Typing...</span>
-                                    ) : onlineUsers.has(targetUserId) ? (
-                                        <span className="text-green-500 flex items-center gap-1">
-                                            <span className="w-2 h-2 bg-green-500 rounded-full"></span> Online
-                                        </span>
-                                    ) : (
-                                        <span className="text-gray-400">Offline</span>
-                                    )}
-                                </p>
+                            {/* Clickable Profile Section */}
+                            <div onClick={handleViewProfile} className="flex items-center gap-3 cursor-pointer hover:bg-slate-50 dark:hover:bg-[#151f2e] p-1 pr-4 rounded-lg transition">
+                                <div className="w-10 h-10 rounded-full bg-indigo-50 dark:bg-[#151f2e] flex items-center justify-center text-indigo-600 dark:text-indigo-400 font-bold overflow-hidden border border-slate-200 dark:border-slate-800">
+                                    {targetUser?.image ? <img src={targetUser.image} className="w-full h-full object-cover" /> : <UserIcon />}
+                                </div>
+                                <div>
+                                    <h3 className="font-bold text-slate-900 dark:text-slate-100 hover:underline">{targetUser?.username || "Loading..."}</h3>
+                                    <p className="text-xs flex items-center gap-1 font-medium">
+                                        {isTyping ? (
+                                            <span className="text-indigo-500 font-bold animate-pulse">Typing...</span>
+                                        ) : onlineUsers.has(targetUserId) ? (
+                                            <span className="text-green-500 flex items-center gap-1">
+                                                <span className="w-2 h-2 bg-green-500 rounded-full"></span> Online
+                                            </span>
+                                        ) : (
+                                            <span className="text-gray-400">Offline</span>
+                                        )}
+                                    </p>
+                                </div>
                             </div>
                         </div>
 
+                        {/* Connection Status Indicator */}
+                        {!isConnected && (
+                            <div className="flex items-center gap-1.5 px-3 py-1 bg-amber-500/10 text-amber-500 dark:bg-amber-500/15 border border-amber-500/25 rounded-full text-xs font-medium animate-pulse">
+                                <span className="w-1.5 h-1.5 bg-amber-500 rounded-full animate-ping"></span>
+                                Connecting...
+                            </div>
+                        )}
                     </div>
 
                     {/* Messages */}
@@ -438,6 +472,12 @@ const ChatPage = () => {
                     </div>
                     <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-200">Welcome to Chat</h2>
                     <p className="mt-2 text-slate-500 dark:text-slate-400">Select a contact to start messaging.</p>
+                    {!isConnected && (
+                        <div className="mt-4 flex items-center gap-2 px-4 py-2 bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 rounded-lg text-sm font-medium animate-pulse">
+                            <span className="w-2 h-2 bg-amber-500 rounded-full animate-ping"></span>
+                            Connecting to real-time chat server...
+                        </div>
+                    )}
                 </div>
             )}
         </div>
