@@ -252,7 +252,7 @@ function LoginPage() {
                   onChange={handleChange}
                   placeholder="Enter your email"
                   required
-                  className="input-premium pl-12"
+                  className="input-premium !pl-12"
                 />
               </div>
             </div>
@@ -267,7 +267,7 @@ function LoginPage() {
                   onChange={handleChange}
                   placeholder="Enter your password"
                   required
-                  className="input-premium pl-12"
+                  className="input-premium !pl-12"
                 />
               </div>
               <div className="text-right pt-1">

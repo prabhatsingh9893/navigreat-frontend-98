@@ -140,7 +140,7 @@ function SignupPage() {
 
           <form onSubmit={handleSubmit} className="space-y-5">
 
-            <div className="space-y-2">
+             <div className="space-y-2">
               <label className="text-sm font-semibold text-slate-700 dark:text-slate-200 ml-1">Full Name</label>
               <div className="relative">
                 <UserIcon className="absolute left-4 top-3.5 text-slate-400 dark:text-slate-500" size={20} />
@@ -150,7 +150,7 @@ function SignupPage() {
                   onChange={handleChange}
                   placeholder="John Doe"
                   required
-                  className="input-premium pl-12"
+                  className="input-premium !pl-12"
                 />
               </div>
             </div>
@@ -165,7 +165,7 @@ function SignupPage() {
                   onChange={handleChange}
                   placeholder="john@example.com"
                   required
-                  className="input-premium pl-12"
+                  className="input-premium !pl-12"
                 />
               </div>
             </div>
@@ -180,7 +180,7 @@ function SignupPage() {
                   onChange={handleChange}
                   placeholder="Min 6 characters"
                   required
-                  className="input-premium pl-12"
+                  className="input-premium !pl-12"
                 />
               </div>
             </div>
