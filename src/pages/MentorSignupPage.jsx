@@ -2,10 +2,12 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { API_BASE_URL } from '../config';
 import toast from 'react-hot-toast';
-import { Loader2, UploadCloud, User } from 'lucide-react';
+import { ArrowLeft, User as UserIcon, Lock, Mail, ChevronRight, Briefcase, GraduationCap, Sparkles, Loader2, UploadCloud, User, Sun, Moon } from 'lucide-react';
+import { useTheme } from '../context/ThemeContext';
 
 function MentorSignupPage() {
   const navigate = useNavigate();
+  const { theme, toggleTheme } = useTheme();
 
   const [formData, setFormData] = useState({
     username: '',
@@ -91,27 +93,31 @@ function MentorSignupPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-      <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+    <div className="min-h-screen bg-mesh-hero dark:bg-[#0b141a] flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative">
+   
+  <button type="button" aria-label="Toggle dark mode" onClick={toggleTheme} className="absolute top-8 right-8 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white">
+    {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
+  </button>
+  <div className="sm:mx-auto sm:w-full sm:max-w-md">
+        <h2 className="mt-6 text-center text-3xl font-extrabold text-slate-900 dark:text-white">
           Join as a Mentor 🚀
         </h2>
-        <p className="mt-2 text-center text-sm text-gray-600">
+        <p className="mt-2 text-center text-sm text-slate-600 dark:text-slate-400">
           Guide juniors and build your personal brand.
         </p>
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10 border border-gray-100">
+        <div className="glass-card py-8 px-4 border border-slate-100 dark:border-slate-800">
           <form className="space-y-6" onSubmit={handleSubmit}>
 
             {/* Profile Image Upload with Preview */}
             <div className="flex flex-col items-center space-y-4 mb-6">
-              <div className="relative w-24 h-24 rounded-full overflow-hidden bg-gray-100 border-2 border-dashed border-gray-300 flex items-center justify-center group hover:border-blue-500 transition-colors cursor-pointer">
+              <div className="relative w-24 h-24 rounded-full overflow-hidden bg-slate-100 dark:bg-slate-800 border-2 border-dashed border-slate-300 dark:border-slate-700 flex items-center justify-center group hover:border-indigo-500 transition-colors cursor-pointer">
                 {imagePreview ? (
                   <img src={imagePreview} alt="Profile" className="w-full h-full object-cover" />
                 ) : (
-                  <User className="text-gray-400 w-10 h-10" />
+                  <User className="text-slate-400 dark:text-slate-500 w-10 h-10" />
                 )}
                 <input
                   type="file"
@@ -120,43 +126,44 @@ function MentorSignupPage() {
                   className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                 />
               </div>
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-slate-500 dark:text-slate-400">
                 {selectedFile ? selectedFile.name : "Click to upload profile photo"}
               </p>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700">Full Name</label>
+              <label className="block text-sm font-semibold text-slate-700 dark:text-slate-200 ml-1">Full Name</label>
               <div className="mt-1">
-                <input name="username" type="text" required onChange={handleChange} className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" />
+                <input name="username" type="text" required onChange={handleChange} className="input-premium" />
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700">Email address</label>
+              <label className="block text-sm font-semibold text-slate-700 dark:text-slate-200 ml-1">Email address</label>
               <div className="mt-1">
-                <input name="email" type="email" required onChange={handleChange} className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" />
+                <input name="email" type="email" required onChange={handleChange} className="input-premium" />
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700">College / University</label>
+              <label className="block text-sm font-semibold text-slate-700 dark:text-slate-200 ml-1">College / University</label>
               <div className="mt-1">
-                <input name="college" type="text" placeholder="e.g. IIT Delhi" required onChange={handleChange} className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" />
+                <input name="college" type="text" placeholder="e.g. IIT Delhi" required onChange={handleChange} className="input-premium" />
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700">Branch / Specialization</label>
+              <label className="block text-sm font-semibold text-slate-700 dark:text-slate-200 ml-1">Branch / Specialization</label>
               <div className="mt-1">
-                <input name="branch" type="text" placeholder="e.g. Computer Science" required onChange={handleChange} className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" />
+                <input name="branch" type="text" placeholder="e.g. Computer Science" required onChange={handleChange} className="input-premium" />
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700">Password</label>
+              <label className="block text-sm font-semibold text-slate-700 dark:text-slate-200 ml-1">Password</label>
+
               <div className="mt-1">
-                <input name="password" type="password" required onChange={handleChange} className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" />
+                <input name="password" type="password" required onChange={handleChange} className="input-premium" />
               </div>
             </div>
 
@@ -164,7 +171,7 @@ function MentorSignupPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className={`w-full flex justify-center py-2.5 px-4 border border-transparent rounded-md shadow-sm text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
+                className={`w-full btn-primary ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
               >
                 {loading ? (
                   <>
@@ -178,15 +185,9 @@ function MentorSignupPage() {
             </div>
           </form>
 
-          <div className="mt-6">
-            <div className="relative">
-              <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white text-gray-500">
-                  Already have an account? <Link to="/login" className="font-medium text-blue-600 hover:text-blue-500">Login</Link>
-                </span>
-              </div>
-            </div>
-          </div>
+          <p className="mt-8 text-center text-slate-600 dark:text-slate-400">
+            Already have an account? <Link to="/login" className="text-indigo-600 dark:text-indigo-400 font-bold hover:underline">Log In</Link>
+          </p>
         </div>
       </div>
     </div>

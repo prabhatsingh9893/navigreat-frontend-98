@@ -5,7 +5,8 @@ import { auth, provider } from '../firebaseConfig';
 import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
 import { API_BASE_URL } from '../config';
-import { ArrowLeft, User as UserIcon, Lock, Mail, ChevronRight, Sparkles } from 'lucide-react';
+import { ArrowLeft, User as UserIcon, Lock, Mail, ChevronRight, Sparkles, Sun, Moon } from 'lucide-react';
+import { useTheme } from '../context/ThemeContext';
 
 // Simple Loader Component for internal use
 const ProcessingOverlay = ({ text, onCancel }) => (
@@ -29,6 +30,7 @@ function LoginPage() {
   const [verifying, setVerifying] = useState(false);
   const [statusMessage, setStatusMessage] = useState("");
   const navigate = useNavigate();
+  const { theme, toggleTheme } = useTheme();
 
   // Redirect if already logged in
   useEffect(() => {
@@ -175,19 +177,19 @@ function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white dark:bg-[#0b141a] flex relative overflow-hidden">
+    <div className="min-h-screen bg-mesh-hero dark:bg-[#0b141a] flex relative overflow-hidden">
 
       {/* LEFT: Illustrative Side (Desktop Only) */}
-      <div className="hidden lg:flex w-1/2 bg-slate-900 relative items-center justify-center overflow-hidden">
+      <div className="hidden lg:flex w-1/2 bg-slate-100 dark:bg-slate-900 relative items-center justify-center overflow-hidden">
         <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1543269865-cbf427effbad?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80')] bg-cover bg-center opacity-20"></div>
         <div className="absolute inset-0 bg-gradient-to-tr from-indigo-900/90 to-violet-900/90"></div>
 
-        <div className="relative z-10 p-12 text-white max-w-lg">
+        <div className="relative z-10 p-12 max-w-lg glass text-white">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
+            className="animate-float mb-8"
             transition={{ delay: 0.2 }}
-            className="mb-8"
           >
             <div className="inline-flex items-center gap-2 px-3 py-1 bg-indigo-500/20 border border-indigo-400/30 rounded-full text-indigo-200 text-sm font-medium mb-6">
               <Sparkles size={14} /> Future awaits
@@ -224,15 +226,18 @@ function LoginPage() {
         <Link to="/" className="absolute top-8 left-8 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white flex items-center gap-2 font-medium transition-colors">
           <ArrowLeft size={20} /> Back to Home
         </Link>
+        <button type="button" aria-label="Toggle dark mode" onClick={toggleTheme} className="absolute top-8 right-8 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white">
+          {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
+        </button>
 
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.4 }}
-          className="w-full max-w-md bg-white dark:bg-[#0d1520] p-10 rounded-3xl shadow-xl shadow-slate-200 dark:shadow-black/60 border border-slate-100 dark:border-slate-800"
+          className="w-full max-w-md glass-card p-10"
         >
           <div className="text-center mb-10">
-            <h2 className="text-3xl font-bold text-slate-900 dark:text-white">Welcome Back</h2>
+            <h2 className="text-3xl font-bold text-gradient">Welcome Back</h2>
             <p className="text-slate-500 dark:text-slate-400 mt-2">Please enter your details to sign in.</p>
           </div>
 
@@ -247,7 +252,7 @@ function LoginPage() {
                   onChange={handleChange}
                   placeholder="Enter your email"
                   required
-                  className="w-full pl-12 pr-4 py-3.5 bg-slate-50 dark:bg-[#151f2e] border border-slate-200 dark:border-slate-800 rounded-xl focus:border-indigo-500 dark:focus:border-indigo-500 focus:bg-white dark:focus:bg-[#0d1520] focus:ring-4 focus:ring-indigo-500/10 dark:focus:ring-indigo-500/20 outline-none transition-all font-medium text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500"
+                  className="input-premium pl-12"
                 />
               </div>
             </div>
@@ -262,7 +267,7 @@ function LoginPage() {
                   onChange={handleChange}
                   placeholder="Enter your password"
                   required
-                  className="w-full pl-12 pr-4 py-3.5 bg-slate-50 dark:bg-[#151f2e] border border-slate-200 dark:border-slate-800 rounded-xl focus:border-indigo-500 dark:focus:border-indigo-500 focus:bg-white dark:focus:bg-[#0d1520] focus:ring-4 focus:ring-indigo-500/10 dark:focus:ring-indigo-500/20 outline-none transition-all font-medium text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500"
+                  className="input-premium pl-12"
                 />
               </div>
               <div className="text-right pt-1">
