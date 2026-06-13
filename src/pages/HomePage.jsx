@@ -340,23 +340,8 @@ function HomePage() {
                       <CheckCircle size={22} className="text-emerald-600 dark:text-emerald-400" />
                     </div>
                     <div>
-                      <p className="font-bold text-slate-800 dark:text-white text-sm">IIT Delhi</p>
+                      <p className="font-bold text-slate-800 dark:text-white text-sm">MANIT Bhopal</p>
                       <p className="text-slate-500 dark:text-white/60 text-xs">Verified Mentor</p>
-                    </div>
-                  </motion.div>
-
-                  {/* Floating card 2 */}
-                  <motion.div
-                    animate={{ y: [0, 12, 0] }}
-                    transition={{ repeat: Infinity, duration: 4, ease: 'easeInOut', delay: 1 }}
-                    className="absolute -right-14 bottom-16 bg-white/95 dark:bg-white/10 backdrop-blur-xl border border-slate-200/80 dark:border-white/20 p-4 rounded-2xl shadow-xl shadow-indigo-900/8 dark:shadow-black/40 flex items-center gap-3 z-20"
-                  >
-                    <div className="bg-amber-100/70 dark:bg-amber-400/20 p-2.5 rounded-xl">
-                      <Star size={22} className="text-amber-600 dark:text-amber-400 fill-amber-600 dark:fill-amber-400" />
-                    </div>
-                    <div>
-                      <p className="font-bold text-slate-800 dark:text-white text-sm">5.0 Rated</p>
-                      <p className="text-slate-500 dark:text-white/60 text-xs">Student Choice</p>
                     </div>
                   </motion.div>
 
@@ -366,10 +351,6 @@ function HomePage() {
                     transition={{ repeat: Infinity, duration: 5, ease: 'easeInOut', delay: 0.5 }}
                     className="absolute -right-10 top-8 bg-white/95 dark:bg-white/10 backdrop-blur-xl border border-slate-200/80 dark:border-white/20 px-4 py-3 rounded-2xl shadow-xl shadow-indigo-900/8 dark:shadow-black/40 z-20"
                   >
-                    <div className="flex items-center gap-2">
-                      <div className="dot-glow" />
-                      <span className="text-slate-800 dark:text-white text-xs font-semibold">12 sessions live now</span>
-                    </div>
                   </motion.div>
                 </div>
               </motion.div>
