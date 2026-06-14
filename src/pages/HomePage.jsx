@@ -46,8 +46,10 @@ const TypewriterText = ({ words }) => {
       timeout = setTimeout(() => setIsDeleting(true), 1800);
     } else if (isDeleting && displayed === '') {
       // Pause before typing next word
-      setIsDeleting(false);
-      setWordIndex((prev) => (prev + 1) % words.length);
+      timeout = setTimeout(() => {
+        setIsDeleting(false);
+        setWordIndex((prev) => (prev + 1) % words.length);
+      }, 500);
     } else {
       // Typing or deleting characters
       const speed = isDeleting ? 60 : 100;
@@ -235,7 +237,7 @@ function HomePage() {
                 >
                   <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-50/80 dark:bg-white/10 backdrop-blur-md border border-indigo-100 dark:border-white/20 text-indigo-950 dark:text-white/90 text-sm font-semibold mb-8">
                     <Sparkles size={14} className="text-yellow-500 dark:text-yellow-400" />
-                    <span>India's #1 Mentorship Platform for Engineers</span>
+                    <span>India&apos;s #1 Mentorship Platform for Engineers</span>
                     <div className="dot-glow ml-1" />
                   </div>
                 </motion.div>
@@ -257,7 +259,7 @@ function HomePage() {
                   transition={{ duration: 0.6, delay: 0.2 }}
                   className="text-lg md:text-xl text-slate-600 dark:text-slate-300/90 leading-relaxed max-w-xl mx-auto lg:mx-0 mb-10"
                 >
-                  Stop guessing your career path. Connect with verified seniors from IITs & NITs who've already walked the road — and won.
+                  Stop guessing your career path. Connect with verified seniors from IITs & NITs who&apos;ve already walked the road — and won.
                 </motion.p>
 
                 <motion.div
@@ -274,7 +276,7 @@ function HomePage() {
                     <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
                   </Link>
                   <Link
-                    to="/signup"
+                    to="/become-mentor"
                     className="bg-slate-100 hover:bg-slate-200/80 dark:bg-white/10 backdrop-blur-md text-slate-800 dark:text-white border border-slate-200 dark:border-white/20 px-8 py-4 rounded-2xl font-bold transition-all hover:-translate-y-1 flex items-center justify-center gap-2 text-base"
                   >
                     Become a Mentor
@@ -579,7 +581,7 @@ function HomePage() {
                       ))}
                     </div>
                     <p className="text-slate-600 dark:text-slate-300 leading-relaxed mb-6 italic">
-                      "{t.text}"
+                      &quot;{t.text}&quot;
                     </p>
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center text-white text-sm font-bold">
@@ -613,7 +615,7 @@ function HomePage() {
                     Ready to unlock your future?
                   </h2>
                   <p className="text-indigo-200 text-lg max-w-2xl mx-auto mb-10">
-                    Join thousands of students who are already getting the guidance they need from India's best engineers.
+                    Join thousands of students who are already getting the guidance they need from India&apos;s best engineers.
                   </p>
                   <div className="flex flex-col sm:flex-row gap-4 justify-center">
                     <Link to="/mentors"

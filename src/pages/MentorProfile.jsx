@@ -21,7 +21,6 @@ const MentorProfile = () => {
     const navigate = useNavigate();
     const [mentor, setMentor] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [activeTab, setActiveTab] = useState('about');
     const [isLiveNow, setIsLiveNow] = useState(false);
     const [sessions, setSessions] = useState([]);
     const [lectures, setLectures] = useState([]);

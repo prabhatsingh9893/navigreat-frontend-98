@@ -6,7 +6,7 @@ import { motion } from 'framer-motion';
 const footerLinks = {
   platform: [
     { name: 'Find a Mentor', path: '/mentors' },
-    { name: 'Become a Mentor', path: '/signup' },
+    { name: 'Become a Mentor', path: '/become-mentor' },
     { name: 'How It Works', path: '/#how-it-works' },
     { name: 'Pricing', path: '/mentors' },
   ],

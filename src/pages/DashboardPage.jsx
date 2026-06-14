@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { motion } from 'framer-motion';
 // Icons
 import {
     Share2, BadgeCheck, Users, Clock, Star, Video, Trash2, Plus,
@@ -28,7 +27,7 @@ const DashboardPage = () => {
         const savedSession = sessionStorage.getItem('currentSession');
         if (savedSession) {
             try { setLastSession(JSON.parse(savedSession)); }
-            catch (e) { sessionStorage.removeItem('currentSession'); }
+            catch { sessionStorage.removeItem('currentSession'); }
         }
 
         const params = new URLSearchParams(location.search);
@@ -60,7 +59,7 @@ const DashboardPage = () => {
             // Clear URL param without reloading
             navigate('/dashboard', { replace: true });
         }
-    }, [location]);
+    }, [location, navigate]);
     const [loading, setLoading] = useState(true);
     const [uploading, setUploading] = useState(false);
 
@@ -113,7 +112,7 @@ const DashboardPage = () => {
 
                 let parsedUser;
                 try { parsedUser = JSON.parse(storedUser); }
-                catch (e) { localStorage.removeItem('userData'); navigate('/login'); return; }
+                catch { localStorage.removeItem('userData'); navigate('/login'); return; }
 
                 setUser(parsedUser);
 
@@ -171,7 +170,7 @@ const DashboardPage = () => {
 
     // ... (helper functions) ...
 
-    const handleStartSession = (session) => {
+    const handleStartSession = () => {
         if (!profile.meetingId || !profile.passcode) {
             toast.error("Please setup Zoom Meeting ID in profile first!");
             return;
@@ -299,7 +298,7 @@ const DashboardPage = () => {
             setIsZoomModal(false);
             toast.dismiss(loadingToast);
             toast.success("Settings Saved!");
-        } catch (error) { toast.dismiss(loadingToast); }
+        } catch { toast.dismiss(loadingToast); }
     };
 
     const updateBackend = async (dataToUpdate) => {
@@ -345,7 +344,7 @@ const DashboardPage = () => {
                 setNewLecture({ title: '', url: '' });
                 toast.success("Lecture Uploaded!");
             }
-        } catch (error) { toast.error("Error uploading"); }
+        } catch { toast.error("Error uploading"); }
         finally { setUploading(false); }
     };
 
@@ -358,7 +357,7 @@ const DashboardPage = () => {
             });
             setLectures(lectures.filter(l => l._id !== id));
             toast.success("Lecture Removed");
-        } catch (error) { toast.error("Failed to delete"); }
+        } catch { toast.error("Failed to delete"); }
     };
 
     if (loading) return (

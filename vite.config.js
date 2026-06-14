@@ -7,7 +7,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // https://vitejs.dev/config/
-export default defineConfig(({ command }) => ({
+export default defineConfig(() => ({
   // ✅ FIX: Absolute path for Vercel stability (Avoids header/MIME errors)
   base: '/',
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Check, X, Search, Shield, Filter, Mail, Calendar, User, Briefcase, Download } from 'lucide-react';
 import toast from 'react-hot-toast';
@@ -13,11 +13,7 @@ const AdminPage = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [stats, setStats] = useState({ total: 0, mentors: 0, students: 0, pending: 0 });
 
-    useEffect(() => {
-        fetchUsers();
-    }, []);
-
-    const fetchUsers = async () => {
+    const fetchUsers = useCallback(async () => {
         try {
             const token = localStorage.getItem('token');
             const res = await fetch(`${API_BASE_URL}/admin/users`, {
@@ -46,7 +42,11 @@ const AdminPage = () => {
         } finally {
             setLoading(false);
         }
-    };
+    }, [navigate]);
+
+    useEffect(() => {
+        fetchUsers();
+    }, [fetchUsers]);
 
     const handleVerify = async (userId, status) => {
         // status: 'verified' | 'rejected'
@@ -73,7 +73,7 @@ const AdminPage = () => {
             } else {
                 toast.error(data.message, { id: toastId });
             }
-        } catch (error) {
+        } catch {
             toast.error("Server Error", { id: toastId });
         }
     };

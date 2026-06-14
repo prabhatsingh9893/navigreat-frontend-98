@@ -19,11 +19,11 @@ const ChatPage = () => {
     const navigate = useNavigate();
     const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState("");
-    const [currentUser, setCurrentUser] = useState(() => {
+    const [currentUser] = useState(() => {
         const userData = localStorage.getItem('userData');
         try {
             return userData ? JSON.parse(userData) : null;
-        } catch (e) {
+        } catch {
             return null;
         }
     });
@@ -79,7 +79,9 @@ const ChatPage = () => {
         if (socket.connected) {
             handleConnect();
         } else {
-            setIsConnected(false);
+            setTimeout(() => {
+                setIsConnected(false);
+            }, 0);
         }
 
         socket.on("connect", handleConnect);
@@ -163,7 +165,7 @@ const ChatPage = () => {
                 });
 
                 // Play Sound
-                notificationSound.current.play().catch(e => console.log("Audio play failed"));
+                notificationSound.current.play().catch(() => console.log("Audio play failed"));
             }
 
             // B. Update Sidebar (Move to Top + Badge)

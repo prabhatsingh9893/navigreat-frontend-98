@@ -83,7 +83,7 @@ const LiveSession = () => {
 
     generateSignature();
     // Depend ONLY on the captured sessionState values, not location.state
-  }, [meetingNumber, passWord, role, username, navigate]);
+  }, [meetingNumber, passWord, role, username, navigate, sessionState.mentorId]);
 
   return (
     <div className="fixed inset-0 z-[50] bg-black h-[100dvh] w-screen flex flex-col">

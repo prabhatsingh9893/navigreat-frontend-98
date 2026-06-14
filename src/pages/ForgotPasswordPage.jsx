@@ -27,7 +27,7 @@ const ForgotPasswordPage = () => {
             } else {
                 toast.error(data.message || "Something went wrong.");
             }
-        } catch (error) {
+        } catch {
             toast.error("Network Error");
         } finally {
             setLoading(false);

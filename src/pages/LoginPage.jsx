@@ -142,7 +142,7 @@ function LoginPage() {
       } else {
         toast.error(data.message);
       }
-    } catch (error) {
+    } catch {
       toast.dismiss(loadingToast);
       toast.error("Server Error");
     }

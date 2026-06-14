@@ -32,7 +32,7 @@ const NotFoundPage = () => {
             Page Not Found
           </h2>
           <p className="text-slate-500 dark:text-slate-400 text-lg leading-relaxed mb-10">
-            Oops! The page you're looking for doesn't exist or has been moved.
+            {"Oops! The page you're looking for doesn't exist or has been moved."}
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">

@@ -142,7 +142,7 @@ const AboutPage = () => {
                       It started with a simple observation: many brilliant students fail to crack top exams or land dream jobs simply due to a lack of guidance — not ability.
                     </p>
                     <p>
-                      We decided to build a platform that removes barriers. No more cold-emailing seniors or guessing your path. Get 1-on-1 mentorship from those who've already done it.
+                      We decided to build a platform that removes barriers. No more cold-emailing seniors or guessing your path. Get 1-on-1 mentorship from those who&apos;ve already done it.
                     </p>
                   </div>
                   {/* Checklist */}

@@ -76,7 +76,7 @@ function MentorsPage() {
               <span className="text-gradient-cyan">Mentor</span>
             </h1>
             <p className="text-xl text-indigo-200/90 max-w-2xl mx-auto leading-relaxed mb-10">
-              Connect with seniors from IITs, NITs, and Top Universities who've walked the road and are ready to guide you.
+              Connect with seniors from IITs, NITs, and Top Universities who&apos;ve walked the road and are ready to guide you.
             </p>
           </motion.div>
 
@@ -139,7 +139,7 @@ function MentorsPage() {
         {!loading && (
           <p className="text-slate-500 dark:text-slate-400 text-sm mb-6">
             Showing <span className="font-bold text-slate-700 dark:text-slate-200">{filteredMentors.length}</span> mentor{filteredMentors.length !== 1 ? 's' : ''}
-            {searchTerm && <> for "<span className="text-indigo-600 dark:text-indigo-400">{searchTerm}</span>"</>}
+            {searchTerm && <> for &ldquo;<span className="text-indigo-600 dark:text-indigo-400">{searchTerm}</span>&rdquo;</>}
             {activeFilter !== 'All' && <> in <span className="text-violet-600 dark:text-violet-400">{activeFilter}</span></>}
           </p>
         )}
@@ -199,7 +199,7 @@ function MentorsPage() {
                   </div>
 
                   <p className="text-slate-500 dark:text-slate-400 text-sm line-clamp-2 leading-relaxed mb-5">
-                    "{mentor.about || 'Ready to guide juniors to achieve their dreams. Let\'s connect and discuss your future path.'}"
+                    &ldquo;{mentor.about || 'Ready to guide juniors to achieve their dreams. Let\'s connect and discuss your future path.'}&rdquo;
                   </p>
 
                   <button

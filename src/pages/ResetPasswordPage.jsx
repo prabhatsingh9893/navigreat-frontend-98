@@ -28,7 +28,7 @@ const ResetPasswordPage = () => {
             } else {
                 toast.error(data.message || "Invalid or Expired Token");
             }
-        } catch (error) {
+        } catch {
             toast.error("Network Error");
         } finally {
             setLoading(false);

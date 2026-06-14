@@ -90,10 +90,15 @@ const Header = () => {
   }, [mobileOpen]);
 
   /* close mobile on route change */
-  useEffect(() => { setMobileOpen(false); }, [location]);
+  useEffect(() => {
+    const handle = setTimeout(() => {
+      setMobileOpen(false);
+    }, 0);
+    return () => clearTimeout(handle);
+  }, [location]);
 
   const handleLogout = async () => {
-    try { await signOut(auth); } catch {}
+    try { await signOut(auth); } catch { /* ignore */ }
     localStorage.removeItem('userData');
     localStorage.removeItem('token');
     setUser(null);
