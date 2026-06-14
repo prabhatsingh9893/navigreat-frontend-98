@@ -6,7 +6,7 @@ import { FadeIn } from './Animations';
 const faqs = [
   {
     question: 'What is NaviGreat?',
-    answer: 'NaviGreat is a mentorship platform that connects college students with verified seniors from IITs, NITs, and Top Universities. Get personalized career guidance, placement tips, and goal-specific roadmaps directly from those who\'ve done it.'
+    answer: 'NaviGreat is a mentorship platform that connects students with verified seniors from IITs, NITs, and Top Universities. Get personalized career guidance, placement tips, and goal-specific roadmaps directly from those who\'ve done it.'
   },
   {
     question: 'Is it free to book a session?',
@@ -53,29 +53,26 @@ const FAQSection = () => {
           {faqs.map((faq, index) => (
             <FadeIn key={index} delay={index * 0.06}>
               <div
-                className={`rounded-2xl border transition-all duration-300 overflow-hidden ${
-                  activeIndex === index
+                className={`rounded-2xl border transition-all duration-300 overflow-hidden ${activeIndex === index
                     ? 'border-indigo-200 dark:border-indigo-700 shadow-lg shadow-indigo-100/50 dark:shadow-indigo-900/20'
                     : 'border-slate-200 dark:border-slate-700 hover:border-indigo-200 dark:hover:border-slate-600'
-                } bg-white dark:bg-slate-800`}
+                  } bg-white dark:bg-slate-800`}
               >
                 <button
                   onClick={() => setActiveIndex(activeIndex === index ? null : index)}
-                  className={`w-full flex justify-between items-center p-6 text-left font-semibold text-base transition-colors duration-200 ${
-                    activeIndex === index
+                  className={`w-full flex justify-between items-center p-6 text-left font-semibold text-base transition-colors duration-200 ${activeIndex === index
                       ? 'text-indigo-700 dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-900/20'
                       : 'text-slate-800 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700/50'
-                  }`}
+                    }`}
                 >
                   <span>{faq.question}</span>
                   <motion.div
                     animate={{ rotate: activeIndex === index ? 180 : 0 }}
                     transition={{ duration: 0.2 }}
-                    className={`flex-shrink-0 ml-4 p-1 rounded-lg ${
-                      activeIndex === index
+                    className={`flex-shrink-0 ml-4 p-1 rounded-lg ${activeIndex === index
                         ? 'bg-indigo-100 dark:bg-indigo-900/40 text-indigo-600 dark:text-indigo-400'
                         : 'bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400'
-                    }`}
+                      }`}
                   >
                     <ChevronDown size={18} />
                   </motion.div>

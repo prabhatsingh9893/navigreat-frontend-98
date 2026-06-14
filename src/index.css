@@ -76,6 +76,11 @@
   @apply dark:bg-slate-800/60 dark:border-slate-700/60 dark:hover:shadow-black/30;
 }
 
+.glass-dark {
+  @apply bg-slate-950/40 backdrop-blur-xl border border-white/10 shadow-2xl rounded-3xl;
+}
+
+
 /* Premium gradient backgrounds */
 @layer utilities {
   .bg-mesh-hero {
