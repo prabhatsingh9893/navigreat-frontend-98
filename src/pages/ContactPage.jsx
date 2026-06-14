@@ -137,11 +137,18 @@ function ContactPage() {
               <div className="mt-8 pt-8 border-t border-gray-200 dark:border-[#2a3942]">
                 <h3 className="text-sm font-bold text-gray-500 dark:text-[#8696a0] uppercase tracking-wider mb-4">Follow Us</h3>
                 <div className="flex gap-4">
-                  {[Twitter, Linkedin, Instagram, Facebook].map((Icon, i) => (
+                  {[
+                    { Icon: Twitter, href: '#' },
+                    { Icon: Linkedin, href: 'https://www.linkedin.com/company/navigreat-the-path-finder/?viewAsMember=true' },
+                    { Icon: Instagram, href: '#' },
+                    { Icon: Facebook, href: '#' }
+                  ].map(({ Icon, href }, i) => (
                     <motion.a
                       key={i}
                       whileHover={{ y: -3 }}
-                      href="#"
+                      href={href}
+                      target={href !== '#' ? '_blank' : undefined}
+                      rel={href !== '#' ? 'noopener noreferrer' : undefined}
                       className="p-3 bg-white dark:bg-[#202c33] border border-gray-200 dark:border-[#2a3942] rounded-full text-gray-500 dark:text-[#8696a0] hover:text-blue-600 dark:hover:text-blue-400 hover:border-blue-200 transition-colors shadow-sm"
                     >
                       <Icon size={20} />

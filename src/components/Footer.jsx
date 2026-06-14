@@ -20,7 +20,7 @@ const footerLinks = {
 
 const socialLinks = [
   { Icon: Twitter, href: '#', label: 'Twitter', color: 'hover:bg-sky-500' },
-  { Icon: Linkedin, href: '#', label: 'LinkedIn', color: 'hover:bg-blue-600' },
+  { Icon: Linkedin, href: 'https://www.linkedin.com/company/navigreat-the-path-finder/?viewAsMember=true', label: 'LinkedIn', color: 'hover:bg-blue-600' },
   { Icon: Instagram, href: '#', label: 'Instagram', color: 'hover:bg-pink-500' },
   { Icon: Facebook, href: '#', label: 'Facebook', color: 'hover:bg-blue-700' },
 ];
@@ -81,6 +81,8 @@ const Footer = () => {
                 <motion.a
                   key={i}
                   href={href}
+                  target={href !== '#' ? '_blank' : undefined}
+                  rel={href !== '#' ? 'noopener noreferrer' : undefined}
                   aria-label={label}
                   whileHover={{ y: -3 }}
                   className={`w-10 h-10 rounded-xl bg-slate-800 flex items-center justify-center text-slate-400 hover:text-white ${color} transition-all duration-200 border border-slate-700/50`}
