@@ -82,7 +82,7 @@ function SignupPage() {
         <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1523240795612-9a054b0db644?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80')] bg-cover bg-center opacity-20"></div>
         <div className="absolute inset-0 bg-gradient-to-br from-indigo-900/90 to-violet-900/90"></div>
 
-        <div className="relative z-10 p-12 max-w-lg glass text-white">
+        <div className="relative z-10 p-12 max-w-lg glass-dark text-white">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
