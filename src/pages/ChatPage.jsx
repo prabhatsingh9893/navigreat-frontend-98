@@ -138,7 +138,10 @@ const ChatPage = () => {
         })
             .then(res => res.json())
             .then(data => {
-                if (data.success) setMessages(data.messages);
+                if (data.success) {
+                    setMessages(data.messages);
+                    window.dispatchEvent(new Event('messageNotificationSync'));
+                }
             });
 
     }, [targetUserId, currentUser]);
@@ -153,6 +156,15 @@ const ChatPage = () => {
             if (isCurrentChat) {
                 setMessages((prev) => [...prev, msg]);
                 scrollToBottom();
+                if (!isMe) {
+                    const token = localStorage.getItem('token');
+                    fetch(`${API_BASE_URL}/messages/${msg.sender}/read`, {
+                        method: 'PUT',
+                        headers: { Authorization: `Bearer ${token}` }
+                    }).then(() => {
+                        window.dispatchEvent(new Event('messageNotificationSync'));
+                    }).catch(err => console.error("Error marking messages as read:", err));
+                }
             } else if (!isMe) {
                 // ✅ Improved Notification
                 // Try to find sender name from contact list or just say "New Message"
@@ -166,6 +178,9 @@ const ChatPage = () => {
 
                 // Play Sound
                 notificationSound.current.play().catch(() => console.log("Audio play failed"));
+
+                // Sync notification count
+                window.dispatchEvent(new Event('messageNotificationSync'));
             }
 
             // B. Update Sidebar (Move to Top + Badge)
