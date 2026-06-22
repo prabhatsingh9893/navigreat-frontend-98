@@ -341,7 +341,7 @@ const Header = () => {
           {/* RIGHT – Hamburger (mobile) */}
           <button
             onClick={() => setMobileOpen(v => !v)}
-            className={`md:hidden p-2 rounded-lg transition-colors ${
+            className={`relative md:hidden p-2 rounded-lg transition-colors ${
               isTransparent
                 ? 'text-slate-600 dark:text-white/80 hover:bg-slate-100 dark:hover:bg-white/10 hover:text-slate-900 dark:hover:text-white'
                 : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/[0.06]'
@@ -349,6 +349,9 @@ const Header = () => {
             aria-label="Toggle menu"
           >
             {mobileOpen ? <X size={22} /> : <Menu size={22} />}
+            {!mobileOpen && unreadCount > 0 && (
+              <span className="absolute top-1.5 right-1.5 flex h-2.5 w-2.5 rounded-full bg-red-500 ring-2 ring-white dark:ring-[#0d1117]"></span>
+            )}
           </button>
         </div>
       </header>
