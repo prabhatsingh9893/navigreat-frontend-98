@@ -10,6 +10,7 @@ import logo from '../assets/startup-logo.png';
 import { signOut } from 'firebase/auth';
 import { auth } from '../firebaseConfig';
 import { useTheme } from '../context/ThemeContext';
+import { API_BASE_URL } from '../config';
 
 /* ─── Nav Links ─── */
 const NAV_LINKS = [
@@ -50,11 +51,59 @@ const Header = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [user, setUser]   = useState(null);
   const [scrolled, setScrolled] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(0);
 
   const { theme, toggleTheme } = useTheme();
   const navigate  = useNavigate();
   const location  = useLocation();
   const dropRef   = useRef(null);
+
+  const fetchUnreadCount = async () => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      setUnreadCount(0);
+      return;
+    }
+    try {
+      const res = await fetch(`${API_BASE_URL}/messages/unread/count`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      const data = await res.json();
+      if (data.success) {
+        setUnreadCount(data.count);
+      }
+    } catch (error) {
+      console.error("Error fetching unread count:", error);
+    }
+  };
+
+  /* unread count sync */
+  useEffect(() => {
+    fetchUnreadCount();
+
+    const interval = setInterval(fetchUnreadCount, 15000);
+
+    window.addEventListener('messageNotificationSync', fetchUnreadCount);
+    window.addEventListener('userUpdated', fetchUnreadCount);
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('messageNotificationSync', fetchUnreadCount);
+      window.removeEventListener('userUpdated', fetchUnreadCount);
+    };
+  }, [location, user]);
+
+  /* update page title with unread count */
+  useEffect(() => {
+    if (unreadCount > 0) {
+      document.title = `(${unreadCount}) NaviGreat`;
+    } else {
+      document.title = 'NaviGreat';
+    }
+    return () => {
+      document.title = 'NaviGreat';
+    };
+  }, [unreadCount]);
 
   /* scroll detection */
   useEffect(() => {
@@ -184,9 +233,16 @@ const Header = () => {
                       : 'hover:bg-slate-100 dark:hover:bg-white/[0.06]'
                   }`}
                 >
-                  {/* Avatar */}
-                  <div className="w-7 h-7 rounded-full overflow-hidden ring-2 ring-indigo-500/40 flex-shrink-0">
-                    <Avatar src={user.image} name={user.username} size="w-full h-full" className="text-[10px]" />
+                  {/* Avatar Container */}
+                  <div className="relative flex-shrink-0">
+                    <div className="w-7 h-7 rounded-full overflow-hidden ring-2 ring-indigo-500/40">
+                      <Avatar src={user.image} name={user.username} size="w-full h-full" className="text-[10px]" />
+                    </div>
+                    {unreadCount > 0 && (
+                      <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[9px] font-semibold text-white ring-2 ring-white dark:ring-[#0d1117]">
+                        {unreadCount}
+                      </span>
+                    )}
                   </div>
                   {/* Name + role */}
                   <div className="text-left hidden lg:block">
@@ -228,7 +284,14 @@ const Header = () => {
                             Dashboard
                           </DropItem>
                           <DropItem to="/chat" icon={<MessageSquare size={15}/>} onClick={() => setDropdownOpen(false)}>
-                            Messages
+                            <div className="flex items-center justify-between w-full">
+                              <span>Messages</span>
+                              {unreadCount > 0 && (
+                                <span className="bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">
+                                  {unreadCount}
+                                </span>
+                              )}
+                            </div>
                           </DropItem>
                           {user.role === 'admin' && (
                             <DropItem to="/admin" icon={<Shield size={15}/>} onClick={() => setDropdownOpen(false)}>
@@ -331,8 +394,15 @@ const Header = () => {
                 {/* User card */}
                 {user && (
                   <div className="flex items-center gap-3 px-3 py-3 mb-3 rounded-xl bg-slate-50 dark:bg-white/[0.04] border border-slate-100 dark:border-white/[0.06]">
-                    <div className="w-9 h-9 rounded-full overflow-hidden ring-2 ring-indigo-500/30 flex-shrink-0">
-                      <Avatar src={user.image} name={user.username} size="w-full h-full" className="text-xs" />
+                    <div className="relative flex-shrink-0">
+                      <div className="w-9 h-9 rounded-full overflow-hidden ring-2 ring-indigo-500/30">
+                        <Avatar src={user.image} name={user.username} size="w-full h-full" className="text-xs" />
+                      </div>
+                      {unreadCount > 0 && (
+                        <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[9px] font-semibold text-white ring-2 ring-white dark:ring-[#0d1117]">
+                          {unreadCount}
+                        </span>
+                      )}
                     </div>
                     <div className="min-w-0">
                       <p className="text-sm font-semibold text-slate-900 dark:text-white truncate">{user.username}</p>
@@ -370,7 +440,14 @@ const Header = () => {
                       Dashboard
                     </MobileItem>
                     <MobileItem to="/chat" icon={<MessageSquare size={16}/>} onClick={() => setMobileOpen(false)}>
-                      Messages
+                      <div className="flex items-center justify-between w-full">
+                        <span>Messages</span>
+                        {unreadCount > 0 && (
+                          <span className="bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">
+                            {unreadCount}
+                          </span>
+                        )}
+                      </div>
                     </MobileItem>
                     {user.role === 'admin' && (
                       <MobileItem to="/admin" icon={<Shield size={16}/>} onClick={() => setMobileOpen(false)}>
