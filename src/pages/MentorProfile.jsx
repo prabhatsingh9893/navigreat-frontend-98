@@ -309,8 +309,47 @@ const MentorProfile = () => {
         }
     };
 
-    if (loading) return <div className="h-screen flex items-center justify-center font-bold text-gray-500 animate-pulse">Loading Profile...</div>;
-    if (!mentor) return <div className="text-center py-20 text-red-500 font-bold">Mentor Not Found</div>;
+    if (loading) return (
+        <div className="min-h-screen bg-slate-50 dark:bg-[#080d14] pt-28 pb-20">
+            <div className="max-w-6xl mx-auto px-6 grid lg:grid-cols-3 gap-8">
+                {/* Left card skeleton */}
+                <div className="bg-white dark:bg-slate-800 rounded-3xl p-8 border border-slate-100 dark:border-slate-700/50 flex flex-col items-center">
+                    <div className="w-32 h-32 rounded-full bg-slate-200 dark:bg-slate-700 animate-pulse mb-5" />
+                    <div className="h-6 w-40 rounded bg-slate-200 dark:bg-slate-700 animate-pulse mb-3" />
+                    <div className="h-4 w-28 rounded bg-slate-200 dark:bg-slate-700 animate-pulse mb-8" />
+                    <div className="h-12 w-full rounded-xl bg-slate-200 dark:bg-slate-700 animate-pulse mb-3" />
+                    <div className="h-12 w-full rounded-xl bg-slate-200 dark:bg-slate-700 animate-pulse" />
+                </div>
+                {/* Right content skeleton */}
+                <div className="lg:col-span-2 space-y-8">
+                    <div className="bg-white dark:bg-slate-800 rounded-3xl p-8 border border-slate-100 dark:border-slate-700/50 space-y-3">
+                        <div className="h-5 w-32 rounded bg-slate-200 dark:bg-slate-700 animate-pulse mb-2" />
+                        <div className="h-3 w-full rounded bg-slate-200 dark:bg-slate-700 animate-pulse" />
+                        <div className="h-3 w-4/5 rounded bg-slate-200 dark:bg-slate-700 animate-pulse" />
+                    </div>
+                    <div className="bg-white dark:bg-slate-800 rounded-3xl p-8 border border-slate-100 dark:border-slate-700/50 space-y-3">
+                        <div className="h-5 w-40 rounded bg-slate-200 dark:bg-slate-700 animate-pulse mb-2" />
+                        <div className="h-20 w-full rounded-xl bg-slate-200 dark:bg-slate-700 animate-pulse" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+    if (!mentor) return (
+        <div className="min-h-screen bg-slate-50 dark:bg-[#080d14] flex items-center justify-center p-6">
+            <div className="text-center max-w-md">
+                <div className="w-20 h-20 bg-slate-100 dark:bg-slate-800 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                    <UserIcon size={40} className="text-slate-400" />
+                </div>
+                <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-3">Mentor not found</h2>
+                <p className="text-slate-500 dark:text-slate-400 mb-8">This mentor may have removed their profile, or the link isn&apos;t quite right.</p>
+                <div className="flex gap-3 justify-center">
+                    <button onClick={() => navigate('/mentors')} className="btn-primary px-6 py-3 rounded-xl">Browse mentors</button>
+                    <button onClick={() => navigate(-1)} className="btn-secondary px-6 py-3 rounded-xl"><ArrowLeft size={16} /> Go back</button>
+                </div>
+            </div>
+        </div>
+    );
 
     return (
         <div className="bg-slate-50 dark:bg-[#080d14] min-h-screen relative font-sans transition-colors duration-300">
