@@ -407,31 +407,28 @@ function HomePage() {
               </div>
             </FadeIn>
 
-            {/* Steps with connecting line */}
-            <div className="relative">
-              {/* Connection line (desktop) */}
-              <div className="hidden md:block absolute top-16 left-[12.5%] right-[12.5%] h-0.5 bg-gradient-to-r from-teal-500 via-sky-500 to-amber-400 z-0" />
-
-              <div className="grid md:grid-cols-4 gap-6 relative z-10">
-                {steps.map((s, idx) => (
-                  <FadeIn key={idx} delay={idx * 0.15}>
-                    <motion.div
-                      whileHover={{ y: -8 }}
-                      className={`step-card hover:shadow-2xl ${s.glow} group`}
-                    >
-                      {/* Step number circle */}
-                      <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${s.color} flex items-center justify-center text-white mb-6 shadow-lg ${s.glow} shadow-lg mx-auto`}>
+            {/* Steps */}
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch">
+              {steps.map((s, idx) => (
+                <FadeIn key={idx} delay={idx * 0.12} className="h-full">
+                  <motion.div
+                    whileHover={{ y: -8 }}
+                    className={`step-card group h-full flex flex-col items-start text-left hover:shadow-2xl ${s.glow}`}
+                  >
+                    {/* Top row: icon + step number */}
+                    <div className="flex items-center justify-between w-full mb-6">
+                      <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${s.color} flex items-center justify-center text-white shadow-lg ${s.glow} group-hover:scale-110 transition-transform duration-300`}>
                         {s.icon}
                       </div>
-                      <div className="absolute top-6 right-6 text-4xl font-black text-slate-100 dark:text-slate-800 group-hover:text-slate-200 dark:group-hover:text-slate-700 transition-colors">
+                      <span className="text-5xl font-black leading-none text-slate-100 dark:text-slate-800 group-hover:text-slate-200 dark:group-hover:text-slate-700 transition-colors">
                         {s.step}
-                      </div>
-                      <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-3 text-center">{s.title}</h3>
-                      <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed text-center">{s.desc}</p>
-                    </motion.div>
-                  </FadeIn>
-                ))}
-              </div>
+                      </span>
+                    </div>
+                    <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2.5">{s.title}</h3>
+                    <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">{s.desc}</p>
+                  </motion.div>
+                </FadeIn>
+              ))}
             </div>
           </div>
         </section>
