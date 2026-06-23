@@ -420,7 +420,7 @@ function HomePage() {
                       <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${s.color} flex items-center justify-center text-white shadow-lg ${s.glow} group-hover:scale-110 transition-transform duration-300`}>
                         {s.icon}
                       </div>
-                      <span className="text-5xl font-black leading-none text-slate-100 dark:text-slate-800 group-hover:text-slate-200 dark:group-hover:text-slate-700 transition-colors">
+                      <span className={`text-5xl font-black leading-none bg-gradient-to-br ${s.color} bg-clip-text text-transparent opacity-40 group-hover:opacity-100 transition-opacity duration-300`}>
                         {s.step}
                       </span>
                     </div>
