@@ -7,8 +7,8 @@ const NotFoundPage = () => {
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-[#080d14] flex items-center justify-center p-6 relative overflow-hidden">
       {/* Background orbs */}
-      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-indigo-200/30 dark:bg-indigo-900/20 rounded-full blur-3xl" />
-      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-violet-200/30 dark:bg-violet-900/20 rounded-full blur-3xl" />
+      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-teal-200/30 dark:bg-teal-900/20 rounded-full blur-3xl" />
+      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-cyan-200/30 dark:bg-cyan-900/20 rounded-full blur-3xl" />
 
       <div className="relative z-10 text-center max-w-lg">
         <motion.div
@@ -22,7 +22,7 @@ const NotFoundPage = () => {
               404
             </h1>
             <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-24 h-24 rounded-3xl bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center shadow-2xl shadow-indigo-500/30">
+              <div className="w-24 h-24 rounded-3xl bg-gradient-to-br from-teal-500 to-cyan-600 flex items-center justify-center shadow-2xl shadow-teal-500/30">
                 <Search size={44} className="text-white" />
               </div>
             </div>
