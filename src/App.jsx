@@ -43,6 +43,10 @@ const ProtectedRoute = ({ children }) => {
 function App() {
   const location = useLocation();
 
+  // Auth pages render as a full-screen branded shell — hide the marketing chrome.
+  const authRoutes = ['/login', '/signup', '/become-mentor', '/signup/mentor', '/forgot-password'];
+  const isAuthRoute = authRoutes.includes(location.pathname) || location.pathname.startsWith('/reset-password');
+
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
@@ -83,7 +87,7 @@ function App() {
       <ScrollToTop />
 
 
-      <Header />
+      {!isAuthRoute && <Header />}
       <main className="flex-grow">
         <AnimatePresence mode="wait">
           <Suspense fallback={<div className="h-screen flex items-center justify-center"><Loader text="Loading..." /></div>}>
@@ -127,7 +131,7 @@ function App() {
           </Suspense>
         </AnimatePresence>
       </main>
-      <Footer />
+      {!isAuthRoute && <Footer />}
     </div >
   );
 }
