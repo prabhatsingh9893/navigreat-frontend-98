@@ -311,19 +311,22 @@ function HomePage() {
                 className="lg:w-1/2 relative hidden lg:flex justify-center"
               >
                 <div className="relative">
-                  {/* Main image */}
+                  {/* Soft brand glow behind */}
+                  <div className="absolute -inset-6 rounded-[2.5rem] bg-gradient-to-br from-teal-400/30 via-cyan-400/20 to-amber-300/20 blur-3xl" />
+                  {/* Tilted gradient backdrop card for depth */}
+                  <div className="absolute -right-5 -top-5 w-[420px] h-full rounded-[2rem] bg-gradient-to-br from-teal-500/20 to-cyan-500/20 rotate-3" />
+
+                  {/* Main image in a brand gradient frame */}
                   <motion.div
-                    animate={{ rotate: ['-1deg', '1deg', '-1deg'] }}
-                    transition={{ repeat: Infinity, duration: 5, ease: 'easeInOut' }}
-                    className="relative z-10"
+                    animate={{ y: [0, -10, 0], rotate: ['-0.6deg', '0.6deg', '-0.6deg'] }}
+                    transition={{ repeat: Infinity, duration: 6, ease: 'easeInOut' }}
+                    className="relative z-10 p-1.5 rounded-3xl bg-gradient-to-br from-teal-400 via-cyan-400 to-sky-400 shadow-2xl shadow-teal-500/25 dark:shadow-black/50"
                   >
                     <img
                       src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=560&q=80"
-                      alt="Students getting mentored"
-                      className="rounded-3xl w-[420px] object-cover shadow-2xl shadow-slate-200/80 dark:shadow-black/50 border border-slate-200 dark:border-white/10"
+                      alt="A mentor guiding students"
+                      className="rounded-[1.35rem] w-[420px] h-[440px] object-cover"
                     />
-                    {/* Glow border */}
-                    <div className="absolute inset-0 rounded-3xl ring-1 ring-slate-200 dark:ring-white/10" />
                   </motion.div>
 
                   {/* Floating card 1 */}
