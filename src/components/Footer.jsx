@@ -30,12 +30,12 @@ const Footer = () => {
     <footer className="relative bg-slate-950 text-slate-400 overflow-hidden">
 
       {/* Top gradient line */}
-      <div className="h-px w-full bg-gradient-to-r from-transparent via-indigo-500 to-transparent opacity-30" />
+      <div className="h-px w-full bg-gradient-to-r from-transparent via-teal-500 to-transparent opacity-30" />
 
       {/* Background orbs */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-indigo-600/10 rounded-full blur-3xl translate-x-1/2 -translate-y-1/2" />
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-violet-600/10 rounded-full blur-3xl -translate-x-1/2 translate-y-1/2" />
+        <div className="absolute top-0 right-0 w-96 h-96 bg-teal-600/10 rounded-full blur-3xl translate-x-1/2 -translate-y-1/2" />
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-cyan-600/10 rounded-full blur-3xl -translate-x-1/2 translate-y-1/2" />
       </div>
 
       {/* ====== CTA BANNER ====== */}
@@ -49,7 +49,7 @@ const Footer = () => {
           </div>
           <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
             <div>
-              <div className="flex items-center gap-2 text-indigo-400 font-semibold text-sm mb-3">
+              <div className="flex items-center gap-2 text-teal-400 font-semibold text-sm mb-3">
                 <Sparkles size={14} className="text-yellow-400" />
                 Share Your Experience
               </div>
@@ -58,7 +58,7 @@ const Footer = () => {
             </div>
             <Link
               to="/contact"
-              className="flex-shrink-0 flex items-center gap-2 bg-white text-indigo-700 px-7 py-4 rounded-2xl font-bold hover:bg-indigo-50 transition-all hover:-translate-y-1 shadow-xl shadow-black/20 group whitespace-nowrap"
+              className="flex-shrink-0 flex items-center gap-2 bg-white text-teal-700 px-7 py-4 rounded-2xl font-bold hover:bg-teal-50 transition-all hover:-translate-y-1 shadow-xl shadow-black/20 group whitespace-nowrap"
             >
               Give Feedback <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
             </Link>
@@ -71,7 +71,7 @@ const Footer = () => {
           {/* Brand */}
           <div className="lg:col-span-1">
             <h3 className="text-2xl font-extrabold text-white mb-4">
-              Navi<span className="text-indigo-400">Great</span>
+              Navi<span className="text-teal-400">Great</span>
             </h3>
             <p className="text-slate-400 text-sm leading-relaxed mb-6">
               Bridging the gap between ambition and achievement. We connect aspiring engineers with verified mentors from IITs, NITs & Top Universities.
@@ -96,7 +96,7 @@ const Footer = () => {
           {/* Platform Links */}
           <div>
             <h4 className="text-white font-bold text-sm uppercase tracking-wider mb-6 flex items-center gap-2">
-              <span className="w-6 h-0.5 bg-indigo-500 rounded-full" />
+              <span className="w-6 h-0.5 bg-teal-500 rounded-full" />
               Platform
             </h4>
             <ul className="space-y-3">
@@ -106,7 +106,7 @@ const Footer = () => {
                     to={link.path}
                     className="text-slate-400 hover:text-white text-sm font-medium transition-all duration-200 flex items-center gap-2 group"
                   >
-                    <span className="w-1 h-1 rounded-full bg-indigo-600 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <span className="w-1 h-1 rounded-full bg-teal-600 opacity-0 group-hover:opacity-100 transition-opacity" />
                     {link.name}
                   </Link>
                 </li>
@@ -117,7 +117,7 @@ const Footer = () => {
           {/* Company Links */}
           <div>
             <h4 className="text-white font-bold text-sm uppercase tracking-wider mb-6 flex items-center gap-2">
-              <span className="w-6 h-0.5 bg-violet-500 rounded-full" />
+              <span className="w-6 h-0.5 bg-cyan-500 rounded-full" />
               Company
             </h4>
             <ul className="space-y-3">
@@ -127,7 +127,7 @@ const Footer = () => {
                     to={link.path}
                     className="text-slate-400 hover:text-white text-sm font-medium transition-all duration-200 flex items-center gap-2 group"
                   >
-                    <span className="w-1 h-1 rounded-full bg-violet-600 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <span className="w-1 h-1 rounded-full bg-cyan-600 opacity-0 group-hover:opacity-100 transition-opacity" />
                     {link.name}
                   </Link>
                 </li>
@@ -150,14 +150,14 @@ const Footer = () => {
                 <li key={i}>
                   {href ? (
                     <a href={href} className="flex items-start gap-3 group hover:text-white transition-colors">
-                      <div className="mt-0.5 p-1.5 rounded-lg bg-slate-800 text-indigo-400 group-hover:bg-indigo-600 group-hover:text-white transition-all flex-shrink-0">
+                      <div className="mt-0.5 p-1.5 rounded-lg bg-slate-800 text-teal-400 group-hover:bg-teal-600 group-hover:text-white transition-all flex-shrink-0">
                         <Icon size={14} />
                       </div>
                       <span className="text-sm leading-relaxed">{text}</span>
                     </a>
                   ) : (
                     <div className="flex items-start gap-3">
-                      <div className="mt-0.5 p-1.5 rounded-lg bg-slate-800 text-indigo-400 flex-shrink-0">
+                      <div className="mt-0.5 p-1.5 rounded-lg bg-slate-800 text-teal-400 flex-shrink-0">
                         <Icon size={14} />
                       </div>
                       <span className="text-sm leading-relaxed">{text}</span>
@@ -173,11 +173,11 @@ const Footer = () => {
               <input
                 type="email"
                 placeholder="your@email.com"
-                className="flex-1 min-w-0 bg-slate-800/70 border border-slate-700 text-white text-sm pl-4 pr-3 py-2.5 rounded-xl focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all placeholder:text-slate-500"
+                className="flex-1 min-w-0 bg-slate-800/70 border border-slate-700 text-white text-sm pl-4 pr-3 py-2.5 rounded-xl focus:outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 transition-all placeholder:text-slate-500"
               />
               <button
                 type="button"
-                className="flex-shrink-0 p-2.5 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 transition-all shadow-lg"
+                className="flex-shrink-0 p-2.5 rounded-xl bg-teal-600 text-white hover:bg-teal-700 transition-all shadow-lg"
               >
                 <Send size={16} />
               </button>

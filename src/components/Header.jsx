@@ -38,7 +38,7 @@ const ActiveDot = () => (
   <motion.span
     layoutId="nav-underline"
     className="absolute -bottom-px left-3 right-3 h-0.5 rounded-full"
-    style={{ background: 'linear-gradient(90deg, #4f46e5, #7c3aed)' }}
+    style={{ background: 'linear-gradient(90deg, #0d9488, #0891b2)' }}
     transition={{ type: 'spring', stiffness: 400, damping: 30 }}
   />
 );
@@ -165,12 +165,12 @@ const Header = () => {
 
   /* ── link text colour ── */
   const linkColor = isTransparent
-    ? 'text-slate-700 dark:text-white/80 hover:text-indigo-600 dark:hover:text-white'
-    : 'text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-white';
+    ? 'text-slate-700 dark:text-white/80 hover:text-teal-600 dark:hover:text-white'
+    : 'text-slate-600 dark:text-slate-300 hover:text-teal-600 dark:hover:text-white';
 
   const activeLinkColor = isTransparent
-    ? 'text-indigo-600 dark:text-white font-semibold'
-    : 'text-indigo-600 dark:text-white font-semibold';
+    ? 'text-teal-600 dark:text-white font-semibold'
+    : 'text-teal-600 dark:text-white font-semibold';
 
   return (
     <>
@@ -235,7 +235,7 @@ const Header = () => {
                 >
                   {/* Avatar Container */}
                   <div className="relative flex-shrink-0">
-                    <div className="w-7 h-7 rounded-full overflow-hidden ring-2 ring-indigo-500/40">
+                    <div className="w-7 h-7 rounded-full overflow-hidden ring-2 ring-teal-500/40">
                       <Avatar src={user.image} name={user.username} size="w-full h-full" className="text-[10px]" />
                     </div>
                     {unreadCount > 0 && (
@@ -321,16 +321,16 @@ const Header = () => {
                   to="/login"
                   className={`px-3.5 py-1.5 text-sm font-medium rounded-lg transition-all ${
                     isTransparent
-                      ? 'text-slate-700 dark:text-white/80 hover:text-indigo-600 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/10'
-                      : 'text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/[0.06]'
+                      ? 'text-slate-700 dark:text-white/80 hover:text-teal-600 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/10'
+                      : 'text-slate-600 dark:text-slate-300 hover:text-teal-600 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/[0.06]'
                   }`}
                 >
                   Log in
                 </Link>
                 <Link
                   to="/signup"
-                  className="px-4 py-1.5 text-sm font-semibold text-white rounded-lg transition-all hover:opacity-90 hover:shadow-lg hover:shadow-indigo-500/20 active:scale-[0.98]"
-                  style={{ background: 'linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)' }}
+                  className="px-4 py-1.5 text-sm font-semibold text-white rounded-lg transition-all hover:opacity-90 hover:shadow-lg hover:shadow-teal-500/20 active:scale-[0.98]"
+                  style={{ background: 'linear-gradient(135deg, #0d9488 0%, #0891b2 100%)' }}
                 >
                   Get started
                 </Link>
@@ -398,7 +398,7 @@ const Header = () => {
                 {user && (
                   <div className="flex items-center gap-3 px-3 py-3 mb-3 rounded-xl bg-slate-50 dark:bg-white/[0.04] border border-slate-100 dark:border-white/[0.06]">
                     <div className="relative flex-shrink-0">
-                      <div className="w-9 h-9 rounded-full overflow-hidden ring-2 ring-indigo-500/30">
+                      <div className="w-9 h-9 rounded-full overflow-hidden ring-2 ring-teal-500/30">
                         <Avatar src={user.image} name={user.username} size="w-full h-full" className="text-xs" />
                       </div>
                       {unreadCount > 0 && (
@@ -409,7 +409,7 @@ const Header = () => {
                     </div>
                     <div className="min-w-0">
                       <p className="text-sm font-semibold text-slate-900 dark:text-white truncate">{user.username}</p>
-                      <p className="text-xs text-indigo-500 capitalize">{user.role}</p>
+                      <p className="text-xs text-teal-500 capitalize">{user.role}</p>
                     </div>
                   </div>
                 )}
@@ -424,11 +424,11 @@ const Header = () => {
                       onClick={() => setMobileOpen(false)}
                       className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
                         active
-                          ? 'bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400'
+                          ? 'bg-teal-50 dark:bg-teal-500/10 text-teal-600 dark:text-teal-400'
                           : 'text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/[0.04] hover:text-slate-900 dark:hover:text-white'
                       }`}
                     >
-                      {active && <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 flex-shrink-0" />}
+                      {active && <span className="w-1.5 h-1.5 rounded-full bg-teal-500 flex-shrink-0" />}
                       {label}
                     </Link>
                   );
@@ -477,7 +477,7 @@ const Header = () => {
                       to="/signup"
                       onClick={() => setMobileOpen(false)}
                       className="block w-full text-center py-2.5 px-4 text-sm font-semibold text-white rounded-xl transition-all hover:opacity-90 mt-2"
-                      style={{ background: 'linear-gradient(135deg, #4f46e5, #7c3aed)' }}
+                      style={{ background: 'linear-gradient(135deg, #0d9488, #0891b2)' }}
                     >
                       Get started free
                     </Link>
