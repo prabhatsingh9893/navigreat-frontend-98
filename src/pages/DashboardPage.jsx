@@ -4,7 +4,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import {
     Share2, BadgeCheck, Users, Clock, Star, Video, Trash2, Plus,
     UploadCloud, Edit2, X, Save, GraduationCap, Camera, LogOut,
-    Settings, Copy, Loader2, Calendar
+    Settings, Copy, Loader2, Calendar, CheckCircle, Sparkles, ChevronRight
 } from "lucide-react";
 import toast from 'react-hot-toast';
 import Avatar from '../components/Avatar'; // ✅ Import Avatar Component
@@ -510,13 +510,14 @@ const DashboardPage = () => {
                         )}
                     </div>
 
-                    {/* Profile Info */}
+                    {/* Profile Info — sits below the banner on the page bg */}
                     <div className="flex-1 mb-2 text-center md:text-left">
-                        <h1 className="text-3xl font-bold text-white drop-shadow-md tracking-tight mb-2">{profile.username || "Mentor Name"}</h1>
-                        <p className="text-white text-lg font-medium flex items-center justify-center md:justify-start gap-3 mt-2">
-                            <span className="bg-white text-teal-900 px-4 py-1 rounded-full font-bold shadow-lg uppercase text-xs tracking-wider">{profile.role}</span>
-                            <span className="hidden md:inline text-white/40">•</span>
-                            <span className="flex items-center gap-2 text-white font-semibold drop-shadow-md"><GraduationCap size={20} /> {profile.college || "University Not Set"}</span>
+                        <h1 className="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight mb-2">{profile.username || "Your Name"}</h1>
+                        <p className="text-lg font-medium flex flex-wrap items-center justify-center md:justify-start gap-3 mt-2">
+                            <span className="bg-teal-600 text-white px-4 py-1 rounded-full font-bold shadow-sm uppercase text-xs tracking-wider capitalize">{profile.role}</span>
+                            <span className="flex items-center gap-2 text-slate-500 dark:text-slate-400 font-semibold">
+                                <GraduationCap size={20} className="text-slate-400" /> {profile.college || "University not set"}
+                            </span>
                         </p>
                     </div>
 
@@ -539,18 +540,34 @@ const DashboardPage = () => {
                 <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-8 pb-10">
                     <div className="md:col-span-2 space-y-6">
 
-                        {/* 0. STUDENT STATS GRID */}
-                        <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
+                        {/* 0. PROFILE COMPLETION PROMPT */}
+                        {(!profile.college || !profile.branch || !profile.about?.trim()) && (
+                            <div className="bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-950/30 dark:to-orange-950/20 border border-amber-200 dark:border-amber-900/40 rounded-2xl p-5 flex items-center gap-4">
+                                <div className="p-3 rounded-xl bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400 flex-shrink-0">
+                                    <Sparkles size={22} />
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                    <p className="font-bold text-slate-900 dark:text-white">Complete your profile</p>
+                                    <p className="text-sm text-slate-500 dark:text-slate-400">Add your college, branch and a short bio so mentors can guide you better.</p>
+                                </div>
+                                <button onClick={() => { setEditForm(profile); setIsEditing(true); }} className="btn-primary px-5 py-2.5 rounded-xl text-sm whitespace-nowrap flex-shrink-0">
+                                    Complete <ChevronRight size={16} />
+                                </button>
+                            </div>
+                        )}
+
+                        {/* 0.1 STUDENT STATS GRID — booking activity */}
+                        <div className="grid grid-cols-3 gap-4">
                             {[
-                                { label: "Requests Sent", val: bookings?.length || 0, icon: Users, color: "text-teal-600", bg: "bg-teal-50 dark:bg-teal-950/40", border: "border-teal-100 dark:border-teal-900/30" },
-                                { label: "University", val: profile.college || "Not Set", icon: GraduationCap, color: "text-cyan-600", bg: "bg-cyan-50 dark:bg-cyan-950/40", border: "border-cyan-100 dark:border-cyan-900/30" },
-                                { label: "Branch", val: profile.branch || "Not Set", icon: BadgeCheck, color: "text-teal-600", bg: "bg-teal-50 dark:bg-teal-950/40", border: "border-teal-100 dark:border-teal-900/30" },
+                                { label: "Requests Sent", val: bookings?.length || 0, icon: Users, color: "text-teal-600 dark:text-teal-400", bg: "bg-teal-50 dark:bg-teal-950/40", border: "border-teal-100 dark:border-teal-900/30" },
+                                { label: "Confirmed", val: bookings?.filter(b => b.status === 'confirmed').length || 0, icon: CheckCircle, color: "text-emerald-600 dark:text-emerald-400", bg: "bg-emerald-50 dark:bg-emerald-950/40", border: "border-emerald-100 dark:border-emerald-900/30" },
+                                { label: "Pending", val: bookings?.filter(b => b.status !== 'confirmed' && b.status !== 'failed').length || 0, icon: Clock, color: "text-amber-600 dark:text-amber-400", bg: "bg-amber-50 dark:bg-amber-950/40", border: "border-amber-100 dark:border-amber-900/30" },
                             ].map((s, i) => (
-                                <div key={i} className={`bg-white dark:bg-[#0d1520] p-5 rounded-2xl shadow-sm border ${s.border} flex items-center gap-4 hover:shadow-md hover:scale-[1.02] transition-all duration-300 cursor-default`}>
+                                <div key={i} className={`bg-white dark:bg-[#0d1520] p-5 rounded-2xl shadow-sm border ${s.border} flex flex-col sm:flex-row items-center gap-3 sm:gap-4 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 cursor-default text-center sm:text-left`}>
                                     <div className={`p-3.5 rounded-xl ${s.bg} ${s.color}`}><s.icon size={24} /></div>
                                     <div className="min-w-0">
-                                        <div className="font-extrabold text-lg md:text-xl text-gray-800 dark:text-gray-100 leading-tight mb-1 truncate">{s.val}</div>
-                                        <div className="text-xs text-gray-500 dark:text-gray-400 uppercase font-bold tracking-wide">{s.label}</div>
+                                        <div className="font-extrabold text-2xl text-gray-800 dark:text-gray-100 leading-none mb-1">{s.val}</div>
+                                        <div className="text-[11px] text-gray-500 dark:text-gray-400 uppercase font-bold tracking-wide">{s.label}</div>
                                     </div>
                                 </div>
                             ))}
@@ -613,8 +630,17 @@ const DashboardPage = () => {
                                 <h3 className="font-bold text-xl text-gray-800 dark:text-white flex items-center gap-2"><Clock size={22} className="text-teal-600" /> My Booking Requests</h3>
                             </div>
                             <div className="p-0">
-                                {bookings?.length === 0 ? (
-                                    <div className="p-8 text-center text-gray-400">You haven&apos;t booked any sessions yet.</div>
+                                {!bookings?.length ? (
+                                    <div className="px-6 py-12 text-center">
+                                        <div className="w-14 h-14 rounded-2xl bg-slate-100 dark:bg-[#151f2e] flex items-center justify-center mx-auto mb-4 text-slate-400">
+                                            <Calendar size={26} />
+                                        </div>
+                                        <p className="font-bold text-slate-700 dark:text-slate-200 mb-1">No bookings yet</p>
+                                        <p className="text-sm text-slate-500 dark:text-slate-400 mb-5 max-w-xs mx-auto">Find a mentor and book your first 1-on-1 session — your requests will show up here.</p>
+                                        <button onClick={() => navigate('/mentors')} className="btn-primary px-6 py-3 rounded-xl text-sm">
+                                            <Users size={16} /> Find a mentor
+                                        </button>
+                                    </div>
                                 ) : (
                                     bookings?.map((b) => (
                                         <div key={b._id} className="p-6 border-b border-slate-150 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-[#151f2e]/60 transition">
