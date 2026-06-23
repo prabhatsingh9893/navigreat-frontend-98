@@ -10,37 +10,33 @@ const values = [
     icon: <BookOpen size={26} />,
     title: 'Quality First',
     desc: 'We manually verify every mentor. No shortcuts, no compromises on the quality of guidance you receive.',
-    color: 'text-indigo-600 dark:text-indigo-400',
-    bg: 'bg-indigo-50 dark:bg-indigo-900/20',
+    grad: 'from-teal-500 to-teal-600',
   },
   {
     icon: <Heart size={26} />,
     title: 'Student-Centric',
     desc: 'Every feature we build starts with one question: does this make students more successful?',
-    color: 'text-rose-600 dark:text-rose-400',
-    bg: 'bg-rose-50 dark:bg-rose-900/20',
+    grad: 'from-amber-400 to-orange-500',
   },
   {
     icon: <Globe size={26} />,
     title: 'Democratise Access',
     desc: 'Great mentorship shouldn\'t be a privilege. We\'re making it accessible to every deserving student.',
-    color: 'text-emerald-600 dark:text-emerald-400',
-    bg: 'bg-emerald-50 dark:bg-emerald-900/20',
+    grad: 'from-sky-500 to-cyan-600',
   },
   {
     icon: <Zap size={26} />,
     title: 'Speed & Simplicity',
     desc: 'From signup to your first session in under 10 minutes. No bureaucracy, no friction.',
-    color: 'text-amber-600 dark:text-amber-400',
-    bg: 'bg-amber-50 dark:bg-amber-900/20',
+    grad: 'from-cyan-500 to-teal-600',
   },
 ];
 
 const teamHighlights = [
-  { val: '500+', label: 'Students Guided', color: 'text-indigo-600 dark:text-indigo-400' },
-  { val: '50+', label: 'Expert Mentors', color: 'text-violet-600 dark:text-violet-400' },
-  { val: '23+', label: 'IITs Covered', color: 'text-emerald-600 dark:text-emerald-400' },
-  { val: '4.9★', label: 'Average Rating', color: 'text-amber-600 dark:text-amber-400' },
+  { val: '500+', label: 'Students Guided', color: 'text-teal-600 dark:text-teal-400' },
+  { val: '50+', label: 'Expert Mentors', color: 'text-cyan-600 dark:text-cyan-400' },
+  { val: '23+', label: 'IITs Covered', color: 'text-sky-600 dark:text-sky-400' },
+  { val: '4.9★', label: 'Average Rating', color: 'text-amber-500 dark:text-amber-400' },
 ];
 
 const AboutPage = () => {
@@ -51,10 +47,10 @@ const AboutPage = () => {
         {/* ====== 1. HERO ====== */}
         <section className="relative py-28 overflow-hidden">
           {/* Gradient background */}
-          <div className="absolute inset-0 bg-gradient-to-br from-indigo-900 via-violet-900 to-purple-900" />
+          <div className="absolute inset-0 bg-gradient-to-br from-teal-900 via-cyan-900 to-sky-900" />
           {/* Orbs */}
-          <div className="absolute top-0 left-0 w-96 h-96 bg-indigo-500/30 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
-          <div className="absolute bottom-0 right-0 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl translate-x-1/3 translate-y-1/3" />
+          <div className="absolute top-0 left-0 w-96 h-96 bg-teal-500/30 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
+          <div className="absolute bottom-0 right-0 w-96 h-96 bg-cyan-500/20 rounded-full blur-3xl translate-x-1/3 translate-y-1/3" />
           {/* Grid */}
           <div className="absolute inset-0 opacity-10"
             style={{
@@ -66,7 +62,7 @@ const AboutPage = () => {
 
           <div className="container mx-auto px-6 relative z-10 text-center">
             <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-              <span className="inline-block px-4 py-1.5 rounded-full bg-white/10 border border-white/20 text-indigo-200 text-sm font-bold tracking-wider mb-6">
+              <span className="inline-block px-4 py-1.5 rounded-full bg-white/10 border border-white/20 text-teal-200 text-sm font-bold tracking-wider mb-6">
                 Our Mission
               </span>
               <h1 className="text-5xl md:text-7xl font-extrabold text-white mb-8 leading-tight tracking-tight">
@@ -74,7 +70,7 @@ const AboutPage = () => {
                 <br />
                 <span className="text-gradient-cyan">Generation of Engineers</span>
               </h1>
-              <p className="max-w-2xl mx-auto text-xl text-indigo-200/90 leading-relaxed">
+              <p className="max-w-2xl mx-auto text-xl text-teal-200/90 leading-relaxed">
                 NaviGreat is bridging the gap between ambition and achievement. We connect aspiring students with verified mentors from top IITs and NITs to democratise career guidance.
               </p>
             </motion.div>
@@ -115,7 +111,7 @@ const AboutPage = () => {
                     className="absolute -bottom-6 -right-6 bg-white dark:bg-slate-800 p-5 rounded-2xl shadow-xl border border-slate-100 dark:border-slate-700"
                   >
                     <div className="flex items-center gap-3">
-                      <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center">
+                      <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-teal-500 to-cyan-600 flex items-center justify-center">
                         <Star size={24} className="text-white fill-white" />
                       </div>
                       <div>
@@ -129,7 +125,7 @@ const AboutPage = () => {
 
               <FadeIn delay={0.2}>
                 <div>
-                  <span className="inline-block px-4 py-1.5 rounded-full bg-indigo-100 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 text-sm font-bold tracking-wide mb-6 border border-indigo-200 dark:border-indigo-800">
+                  <span className="inline-block px-4 py-1.5 rounded-full bg-teal-100 dark:bg-teal-900/40 text-teal-700 dark:text-teal-300 text-sm font-bold tracking-wide mb-6 border border-teal-200 dark:border-teal-800">
                     Why We Started
                   </span>
                   <h2 className="text-4xl font-extrabold text-slate-900 dark:text-white mb-6 leading-tight">
@@ -149,8 +145,8 @@ const AboutPage = () => {
                   <ul className="mt-8 space-y-3">
                     {['Verified IIT & NIT mentors', 'Live 1-on-1 sessions', 'Personalised career roadmaps', 'Secure payment system'].map((item, i) => (
                       <li key={i} className="flex items-center gap-3 text-slate-700 dark:text-slate-300 font-medium">
-                        <div className="w-6 h-6 rounded-full bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center flex-shrink-0">
-                          <CheckCircle size={14} className="text-indigo-600 dark:text-indigo-400" />
+                        <div className="w-6 h-6 rounded-full bg-teal-100 dark:bg-teal-900/30 flex items-center justify-center flex-shrink-0">
+                          <CheckCircle size={14} className="text-teal-600 dark:text-teal-400" />
                         </div>
                         {item}
                       </li>
@@ -170,7 +166,7 @@ const AboutPage = () => {
           <div className="container mx-auto px-6">
             <FadeIn>
               <div className="text-center mb-16">
-                <span className="inline-block px-4 py-1.5 rounded-full bg-violet-100 dark:bg-violet-900/40 text-violet-700 dark:text-violet-300 text-sm font-bold tracking-wide mb-4 border border-violet-200 dark:border-violet-800">
+                <span className="inline-block px-4 py-1.5 rounded-full bg-cyan-100 dark:bg-cyan-900/40 text-cyan-700 dark:text-cyan-300 text-sm font-bold tracking-wide mb-4 border border-cyan-200 dark:border-cyan-800">
                   Core Values
                 </span>
                 <h2 className="text-4xl md:text-5xl font-extrabold text-slate-900 dark:text-white mb-4">
@@ -181,8 +177,8 @@ const AboutPage = () => {
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
               {values.map((v, idx) => (
                 <FadeIn key={idx} delay={idx * 0.1}>
-                  <motion.div whileHover={{ y: -8 }} className="feature-card text-center p-8">
-                    <div className={`w-14 h-14 rounded-2xl ${v.bg} ${v.color} flex items-center justify-center mx-auto mb-5`}>
+                  <motion.div whileHover={{ y: -8 }} className="feature-card text-center p-8 group">
+                    <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${v.grad} text-white flex items-center justify-center mx-auto mb-5 shadow-lg shadow-slate-200/60 dark:shadow-black/30 group-hover:scale-110 transition-transform duration-300`}>
                       {v.icon}
                     </div>
                     <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-3">{v.title}</h3>
@@ -199,18 +195,18 @@ const AboutPage = () => {
           <div className="container mx-auto px-6">
             <FadeIn>
               <div className="relative overflow-hidden rounded-3xl p-12 md:p-16 text-center"
-                style={{ background: 'linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #a855f7 100%)' }}
+                style={{ background: 'linear-gradient(135deg, #0d9488 0%, #0891b2 50%, #0ea5e9 100%)' }}
               >
                 <div className="absolute -top-16 -right-16 w-64 h-64 bg-white/10 rounded-full blur-3xl pointer-events-none" />
                 <div className="absolute -bottom-16 -left-16 w-64 h-64 bg-white/10 rounded-full blur-3xl pointer-events-none" />
                 <div className="relative z-10">
                   <h2 className="text-4xl md:text-5xl font-extrabold text-white mb-4">Ready to find your path?</h2>
-                  <p className="text-indigo-200 text-lg max-w-xl mx-auto mb-10">
+                  <p className="text-teal-200 text-lg max-w-xl mx-auto mb-10">
                     Join the NaviGreat community and get the guidance you deserve.
                   </p>
                   <div className="flex flex-col sm:flex-row gap-4 justify-center">
                     <Link to="/mentors"
-                      className="bg-white text-indigo-700 px-8 py-4 rounded-2xl font-bold hover:bg-indigo-50 transition-all hover:-translate-y-1 shadow-xl flex items-center justify-center gap-2 group"
+                      className="bg-white text-teal-700 px-8 py-4 rounded-2xl font-bold hover:bg-teal-50 transition-all hover:-translate-y-1 shadow-xl flex items-center justify-center gap-2 group"
                     >
                       Find a Mentor <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
                     </Link>
