@@ -4,7 +4,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import {
     Share2, BadgeCheck, Users, Clock, Star, Video, Trash2, Plus,
     UploadCloud, Edit2, X, Save, GraduationCap, Camera, LogOut,
-    Settings, Copy, Loader2, Calendar, CheckCircle, Sparkles, ChevronRight
+    Settings, Copy, Loader2, Calendar, CheckCircle, Sparkles, ChevronRight, Wallet
 } from "lucide-react";
 import toast from 'react-hot-toast';
 import Avatar from '../components/Avatar'; // ✅ Import Avatar Component
@@ -732,10 +732,10 @@ const DashboardPage = () => {
                         {/* Stats Grid */}
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                             {[
-                                { label: "Students", val: "100+", icon: Users, color: "text-teal-600", bg: "bg-teal-50 dark:bg-teal-950/40", border: "border-teal-100 dark:border-teal-900/30" },
-                                { label: "Lectures", val: lectures?.length || 0, icon: Video, color: "text-cyan-600", bg: "bg-cyan-50 dark:bg-cyan-950/40", border: "border-cyan-100 dark:border-cyan-900/30" },
-                                { label: "Rating", val: "4.9", icon: Star, color: "text-amber-500", bg: "bg-amber-50 dark:bg-amber-900/10", border: "border-amber-100 dark:border-amber-900/30" },
-                                { label: "Experience", val: "2+ Yrs", icon: Clock, color: "text-teal-600", bg: "bg-teal-50 dark:bg-teal-950/40", border: "border-teal-100 dark:border-teal-900/30" },
+                                { label: "Lectures", val: lectures?.length || 0, icon: Video, color: "text-teal-600 dark:text-teal-400", bg: "bg-teal-50 dark:bg-teal-950/40", border: "border-teal-100 dark:border-teal-900/30" },
+                                { label: "Session Fee", val: `₹${profile.sessionFee || 500}`, icon: Wallet, color: "text-cyan-600 dark:text-cyan-400", bg: "bg-cyan-50 dark:bg-cyan-950/40", border: "border-cyan-100 dark:border-cyan-900/30" },
+                                { label: "Rating", val: lectures?.length ? "4.9" : "New", icon: Star, color: "text-amber-500 dark:text-amber-400", bg: "bg-amber-50 dark:bg-amber-900/10", border: "border-amber-100 dark:border-amber-900/30" },
+                                { label: profile.isVerified ? "Verified" : "In review", val: profile.isVerified ? "✓" : "…", icon: BadgeCheck, color: profile.isVerified ? "text-emerald-600 dark:text-emerald-400" : "text-amber-600 dark:text-amber-400", bg: profile.isVerified ? "bg-emerald-50 dark:bg-emerald-950/40" : "bg-amber-50 dark:bg-amber-900/10", border: profile.isVerified ? "border-emerald-100 dark:border-emerald-900/30" : "border-amber-100 dark:border-amber-900/30" },
                             ].map((s, i) => (
                                 <div key={i} className={`bg-white dark:bg-[#0d1520] p-5 rounded-2xl shadow-sm border ${s.border} flex items-center gap-4 hover:shadow-md hover:scale-[1.02] transition-all duration-300 cursor-default`}>
                                     <div className={`p-3.5 rounded-xl ${s.bg} ${s.color}`}><s.icon size={24} /></div>

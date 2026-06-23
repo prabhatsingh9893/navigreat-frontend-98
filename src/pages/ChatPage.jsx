@@ -330,14 +330,14 @@ const ChatPage = () => {
                             <span className="w-2.5 h-2.5 bg-amber-500 rounded-full animate-pulse" title="Connecting to server..."></span>
                         )}
                     </div>
-                    <span className="text-xs bg-indigo-50 dark:bg-indigo-950/40 text-indigo-650 dark:text-indigo-400 border border-indigo-100 dark:border-indigo-900/30 px-2.5 py-1 rounded-full font-bold">{contactList.length} Contacts</span>
+                    <span className="text-xs bg-teal-50 dark:bg-teal-950/40 text-teal-650 dark:text-teal-400 border border-teal-100 dark:border-teal-900/30 px-2.5 py-1 rounded-full font-bold">{contactList.length} Contacts</span>
                 </div>
                 <div className="flex-1 overflow-y-auto">
                     {contactList.map(contact => (
                         <div
                             key={contact._id}
                             onClick={() => navigate(`/chat/${contact._id}`)}
-                            className={`p-4 flex items-center gap-3 cursor-pointer hover:bg-slate-50 dark:hover:bg-[#151f2e]/40 transition border-b border-slate-100 dark:border-slate-800/60 ${targetUserId === contact._id ? 'bg-indigo-50/50 dark:bg-[#151f2e] border-r-4 border-r-indigo-500' : ''}`}
+                            className={`p-4 flex items-center gap-3 cursor-pointer hover:bg-slate-50 dark:hover:bg-[#151f2e]/40 transition border-b border-slate-100 dark:border-slate-800/60 ${targetUserId === contact._id ? 'bg-teal-50/50 dark:bg-[#151f2e] border-r-4 border-r-teal-500' : ''}`}
                         >
                             <div className="w-12 h-12 rounded-full bg-slate-100 dark:bg-[#151f2e] overflow-hidden flex-shrink-0 border border-slate-200 dark:border-slate-800 relative">
                                 <img src={contact.image || `https://api.dicebear.com/7.x/initials/svg?seed=${contact.username}`} alt="avatar" className="w-full h-full object-cover" />
@@ -359,7 +359,7 @@ const ChatPage = () => {
                                         {contact.lastMessage || (contact.college ? contact.college : "Tap to chat")}
                                     </p>
                                     {contact.unreadCount > 0 && (
-                                        <span className="bg-indigo-600 text-white text-[10px] font-bold h-5 min-w-[20px] px-1 flex items-center justify-center rounded-full shadow-sm">
+                                        <span className="bg-teal-600 text-white text-[10px] font-bold h-5 min-w-[20px] px-1 flex items-center justify-center rounded-full shadow-sm">
                                             {contact.unreadCount}
                                         </span>
                                     )}
@@ -383,14 +383,14 @@ const ChatPage = () => {
 
                             {/* Clickable Profile Section */}
                             <div onClick={handleViewProfile} className="flex items-center gap-3 cursor-pointer hover:bg-slate-50 dark:hover:bg-[#151f2e] p-1 pr-4 rounded-lg transition">
-                                <div className="w-10 h-10 rounded-full bg-indigo-50 dark:bg-[#151f2e] flex items-center justify-center text-indigo-600 dark:text-indigo-400 font-bold overflow-hidden border border-slate-200 dark:border-slate-800">
+                                <div className="w-10 h-10 rounded-full bg-teal-50 dark:bg-[#151f2e] flex items-center justify-center text-teal-600 dark:text-teal-400 font-bold overflow-hidden border border-slate-200 dark:border-slate-800">
                                     {targetUser?.image ? <img src={targetUser.image} className="w-full h-full object-cover" /> : <UserIcon />}
                                 </div>
                                 <div>
                                     <h3 className="font-bold text-slate-900 dark:text-slate-100 hover:underline">{targetUser?.username || "Loading..."}</h3>
                                     <p className="text-xs flex items-center gap-1 font-medium">
                                         {isTyping ? (
-                                            <span className="text-indigo-500 font-bold animate-pulse">Typing...</span>
+                                            <span className="text-teal-500 font-bold animate-pulse">Typing...</span>
                                         ) : onlineUsers.has(targetUserId) ? (
                                             <span className="text-green-500 flex items-center gap-1">
                                                 <span className="w-2 h-2 bg-green-500 rounded-full"></span> Online
@@ -417,7 +417,7 @@ const ChatPage = () => {
                         {messages.length === 0 ? (
                             <div className="flex flex-col items-center justify-center h-full text-slate-400 dark:text-slate-500 opacity-80">
                                 <div className="bg-white/50 dark:bg-slate-900/40 p-4 rounded-full mb-3 border border-slate-200 dark:border-slate-800">
-                                    <MessageSquare size={32} className="text-indigo-400" />
+                                    <MessageSquare size={32} className="text-teal-400" />
                                 </div>
                                 <p className="text-sm font-medium">No messages yet</p>
                                 <p className="text-xs">Say &quot;Hi&quot; to start the conversation! 👋</p>
@@ -427,7 +427,7 @@ const ChatPage = () => {
                                 const isMe = msg.sender === (currentUser._id || currentUser.id);
                                 return (
                                     <div key={index} className={`flex ${isMe ? 'justify-end' : 'justify-start'}`}>
-                                        <div className={`relative max-w-[70%] p-3 px-4 rounded-2xl shadow-sm text-sm ${isMe ? 'bg-gradient-to-r from-indigo-600 to-violet-600 text-white rounded-tr-none' : 'bg-white dark:bg-[#151f2e] text-slate-800 dark:text-slate-200 rounded-tl-none border border-slate-150/80 dark:border-slate-800/65'}`}>
+                                        <div className={`relative max-w-[70%] p-3 px-4 rounded-2xl shadow-sm text-sm ${isMe ? 'bg-gradient-to-r from-teal-600 to-cyan-600 text-white rounded-tr-none' : 'bg-white dark:bg-[#151f2e] text-slate-800 dark:text-slate-200 rounded-tl-none border border-slate-150/80 dark:border-slate-800/65'}`}>
 
                                             {msg.messageType === 'audio' ? (
                                                 <div className="flex items-center gap-2 min-w-[200px] py-1">
@@ -438,12 +438,12 @@ const ChatPage = () => {
                                             )}
 
                                             <div className="flex items-center justify-end gap-1 mt-0.5 select-none">
-                                                <span className={`text-[10px] min-w-[45px] text-right ${isMe ? 'text-indigo-200' : 'text-slate-400 dark:text-slate-500'}`}>
+                                                <span className={`text-[10px] min-w-[45px] text-right ${isMe ? 'text-teal-200' : 'text-slate-400 dark:text-slate-500'}`}>
                                                     {formatTime(msg.timestamp)}
                                                 </span>
                                                 {isMe && (
                                                     <span>
-                                                        {msg.read ? <CheckCheck size={14} className="text-indigo-200" /> : <Check size={14} className="text-indigo-300" />}
+                                                        {msg.read ? <CheckCheck size={14} className="text-teal-200" /> : <Check size={14} className="text-teal-300" />}
                                                     </span>
                                                 )}
                                             </div>
@@ -470,11 +470,11 @@ const ChatPage = () => {
                                 onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
                                 placeholder={isRecording ? "Recording audio..." : "Type a message..."}
                                 disabled={isRecording}
-                                className={`flex-1 border border-slate-200 dark:border-slate-850 rounded-full px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white dark:focus:bg-[#0d1520] bg-slate-50 dark:bg-[#151f2e] text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 transition ${isRecording ? 'opacity-50 cursor-not-allowed bg-red-50 dark:bg-red-900/10' : ''}`}
+                                className={`flex-1 border border-slate-200 dark:border-slate-850 rounded-full px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:bg-white dark:focus:bg-[#0d1520] bg-slate-50 dark:bg-[#151f2e] text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 transition ${isRecording ? 'opacity-50 cursor-not-allowed bg-red-50 dark:bg-red-900/10' : ''}`}
                             />
                             <button
                                 onClick={newMessage.trim() ? sendMessage : (isRecording ? stopRecording : startRecording)}
-                                className={`${isRecording ? 'bg-red-500 hover:bg-red-600 animate-pulse' : 'bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700'} text-white p-3 rounded-full transition shadow-md active:scale-95 flex items-center justify-center`}
+                                className={`${isRecording ? 'bg-red-500 hover:bg-red-600 animate-pulse' : 'bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-700 hover:to-cyan-700'} text-white p-3 rounded-full transition shadow-md active:scale-95 flex items-center justify-center`}
                             >
                                 {newMessage.trim() ? <Send size={18} /> : (isRecording ? <StopCircle size={20} /> : <Mic size={20} />)}
                             </button>
@@ -483,9 +483,9 @@ const ChatPage = () => {
 
                 </div>
             ) : (
-                <div className="hidden md:flex flex-1 flex-col items-center justify-center text-slate-400 dark:text-slate-500 bg-slate-50/50 dark:bg-[#080d14] border-l border-slate-200 dark:border-slate-800/80 border-b-[6px] border-b-indigo-500">
+                <div className="hidden md:flex flex-1 flex-col items-center justify-center text-slate-400 dark:text-slate-500 bg-slate-50/50 dark:bg-[#080d14] border-l border-slate-200 dark:border-slate-800/80 border-b-[6px] border-b-teal-500">
                     <div className="w-40 h-40 bg-slate-100 dark:bg-[#151f2e] rounded-full flex items-center justify-center mb-6 border border-slate-200 dark:border-slate-850 shadow-inner">
-                        <MessageSquare size={64} className="opacity-20 text-indigo-500 dark:text-indigo-400" />
+                        <MessageSquare size={64} className="opacity-20 text-teal-500 dark:text-teal-400" />
                     </div>
                     <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-200">Welcome to Chat</h2>
                     <p className="mt-2 text-slate-500 dark:text-slate-400">Select a contact to start messaging.</p>
