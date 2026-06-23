@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { Search, MapPin, BookOpen, User as UserIcon, Frown, Sparkles, Filter, ChevronRight, X } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Search, MapPin, BookOpen, Frown, Sparkles, Filter, ChevronRight, X, Wallet, AlertTriangle, RotateCw, Users } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
 import { API_BASE_URL } from '../config';
 import Avatar from '../components/Avatar';
-import { motion, AnimatePresence } from 'framer-motion';
-import { FadeIn } from '../components/Animations';
+import { motion } from 'framer-motion';
 import { MentorCardSkeleton } from '../components/SkeletonLoader';
 
 const BRANCH_FILTERS = ['All', 'CSE', 'ECE', 'Mechanical', 'Civil', 'Chemical', 'Electrical'];
@@ -14,18 +13,27 @@ function MentorsPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [activeFilter, setActiveFilter] = useState('All');
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    fetch(`${API_BASE_URL}/mentors`)
-      .then(res => res.json())
-      .then(data => {
-        if (data.success && Array.isArray(data.mentors)) setMentors(data.mentors);
-        else setMentors([]);
-      })
-      .catch(() => setMentors([]))
-      .finally(() => setLoading(false));
+  const loadMentors = useCallback(async () => {
+    setLoading(true);
+    setError(false);
+    try {
+      const res = await fetch(`${API_BASE_URL}/mentors`);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      if (data.success && Array.isArray(data.mentors)) setMentors(data.mentors);
+      else throw new Error('Unexpected response');
+    } catch {
+      setError(true);
+      setMentors([]);
+    } finally {
+      setLoading(false);
+    }
   }, []);
+
+  useEffect(() => { loadMentors(); }, [loadMentors]);
 
   const filteredMentors = mentors.filter(mentor => {
     const matchesSearch =
@@ -136,7 +144,7 @@ function MentorsPage() {
         </div>
 
         {/* Results count */}
-        {!loading && (
+        {!loading && !error && (
           <p className="text-slate-500 dark:text-slate-400 text-sm mb-6">
             Showing <span className="font-bold text-slate-700 dark:text-slate-200">{filteredMentors.length}</span> mentor{filteredMentors.length !== 1 ? 's' : ''}
             {searchTerm && <> for &ldquo;<span className="text-teal-600 dark:text-teal-400">{searchTerm}</span>&rdquo;</>}
@@ -144,107 +152,133 @@ function MentorsPage() {
           </p>
         )}
 
-        {/* Mentors Grid */}
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-        >
-          {loading ? (
-            [1, 2, 3, 4, 5, 6].map((n) => <MentorCardSkeleton key={n} />)
-          ) : filteredMentors.length > 0 ? (
-            filteredMentors.map((mentor) => (
-              <motion.div
-                key={mentor._id}
-                variants={itemVariants}
-                className="mentor-card-premium group shadow-sm hover:shadow-2xl hover:shadow-teal-100/50 dark:hover:shadow-black/40"
-              >
-                {/* Image */}
-                <div className="relative h-64 overflow-hidden bg-slate-100 dark:bg-slate-800">
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-10" />
-                  {/* Badge */}
-                  <div className="absolute top-4 right-4 z-20 bg-white/15 backdrop-blur-md border border-white/20 text-white px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide">
-                    {mentor.role || 'Mentor'}
-                  </div>
-                  <Avatar
-                    src={mentor.image}
-                    name={mentor.username}
-                    size="w-full h-full"
-                    fontSize="text-6xl"
-                    className="rounded-none group-hover:scale-110 transition-transform duration-700 object-cover"
-                    loading="lazy"
-                  />
-                  {/* Name overlay */}
-                  <div className="absolute bottom-5 left-5 z-20 text-white">
-                    <h3 className="font-bold text-xl leading-tight mb-1">{mentor.username}</h3>
-                    <p className="text-white/75 text-sm flex items-center gap-1.5">
-                      <MapPin size={12} className="text-teal-400" />
-                      {mentor.college?.split(',')[0] || 'Top University'}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Card Body */}
-                <div className="p-6 bg-white dark:bg-slate-800 relative">
-                  {/* Decorative circle */}
-                  <div className="absolute -top-5 right-6 w-10 h-10 bg-gradient-to-br from-teal-500 to-cyan-600 rounded-xl flex items-center justify-center text-white border-2 border-white dark:border-slate-800 shadow-lg z-20 group-hover:scale-110 transition duration-300">
-                    <BookOpen size={16} />
-                  </div>
-
-                  <div className="mb-5 pt-2">
-                    <span className="inline-block bg-teal-50 dark:bg-teal-900/30 text-teal-700 dark:text-teal-300 px-3 py-1 rounded-lg text-xs font-bold border border-teal-100 dark:border-teal-800">
-                      {mentor.branch || 'General Engineering'}
-                    </span>
-                  </div>
-
-                  <p className="text-slate-500 dark:text-slate-400 text-sm line-clamp-2 leading-relaxed mb-5">
-                    &ldquo;{mentor.about || 'Ready to guide juniors to achieve their dreams. Let\'s connect and discuss your future path.'}&rdquo;
-                  </p>
-
-                  <button
-                    onClick={() => navigate(`/mentor/${mentor._id}`)}
-                    className="btn-primary w-full py-3 rounded-xl text-sm"
-                  >
-                    View Profile <ChevronRight size={16} />
-                  </button>
-                </div>
-              </motion.div>
-            ))
-          ) : (
-            <div className="col-span-3 text-center py-24">
-              <div className="w-24 h-24 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-6 relative">
-                <div className="absolute inset-0 bg-teal-100 dark:bg-teal-900/30 rounded-full animate-ping opacity-30" />
-                <Frown size={44} className="text-slate-400 dark:text-slate-500 relative z-10" />
-              </div>
-              <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-3">No mentors found</h3>
-              <p className="text-slate-500 dark:text-slate-400 max-w-md mx-auto mb-8">
-                {searchTerm
-                  ? `We couldn't find anyone matching "${searchTerm}" in ${activeFilter !== 'All' ? activeFilter : 'any branch'}.`
-                  : 'No mentors in this category yet. Check back soon!'
-                }
-              </p>
-              <div className="flex items-center justify-center gap-3">
-                {searchTerm && (
-                  <button
-                    onClick={() => setSearchTerm('')}
-                    className="btn-secondary px-6 py-3 rounded-xl"
-                  >
-                    Clear Search
-                  </button>
-                )}
-                {activeFilter !== 'All' && (
-                  <button
-                    onClick={() => setActiveFilter('All')}
-                    className="btn-primary px-6 py-3 rounded-xl"
-                  >
-                    Show All Mentors
-                  </button>
-                )}
-              </div>
+        {/* ===== ERROR STATE ===== */}
+        {!loading && error && (
+          <div className="text-center py-24">
+            <div className="w-20 h-20 bg-red-50 dark:bg-red-900/20 rounded-2xl flex items-center justify-center mx-auto mb-6">
+              <AlertTriangle size={40} className="text-red-500" />
             </div>
-          )}
-        </motion.div>
+            <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-3">We couldn&apos;t load mentors</h3>
+            <p className="text-slate-500 dark:text-slate-400 max-w-md mx-auto mb-8">
+              Something went wrong reaching our servers. Check your connection and try again.
+            </p>
+            <button onClick={loadMentors} className="btn-primary px-6 py-3 rounded-xl">
+              <RotateCw size={16} /> Try again
+            </button>
+          </div>
+        )}
+
+        {/* ===== LOADING / DATA / EMPTY ===== */}
+        {!error && (
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+          >
+            {loading ? (
+              [1, 2, 3, 4, 5, 6].map((n) => <MentorCardSkeleton key={n} />)
+            ) : filteredMentors.length > 0 ? (
+              filteredMentors.map((mentor) => (
+                <motion.div
+                  key={mentor._id}
+                  variants={itemVariants}
+                  className="mentor-card-premium group shadow-sm hover:shadow-2xl hover:shadow-teal-100/50 dark:hover:shadow-black/40"
+                >
+                  {/* Image */}
+                  <div className="relative h-64 overflow-hidden bg-slate-100 dark:bg-slate-800">
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-10" />
+                    {/* Badge */}
+                    <div className="absolute top-4 right-4 z-20 bg-white/15 backdrop-blur-md border border-white/20 text-white px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide">
+                      {mentor.role || 'Mentor'}
+                    </div>
+                    <Avatar
+                      src={mentor.image}
+                      name={mentor.username}
+                      size="w-full h-full"
+                      fontSize="text-6xl"
+                      className="rounded-none group-hover:scale-110 transition-transform duration-700 object-cover"
+                      loading="lazy"
+                    />
+                    {/* Name overlay */}
+                    <div className="absolute bottom-5 left-5 z-20 text-white">
+                      <h3 className="font-bold text-xl leading-tight mb-1">{mentor.username}</h3>
+                      <p className="text-white/75 text-sm flex items-center gap-1.5">
+                        <MapPin size={12} className="text-teal-400" />
+                        {mentor.college?.split(',')[0] || 'Top University'}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Card Body */}
+                  <div className="p-6 bg-white dark:bg-slate-800 relative">
+                    {/* Decorative circle */}
+                    <div className="absolute -top-5 right-6 w-10 h-10 bg-gradient-to-br from-teal-500 to-cyan-600 rounded-xl flex items-center justify-center text-white border-2 border-white dark:border-slate-800 shadow-lg z-20 group-hover:scale-110 transition duration-300">
+                      <BookOpen size={16} />
+                    </div>
+
+                    {/* Branch + fee */}
+                    <div className="flex items-center justify-between gap-2 mb-4 pt-2">
+                      <span className="inline-block bg-teal-50 dark:bg-teal-900/30 text-teal-700 dark:text-teal-300 px-3 py-1 rounded-lg text-xs font-bold border border-teal-100 dark:border-teal-800">
+                        {mentor.branch || 'General Engineering'}
+                      </span>
+                      <span className="flex items-center gap-1 text-slate-700 dark:text-slate-200 text-sm font-bold">
+                        <Wallet size={14} className="text-amber-500" />
+                        ₹{mentor.sessionFee ?? 500}
+                        <span className="text-slate-400 dark:text-slate-500 font-medium text-xs">/session</span>
+                      </span>
+                    </div>
+
+                    <p className="text-slate-500 dark:text-slate-400 text-sm line-clamp-2 leading-relaxed mb-5">
+                      &ldquo;{mentor.about || 'Ready to guide juniors to achieve their dreams. Let\'s connect and discuss your future path.'}&rdquo;
+                    </p>
+
+                    <button
+                      onClick={() => navigate(`/mentor/${mentor._id}`)}
+                      className="btn-primary w-full py-3 rounded-xl text-sm"
+                    >
+                      View Profile <ChevronRight size={16} />
+                    </button>
+                  </div>
+                </motion.div>
+              ))
+            ) : (searchTerm || activeFilter !== 'All') ? (
+              /* No results for the current search/filter */
+              <div className="col-span-full text-center py-24">
+                <div className="w-24 h-24 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-6 relative">
+                  <div className="absolute inset-0 bg-teal-100 dark:bg-teal-900/30 rounded-full animate-ping opacity-30" />
+                  <Frown size={44} className="text-slate-400 dark:text-slate-500 relative z-10" />
+                </div>
+                <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-3">No mentors found</h3>
+                <p className="text-slate-500 dark:text-slate-400 max-w-md mx-auto mb-8">
+                  We couldn&apos;t find anyone {searchTerm && <>matching &ldquo;{searchTerm}&rdquo;</>} {activeFilter !== 'All' && <>in {activeFilter}</>}. Try a different search or branch.
+                </p>
+                <div className="flex items-center justify-center gap-3">
+                  {searchTerm && (
+                    <button onClick={() => setSearchTerm('')} className="btn-secondary px-6 py-3 rounded-xl">Clear search</button>
+                  )}
+                  {activeFilter !== 'All' && (
+                    <button onClick={() => setActiveFilter('All')} className="btn-primary px-6 py-3 rounded-xl">Show all mentors</button>
+                  )}
+                </div>
+              </div>
+            ) : (
+              /* Genuinely no mentors on the platform yet */
+              <div className="col-span-full text-center py-24">
+                <div className="w-24 h-24 bg-teal-50 dark:bg-teal-900/20 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                  <Users size={44} className="text-teal-500" />
+                </div>
+                <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-3">Mentors are joining soon</h3>
+                <p className="text-slate-500 dark:text-slate-400 max-w-md mx-auto mb-8">
+                  We&apos;re onboarding verified seniors from top colleges. Check back shortly — or share your own experience as a mentor.
+                </p>
+                <Link to="/become-mentor" className="btn-primary px-6 py-3 rounded-xl inline-flex">
+                  Become a mentor <ChevronRight size={16} />
+                </Link>
+              </div>
+            )}
+          </motion.div>
+        )}
       </div>
     </div>
   );

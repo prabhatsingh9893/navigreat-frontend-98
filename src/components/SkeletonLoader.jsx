@@ -13,34 +13,20 @@ export const MetricSkeleton = () => (
   </div>
 );
 
+// Mirrors the real MentorsPage card (image header + body) so there's no
+// layout shift when the data swaps in.
 export const MentorCardSkeleton = () => (
-  <div className="bg-white dark:bg-slate-850 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 flex flex-col justify-between h-full hover:shadow-md transition-shadow duration-300">
-    <div>
-      <div className="flex items-center gap-4 mb-4">
-        {/* Avatar */}
-        <div className={`w-16 h-16 rounded-full ${shimmerClass}`}></div>
-        {/* Name and role */}
-        <div className="space-y-2 flex-1">
-          <div className={`h-4 w-3/4 ${shimmerClass}`}></div>
-          <div className={`h-3 w-1/2 ${shimmerClass}`}></div>
-        </div>
-      </div>
-      {/* College and Branch */}
-      <div className="space-y-2 mb-4">
-        <div className={`h-3 w-5/6 ${shimmerClass}`}></div>
-        <div className={`h-3 w-2/3 ${shimmerClass}`}></div>
-      </div>
-      {/* About */}
-      <div className="space-y-1.5 mb-6">
-        <div className={`h-3 w-full ${shimmerClass}`}></div>
+  <div className="rounded-3xl overflow-hidden bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700/50 shadow-sm">
+    {/* Image header */}
+    <div className="h-64 animate-pulse bg-slate-200 dark:bg-slate-700" />
+    {/* Body */}
+    <div className="p-6 space-y-4">
+      <div className={`h-6 w-28 ${shimmerClass}`}></div>
+      <div className="space-y-2">
         <div className={`h-3 w-full ${shimmerClass}`}></div>
         <div className={`h-3 w-4/5 ${shimmerClass}`}></div>
       </div>
-    </div>
-    {/* Buttons */}
-    <div className="flex gap-3">
-      <div className={`h-11 flex-1 ${shimmerClass}`}></div>
-      <div className={`h-11 flex-1 ${shimmerClass}`}></div>
+      <div className={`h-11 w-full rounded-xl ${shimmerClass}`}></div>
     </div>
   </div>
 );
