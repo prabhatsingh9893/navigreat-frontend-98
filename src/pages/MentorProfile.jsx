@@ -320,7 +320,7 @@ const MentorProfile = () => {
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-50 via-slate-50/40 to-transparent dark:from-[#080d14] dark:via-[#080d14]/40"></div>
 
                 <div className="absolute top-8 left-8 z-30">
-                    <button onClick={() => navigate(-1)} className="flex items-center gap-2 text-slate-700 dark:text-white/80 hover:text-indigo-600 dark:hover:text-white transition font-semibold bg-white/40 dark:bg-white/10 backdrop-blur-md px-4 py-2 rounded-full border border-slate-200 dark:border-white/10 hover:bg-white/60 dark:hover:bg-white/20 shadow-sm">
+                    <button onClick={() => navigate(-1)} className="flex items-center gap-2 text-slate-700 dark:text-white/80 hover:text-teal-600 dark:hover:text-white transition font-semibold bg-white/40 dark:bg-white/10 backdrop-blur-md px-4 py-2 rounded-full border border-slate-200 dark:border-white/10 hover:bg-white/60 dark:hover:bg-white/20 shadow-sm">
                         <ArrowLeft size={18} /> {mentor?.role === 'mentor' ? 'Back to Mentors' : 'Back'}
                     </button>
                 </div>
@@ -355,17 +355,17 @@ const MentorProfile = () => {
                                     {isLiveNow ? (
                                         <div className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 bg-red-600 text-white px-3 py-1 rounded-full text-[10px] font-bold border-4 border-white dark:border-[#0d1520] tracking-widest shadow-lg animate-bounce uppercase">LIVE NOW</div>
                                     ) : (
-                                        <div className="absolute bottom-2 right-2 bg-indigo-500 text-white p-1.5 rounded-full border-4 border-white dark:border-[#0d1520] shadow-md"><CheckCircle size={16} fill="currentColor" /></div>
+                                        <div className="absolute bottom-2 right-2 bg-teal-500 text-white p-1.5 rounded-full border-4 border-white dark:border-[#0d1520] shadow-md"><CheckCircle size={16} fill="currentColor" /></div>
                                     )}
                                 </div>
 
                                 <h1 className="text-3xl font-extrabold text-slate-900 dark:text-white capitalize mb-2">{mentor.username}</h1>
 
                                 <div className="flex items-center justify-center gap-2 mb-6">
-                                    <span className="px-3 py-1 rounded-full bg-indigo-50/80 dark:bg-indigo-900/20 text-indigo-700 dark:text-indigo-300 text-xs font-bold border border-indigo-100/80 dark:border-indigo-900/30 flex items-center gap-1">
+                                    <span className="px-3 py-1 rounded-full bg-teal-50/80 dark:bg-teal-900/20 text-teal-700 dark:text-teal-300 text-xs font-bold border border-teal-100/80 dark:border-teal-900/30 flex items-center gap-1">
                                         <Briefcase size={12} /> {mentor.role || "Mentor"}
                                     </span>
-                                    <span className="px-3 py-1 rounded-full bg-violet-50/80 dark:bg-violet-900/20 text-violet-700 dark:text-violet-300 text-xs font-bold border border-violet-100/80 dark:border-violet-900/30 flex items-center gap-1">
+                                    <span className="px-3 py-1 rounded-full bg-cyan-50/80 dark:bg-cyan-900/20 text-cyan-700 dark:text-cyan-300 text-xs font-bold border border-cyan-100/80 dark:border-cyan-900/30 flex items-center gap-1">
                                         <MapPin size={12} /> {mentor.college?.split(',')[0]}
                                     </span>
                                 </div>
@@ -388,7 +388,7 @@ const MentorProfile = () => {
                                                     <div className="text-xl font-bold text-slate-800 dark:text-slate-100">
                                                         {new Date(sessions.filter(s => new Date(s.startTime) > new Date()).sort((a, b) => new Date(a.startTime) - new Date(b.startTime))[0].startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                                     </div>
-                                                    <div className="text-sm font-medium text-indigo-600 dark:text-indigo-400">
+                                                    <div className="text-sm font-medium text-teal-600 dark:text-teal-400">
                                                         {new Date(sessions.filter(s => new Date(s.startTime) > new Date()).sort((a, b) => new Date(a.startTime) - new Date(b.startTime))[0].startTime).toLocaleDateString([], { month: 'long', day: 'numeric', weekday: 'short' })}
                                                     </div>
                                                 </div>
@@ -396,19 +396,19 @@ const MentorProfile = () => {
 
                                             {/* Always show Book Session Button - Only for Mentors */}
                                             {mentor.role === 'mentor' && (
-                                                <button onClick={handleOpenBookingModal} className="w-full bg-gradient-to-r from-indigo-600 to-violet-600 text-white py-4 rounded-xl font-bold hover:from-indigo-700 hover:to-violet-700 transition-all duration-300 shadow-lg shadow-indigo-500/20 hover:-translate-y-0.5 active:scale-[0.98] flex items-center justify-center gap-2 group">
+                                                <button onClick={handleOpenBookingModal} className="w-full bg-gradient-to-r from-teal-600 to-cyan-600 text-white py-4 rounded-xl font-bold hover:from-teal-700 hover:to-cyan-700 transition-all duration-300 shadow-lg shadow-teal-500/20 hover:-translate-y-0.5 active:scale-[0.98] flex items-center justify-center gap-2 group">
                                                     <Zap size={18} className="text-yellow-300 fill-yellow-300 group-hover:scale-110 transition" /> Book Priority Session
                                                 </button>
                                             )}
                                         </>
                                     )}
-                                    <button onClick={() => navigate(`/chat/${mentor._id}`)} className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-200 py-3.5 rounded-xl font-bold hover:border-indigo-500 dark:hover:border-indigo-500 hover:text-indigo-600 dark:hover:text-indigo-400 transition-all duration-300 hover:-translate-y-0.5 flex items-center justify-center gap-2 shadow-sm">
+                                    <button onClick={() => navigate(`/chat/${mentor._id}`)} className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-200 py-3.5 rounded-xl font-bold hover:border-teal-500 dark:hover:border-teal-500 hover:text-teal-600 dark:hover:text-teal-400 transition-all duration-300 hover:-translate-y-0.5 flex items-center justify-center gap-2 shadow-sm">
                                         <MessageSquare size={18} /> Chat with Mentor
                                     </button>
                                     <button onClick={() => {
                                         navigator.clipboard.writeText(window.location.href);
                                         toast.success("Profile link copied to clipboard!");
-                                    }} className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-200 py-3.5 rounded-xl font-bold hover:border-violet-500 dark:hover:border-violet-500 hover:text-violet-600 dark:hover:text-violet-400 transition-all duration-300 hover:-translate-y-0.5 flex items-center justify-center gap-2 shadow-sm">
+                                    }} className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-200 py-3.5 rounded-xl font-bold hover:border-cyan-500 dark:hover:border-cyan-500 hover:text-cyan-600 dark:hover:text-cyan-400 transition-all duration-300 hover:-translate-y-0.5 flex items-center justify-center gap-2 shadow-sm">
                                         <Share2 size={18} /> Share Profile
                                     </button>
                                 </div>
@@ -424,15 +424,15 @@ const MentorProfile = () => {
                                 className="mt-6 grid grid-cols-3 gap-4"
                             >
                                 <div className="bg-white dark:bg-[#0d1520] p-4 rounded-2xl border border-slate-150/80 dark:border-slate-800/80 shadow-sm text-center flex flex-col justify-center items-center">
-                                    <div className="text-2xl font-extrabold text-indigo-600 dark:text-indigo-400">{lectures.length}</div>
+                                    <div className="text-2xl font-extrabold text-teal-600 dark:text-teal-400">{lectures.length}</div>
                                     <div className="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider mt-1">Lectures</div>
                                 </div>
                                 <div className="bg-white dark:bg-[#0d1520] p-4 rounded-2xl border border-slate-150/80 dark:border-slate-800/80 shadow-sm text-center flex flex-col justify-center items-center">
-                                    <div className="text-2xl font-extrabold text-violet-600 dark:text-violet-400">4.9</div>
+                                    <div className="text-2xl font-extrabold text-cyan-600 dark:text-cyan-400">4.9</div>
                                     <div className="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider mt-1">Rating</div>
                                 </div>
                                 <div className="bg-white dark:bg-[#0d1520] p-4 rounded-2xl border border-slate-150/80 dark:border-slate-800/80 shadow-sm text-center flex flex-col justify-center items-center">
-                                    <div className="text-xl font-extrabold text-indigo-600 dark:text-indigo-400">₹{mentor.sessionFee || 500}</div>
+                                    <div className="text-xl font-extrabold text-teal-600 dark:text-teal-400">₹{mentor.sessionFee || 500}</div>
                                     <div className="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider mt-1.5">Fee</div>
                                 </div>
                             </motion.div>
@@ -466,7 +466,7 @@ const MentorProfile = () => {
                                     {/* About Section */}
                                     <div>
                                         <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
-                                            <div className="p-2 bg-indigo-50 dark:bg-indigo-900/20 rounded-lg text-indigo-600 dark:text-indigo-400"><UserIcon size={20} /></div>
+                                            <div className="p-2 bg-teal-50 dark:bg-teal-900/20 rounded-lg text-teal-600 dark:text-teal-400"><UserIcon size={20} /></div>
                                             About Me
                                         </h3>
                                         <div className="bg-slate-50/50 dark:bg-[#151f2e]/30 p-6 rounded-2xl border border-slate-150/80 dark:border-slate-800/80">
@@ -479,7 +479,7 @@ const MentorProfile = () => {
                                     {/* Schedule Section */}
                                     <div>
                                         <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
-                                            <div className="p-2 bg-violet-50 dark:bg-violet-900/20 rounded-lg text-violet-600 dark:text-violet-400"><Calendar size={20} /></div>
+                                            <div className="p-2 bg-cyan-50 dark:bg-cyan-900/20 rounded-lg text-cyan-600 dark:text-cyan-400"><Calendar size={20} /></div>
                                             Upcoming Schedule
                                         </h3>
 
@@ -507,9 +507,9 @@ const MentorProfile = () => {
                                                         return (
                                                             <div key={session._id || session.id} className={`relative pl-12 transition-all hover:pl-14 duration-300 group`}>
                                                                 {/* Timeline Dot */}
-                                                                <div className={`absolute left-[11px] top-6 w-3 h-3 rounded-full border-2 border-white dark:border-[#0d1520] shadow-sm z-10 ${isSessionLive ? 'bg-red-500 animate-pulse ring-4 ring-red-100 dark:ring-red-950' : 'bg-indigo-500 dark:bg-indigo-400'}`}></div>
+                                                                <div className={`absolute left-[11px] top-6 w-3 h-3 rounded-full border-2 border-white dark:border-[#0d1520] shadow-sm z-10 ${isSessionLive ? 'bg-red-500 animate-pulse ring-4 ring-red-100 dark:ring-red-950' : 'bg-teal-500 dark:bg-teal-400'}`}></div>
 
-                                                                <div className={`bg-white dark:bg-[#151f2e]/40 p-5 rounded-2xl border ${isSessionLive ? 'border-red-200 dark:border-red-900/50 shadow-red-100 dark:shadow-red-900/20 ring-1 ring-red-100 dark:ring-red-900/30' : 'border-slate-150/80 dark:border-slate-800/85 hover:border-indigo-300 dark:hover:border-indigo-800'} shadow-sm transition-all group-hover:shadow-md flex flex-col sm:flex-row sm:items-center justify-between gap-4`}>
+                                                                <div className={`bg-white dark:bg-[#151f2e]/40 p-5 rounded-2xl border ${isSessionLive ? 'border-red-200 dark:border-red-900/50 shadow-red-100 dark:shadow-red-900/20 ring-1 ring-red-100 dark:ring-red-900/30' : 'border-slate-150/80 dark:border-slate-800/85 hover:border-teal-300 dark:hover:border-teal-800'} shadow-sm transition-all group-hover:shadow-md flex flex-col sm:flex-row sm:items-center justify-between gap-4`}>
                                                                     <div>
                                                                         <h4 className="font-bold text-slate-800 dark:text-[#e2e8f0] text-lg mb-1">{session.title}</h4>
                                                                         <div className="flex items-center gap-3 text-sm">
@@ -565,7 +565,7 @@ const MentorProfile = () => {
                                                                 </div>
                                                             )}
                                                             <div className="p-4">
-                                                                <h4 className="font-bold text-slate-800 dark:text-[#e2e8f0] leading-snug line-clamp-2 mb-3 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition">{lecture.title}</h4>
+                                                                <h4 className="font-bold text-slate-800 dark:text-[#e2e8f0] leading-snug line-clamp-2 mb-3 group-hover:text-teal-600 dark:group-hover:text-teal-400 transition">{lecture.title}</h4>
                                                                 <a href={lecture.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-xs font-bold text-slate-400 dark:text-slate-500 hover:text-red-500 dark:hover:text-red-400 uppercase tracking-wide transition">
                                                                     <ExternalLink size={12} /> Watch on YouTube
                                                                 </a>
@@ -596,13 +596,13 @@ const MentorProfile = () => {
                         </div>
 
                         <div className="space-y-4 mb-6">
-                            <div className="bg-indigo-50 dark:bg-indigo-950/40 p-4 rounded-2xl flex items-center justify-between border border-indigo-100 dark:border-indigo-900/40">
+                            <div className="bg-teal-50 dark:bg-teal-950/40 p-4 rounded-2xl flex items-center justify-between border border-teal-100 dark:border-teal-900/40">
                                 <div>
-                                    <p className="text-xs text-indigo-600 dark:text-indigo-400 font-bold uppercase tracking-wider">Mentorship Fee</p>
+                                    <p className="text-xs text-teal-600 dark:text-teal-400 font-bold uppercase tracking-wider">Mentorship Fee</p>
                                     <p className="text-sm text-slate-500 dark:text-slate-400 mt-1 font-semibold">Priority Booking with {mentor.username}</p>
                                 </div>
                                 <div className="text-right">
-                                    <span className="text-2xl font-extrabold text-indigo-600 dark:text-indigo-400">₹{mentor.sessionFee || 500}</span>
+                                    <span className="text-2xl font-extrabold text-teal-600 dark:text-teal-400">₹{mentor.sessionFee || 500}</span>
                                 </div>
                             </div>
 
@@ -611,14 +611,14 @@ const MentorProfile = () => {
                                 <textarea 
                                     value={bookingMessage} 
                                     onChange={e => setBookingMessage(e.target.value)} 
-                                    className="w-full border border-slate-200 dark:border-slate-850 dark:bg-[#151f2e] dark:text-white p-3.5 rounded-2xl outline-none focus:ring-2 focus:ring-indigo-500 font-medium text-sm transition" 
+                                    className="w-full border border-slate-200 dark:border-slate-850 dark:bg-[#151f2e] dark:text-white p-3.5 rounded-2xl outline-none focus:ring-2 focus:ring-teal-500 font-medium text-sm transition" 
                                     rows="4" 
                                     placeholder="Write a message detailing what you want to learn or discuss..." 
                                 />
                             </div>
 
                             <div className="flex items-center gap-2 text-xs text-slate-400 dark:text-slate-500 font-semibold bg-slate-50 dark:bg-slate-900/20 p-3.5 rounded-xl border border-slate-150/80 dark:border-slate-800/80">
-                                <CheckCircle className="text-indigo-500 flex-shrink-0" size={16} />
+                                <CheckCircle className="text-teal-500 flex-shrink-0" size={16} />
                                 <span>Secure Payment via Paytm Checkout. Confirmation will reflect in your dashboard.</span>
                             </div>
                         </div>
@@ -626,7 +626,7 @@ const MentorProfile = () => {
                         <button 
                             onClick={handleInitiatePayment} 
                             disabled={isPaymentProcessing}
-                            className="w-full bg-gradient-to-r from-indigo-600 to-violet-600 text-white py-4 rounded-xl font-bold hover:from-indigo-700 hover:to-violet-700 shadow-lg shadow-indigo-500/20 flex items-center justify-center gap-2 transition hover:-translate-y-0.5 active:scale-[0.98] disabled:opacity-75 disabled:pointer-events-none"
+                            className="w-full bg-gradient-to-r from-teal-600 to-cyan-600 text-white py-4 rounded-xl font-bold hover:from-teal-700 hover:to-cyan-700 shadow-lg shadow-teal-500/20 flex items-center justify-center gap-2 transition hover:-translate-y-0.5 active:scale-[0.98] disabled:opacity-75 disabled:pointer-events-none"
                         >
                             {isPaymentProcessing ? "Initializing Checkout..." : `Pay ₹${mentor.sessionFee || 500} & Confirm Booking`}
                         </button>
