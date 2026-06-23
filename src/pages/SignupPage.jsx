@@ -80,7 +80,7 @@ function SignupPage() {
       {/* LEFT: Illustrative Side (Desktop Only) */}
       <div className="hidden lg:flex w-1/2 bg-slate-100 dark:bg-slate-900 relative items-center justify-center overflow-hidden">
         <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1523240795612-9a054b0db644?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80')] bg-cover bg-center opacity-20"></div>
-        <div className="absolute inset-0 bg-gradient-to-br from-indigo-900/90 to-violet-900/90"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-teal-900/90 to-cyan-900/90"></div>
 
         <div className="relative z-10 p-12 max-w-lg glass-dark text-white">
           <motion.div
@@ -89,11 +89,11 @@ function SignupPage() {
             transition={{ delay: 0.2 }}
             className="animate-float mb-8"
           >
-            <div className="inline-flex items-center gap-2 px-3 py-1 bg-purple-500/20 border border-purple-400/30 rounded-full text-purple-200 text-sm font-medium mb-6">
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-teal-500/20 border border-teal-400/30 rounded-full text-teal-200 text-sm font-medium mb-6">
               <Sparkles size={14} /> Join the Community
             </div>
             <h1 className="text-5xl font-extrabold tracking-tight leading-tight mb-6">Start Your <br />Journey Today.</h1>
-            <p className="text-lg text-blue-100/80 leading-relaxed">
+            <p className="text-lg text-teal-100/80 leading-relaxed">
               Whether you&apos;re looking for guidance or ready to guide others, you&apos;re in the right place.
             </p>
           </motion.div>
@@ -105,14 +105,14 @@ function SignupPage() {
             className="grid grid-cols-2 gap-6"
           >
             <div className="bg-white/10 backdrop-blur-sm p-4 rounded-2xl border border-white/10">
-              <GraduationCap className="text-blue-300 mb-2" size={24} />
+              <GraduationCap className="text-teal-300 mb-2" size={24} />
               <h3 className="font-bold text-lg">For Students</h3>
-              <p className="text-sm text-blue-200/70">Get advice from the best.</p>
+              <p className="text-sm text-teal-200/70">Get advice from the best.</p>
             </div>
             <div className="bg-white/10 backdrop-blur-sm p-4 rounded-2xl border border-white/10">
-              <Briefcase className="text-purple-300 mb-2" size={24} />
+              <Briefcase className="text-amber-300 mb-2" size={24} />
               <h3 className="font-bold text-lg">For Mentors</h3>
-              <p className="text-sm text-blue-200/70">Share your experience.</p>
+              <p className="text-sm text-teal-200/70">Share your experience.</p>
             </div>
           </motion.div>
         </div>
@@ -190,19 +190,19 @@ function SignupPage() {
 
               <div className="grid grid-cols-2 gap-4">
                 {/* Student Option (Selected) */}
-                <div className="border-2 border-indigo-500 bg-indigo-50/50 dark:bg-[#151f2e] dark:border-indigo-500 p-4 rounded-xl flex items-center justify-center gap-2 cursor-default">
-                  <div className="w-5 h-5 rounded-full border-[6px] border-indigo-600 dark:border-indigo-400 bg-white"></div>
-                  <span className="font-bold text-indigo-700 dark:text-indigo-400">Student</span>
+                <div className="border-2 border-teal-500 bg-teal-50/50 dark:bg-[#151f2e] dark:border-teal-500 p-4 rounded-xl flex items-center justify-center gap-2 cursor-default">
+                  <div className="w-5 h-5 rounded-full border-[6px] border-teal-600 dark:border-teal-400 bg-white"></div>
+                  <span className="font-bold text-teal-700 dark:text-teal-400">Student</span>
                 </div>
 
                 {/* Mentor Option (Link) */}
                 <Link to="/become-mentor" className="border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-[#111b21] p-4 rounded-xl flex items-center justify-center gap-2 transition-all group">
-                  <div className="w-5 h-5 rounded-full border-2 border-slate-300 dark:border-slate-500 group-hover:border-purple-500 transition-colors"></div>
-                  <span className="font-bold text-slate-600 dark:text-slate-400 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">Mentor</span>
+                  <div className="w-5 h-5 rounded-full border-2 border-slate-300 dark:border-slate-500 group-hover:border-amber-500 transition-colors"></div>
+                  <span className="font-bold text-slate-600 dark:text-slate-400 group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors">Mentor</span>
                 </Link>
               </div>
               <p className="text-xs text-slate-500 dark:text-slate-400 px-1">
-                Mentors require a dedicated verification process. <Link to="/become-mentor" className="text-purple-600 dark:text-purple-400 hover:underline">Register here</Link>.
+                Mentors require a dedicated verification process. <Link to="/become-mentor" className="text-amber-600 dark:text-amber-400 hover:underline">Register here</Link>.
               </p>
             </div>
 
@@ -212,7 +212,7 @@ function SignupPage() {
           </form>
 
           <p className="mt-8 text-center text-slate-600 dark:text-slate-400">
-            Already have an account? <Link to="/login" className="text-indigo-600 dark:text-indigo-400 font-bold hover:underline">Log In</Link>
+            Already have an account? <Link to="/login" className="text-teal-600 dark:text-teal-400 font-bold hover:underline">Log In</Link>
           </p>
         </motion.div>
       </div>

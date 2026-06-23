@@ -11,7 +11,7 @@ import { useTheme } from '../context/ThemeContext';
 // Simple Loader Component for internal use
 const ProcessingOverlay = ({ text, onCancel }) => (
   <div className="fixed inset-0 bg-white/90 z-50 flex flex-col items-center justify-center p-4 backdrop-blur-sm">
-    <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-600 mb-4"></div>
+    <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-teal-600 mb-4"></div>
     <h3 className="text-xl font-semibold text-gray-800 animate-pulse">{text}</h3>
     <p className="text-sm text-gray-500 mt-2">Please wait while we secure your session...</p>
     {onCancel && (
@@ -182,7 +182,7 @@ function LoginPage() {
       {/* LEFT: Illustrative Side (Desktop Only) */}
       <div className="hidden lg:flex w-1/2 bg-slate-100 dark:bg-slate-900 relative items-center justify-center overflow-hidden">
         <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1543269865-cbf427effbad?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80')] bg-cover bg-center opacity-20"></div>
-        <div className="absolute inset-0 bg-gradient-to-tr from-indigo-900/90 to-violet-900/90"></div>
+        <div className="absolute inset-0 bg-gradient-to-tr from-teal-900/90 to-cyan-900/90"></div>
 
         <div className="relative z-10 p-12 max-w-lg glass-dark text-white">
           <motion.div
@@ -191,11 +191,11 @@ function LoginPage() {
             className="animate-float mb-8"
             transition={{ delay: 0.2 }}
           >
-            <div className="inline-flex items-center gap-2 px-3 py-1 bg-indigo-500/20 border border-indigo-400/30 rounded-full text-indigo-200 text-sm font-medium mb-6">
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-teal-500/20 border border-teal-400/30 rounded-full text-teal-200 text-sm font-medium mb-6">
               <Sparkles size={14} /> Future awaits
             </div>
             <h1 className="text-5xl font-extrabold tracking-tight leading-tight mb-6">Welcome to <br />NaviGreat.</h1>
-            <p className="text-lg text-blue-100/80 leading-relaxed">
+            <p className="text-lg text-teal-100/80 leading-relaxed">
               Connect with mentors from top IITs & NITs. Your journey to a dream career starts with a single step.
             </p>
           </motion.div>
@@ -215,7 +215,7 @@ function LoginPage() {
             </div>
             <div className="flex flex-col justify-center">
               <span className="font-bold text-lg">500+</span>
-              <span className="text-sm text-blue-200">Students active now</span>
+              <span className="text-sm text-teal-200">Students active now</span>
             </div>
           </motion.div>
         </div>
@@ -271,7 +271,7 @@ function LoginPage() {
                 />
               </div>
               <div className="text-right pt-1">
-                <Link to="/forgot-password" className="text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 hover:underline">Forgot Password?</Link>
+                <Link to="/forgot-password" className="text-sm font-medium text-teal-600 dark:text-teal-400 hover:text-teal-700 hover:underline">Forgot Password?</Link>
               </div>
             </div>
 
@@ -288,7 +288,7 @@ function LoginPage() {
 
           <button
             onClick={handleGoogleLogin}
-            className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-200 py-3.5 rounded-xl font-bold hover:bg-slate-50 dark:hover:bg-slate-800 hover:border-indigo-300 dark:hover:border-indigo-600 transition-all flex items-center justify-center gap-3 group"
+            className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-200 py-3.5 rounded-xl font-bold hover:bg-slate-50 dark:hover:bg-slate-800 hover:border-teal-300 dark:hover:border-teal-600 transition-all flex items-center justify-center gap-3 group"
           >
             <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" className="w-5 h-5 group-hover:scale-110 transition-transform" />
             Sign in with Google
@@ -303,14 +303,14 @@ function LoginPage() {
                 setStatusMessage("Redirecting...");
                 await signInWithRedirect(auth, provider);
               }}
-              className="text-xs text-slate-400 dark:text-slate-500 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium transition-colors"
+              className="text-xs text-slate-400 dark:text-slate-500 hover:text-teal-600 dark:hover:text-teal-400 font-medium transition-colors"
             >
               Having specific trouble? Use Alternate Login
             </button>
           </div>
 
           <p className="mt-8 text-center text-slate-600 dark:text-slate-400">
-            Don&apos;t have an account? <Link to="/signup" className="text-indigo-600 dark:text-indigo-400 font-bold hover:underline">Create Account</Link>
+            Don&apos;t have an account? <Link to="/signup" className="text-teal-600 dark:text-teal-400 font-bold hover:underline">Create Account</Link>
           </p>
         </motion.div>
       </div>

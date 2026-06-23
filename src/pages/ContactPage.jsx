@@ -52,27 +52,27 @@ function ContactPage() {
       title: "Email Us",
       content: "support@navigreat.com",
       link: "mailto:support@navigreat.com",
-      color: "text-blue-500",
-      bg: "bg-blue-100 dark:bg-blue-900/30",
-      hover: "group-hover:bg-blue-600 group-hover:text-white"
+      color: "text-teal-500",
+      bg: "bg-teal-100 dark:bg-teal-900/30",
+      hover: "group-hover:bg-teal-600 group-hover:text-white"
     },
     {
       icon: <Phone className="w-6 h-6" />,
       title: "Call Us",
       content: "+91 7974714605",
       link: "tel:+917974714605",
-      color: "text-green-500",
-      bg: "bg-green-100 dark:bg-green-900/30",
-      hover: "group-hover:bg-green-600 group-hover:text-white"
+      color: "text-emerald-500",
+      bg: "bg-emerald-100 dark:bg-emerald-900/30",
+      hover: "group-hover:bg-emerald-600 group-hover:text-white"
     },
     {
       icon: <MapPin className="w-6 h-6" />,
       title: "Visit Us",
       content: "MANIT Bhopal, Madhya Pradesh, India",
       link: "https://goo.gl/maps/example",
-      color: "text-purple-500",
-      bg: "bg-purple-100 dark:bg-purple-900/30",
-      hover: "group-hover:bg-purple-600 group-hover:text-white"
+      color: "text-amber-500",
+      bg: "bg-amber-100 dark:bg-amber-900/30",
+      hover: "group-hover:bg-amber-500 group-hover:text-white"
     }
   ];
 
@@ -81,9 +81,9 @@ function ContactPage() {
 
       {/* 1. HERO SECTION */}
       <section className="relative py-28 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-indigo-900 via-violet-900 to-purple-900" />
-        <div className="absolute top-0 left-0 w-96 h-96 bg-indigo-500/30 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
-        <div className="absolute bottom-0 right-0 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl translate-x-1/3 translate-y-1/3" />
+        <div className="absolute inset-0 bg-gradient-to-br from-teal-900 via-cyan-900 to-sky-900" />
+        <div className="absolute top-0 left-0 w-96 h-96 bg-teal-500/30 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
+        <div className="absolute bottom-0 right-0 w-96 h-96 bg-cyan-500/20 rounded-full blur-3xl translate-x-1/3 translate-y-1/3" />
         <div className="absolute inset-0 opacity-10"
           style={{
             backgroundImage: `linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
@@ -93,13 +93,13 @@ function ContactPage() {
         />
         <div className="container mx-auto text-center relative z-10 max-w-3xl px-6">
           <FadeIn>
-            <span className="inline-block py-1.5 px-4 rounded-full bg-white/10 border border-white/20 text-indigo-200 text-sm font-bold tracking-wider mb-6">
+            <span className="inline-block py-1.5 px-4 rounded-full bg-white/10 border border-white/20 text-teal-200 text-sm font-bold tracking-wider mb-6">
               Get in Touch
             </span>
             <h1 className="text-5xl md:text-6xl font-extrabold text-white mb-6 leading-tight tracking-tight">
               We&apos;d love to hear from you.
             </h1>
-            <p className="text-xl text-indigo-200/90 leading-relaxed">
+            <p className="text-xl text-teal-200/90 leading-relaxed">
               Have a question about our mentorship program? Want to partner with us?
               Fill out the form below or reach out directly.
             </p>
@@ -149,7 +149,7 @@ function ContactPage() {
                       href={href}
                       target={href !== '#' ? '_blank' : undefined}
                       rel={href !== '#' ? 'noopener noreferrer' : undefined}
-                      className="p-3 bg-white dark:bg-[#202c33] border border-gray-200 dark:border-[#2a3942] rounded-full text-gray-500 dark:text-[#8696a0] hover:text-blue-600 dark:hover:text-blue-400 hover:border-blue-200 transition-colors shadow-sm"
+                      className="p-3 bg-white dark:bg-[#202c33] border border-gray-200 dark:border-[#2a3942] rounded-full text-gray-500 dark:text-[#8696a0] hover:text-teal-600 dark:hover:text-teal-400 hover:border-teal-200 transition-colors shadow-sm"
                     >
                       <Icon size={20} />
                     </motion.a>
@@ -176,7 +176,7 @@ function ContactPage() {
                           value={formData.name}
                           onChange={handleChange}
                           required
-                          className="w-full px-4 py-3 rounded-lg bg-gray-50 dark:bg-[#111b21] border border-gray-200 dark:border-[#2a3942] text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent outline-none transition-all"
+                          className="w-full px-4 py-3 rounded-lg bg-gray-50 dark:bg-[#111b21] border border-gray-200 dark:border-[#2a3942] text-gray-900 dark:text-white focus:ring-2 focus:ring-teal-500 dark:focus:ring-teal-400 focus:border-transparent outline-none transition-all"
                           placeholder="Your full name"
                         />
                       </div>
@@ -188,7 +188,7 @@ function ContactPage() {
                           value={formData.email}
                           onChange={handleChange}
                           required
-                          className="w-full px-4 py-3 rounded-lg bg-gray-50 dark:bg-[#111b21] border border-gray-200 dark:border-[#2a3942] text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent outline-none transition-all"
+                          className="w-full px-4 py-3 rounded-lg bg-gray-50 dark:bg-[#111b21] border border-gray-200 dark:border-[#2a3942] text-gray-900 dark:text-white focus:ring-2 focus:ring-teal-500 dark:focus:ring-teal-400 focus:border-transparent outline-none transition-all"
                           placeholder="you@example.com"
                         />
                       </div>
@@ -201,7 +201,7 @@ function ContactPage() {
                         name="subject"
                         value={formData.subject}
                         onChange={handleChange}
-                        className="w-full px-4 py-3 rounded-lg bg-gray-50 dark:bg-[#111b21] border border-gray-200 dark:border-[#2a3942] text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent outline-none transition-all"
+                        className="w-full px-4 py-3 rounded-lg bg-gray-50 dark:bg-[#111b21] border border-gray-200 dark:border-[#2a3942] text-gray-900 dark:text-white focus:ring-2 focus:ring-teal-500 dark:focus:ring-teal-400 focus:border-transparent outline-none transition-all"
                         placeholder="What is this about?"
                       />
                     </div>
@@ -214,7 +214,7 @@ function ContactPage() {
                         onChange={handleChange}
                         rows="5"
                         required
-                        className="w-full px-4 py-3 rounded-lg bg-gray-50 dark:bg-[#111b21] border border-gray-200 dark:border-[#2a3942] text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent outline-none transition-all resize-none"
+                        className="w-full px-4 py-3 rounded-lg bg-gray-50 dark:bg-[#111b21] border border-gray-200 dark:border-[#2a3942] text-gray-900 dark:text-white focus:ring-2 focus:ring-teal-500 dark:focus:ring-teal-400 focus:border-transparent outline-none transition-all resize-none"
                         placeholder="Tell us how we can help..."
                       ></textarea>
                     </div>
