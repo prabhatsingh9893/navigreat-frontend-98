@@ -2,12 +2,11 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { API_BASE_URL } from '../config';
-import { motion } from 'framer-motion';
-import { ArrowLeft, User as UserIcon, Lock, Mail, ChevronRight, Briefcase, GraduationCap, Sparkles, Sun, Moon } from 'lucide-react';
-import { useTheme } from '../context/ThemeContext';
+import { User as UserIcon, Lock, Mail, ChevronRight, Briefcase, GraduationCap, Eye, EyeOff, CheckCircle } from 'lucide-react';
+import AuthLayout from '../components/AuthLayout';
 
 function SignupPage() {
-  const { theme, toggleTheme } = useTheme();
+  const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -74,149 +73,138 @@ function SignupPage() {
     }
   };
 
-  return (
-    <div className="min-h-screen bg-mesh-hero dark:bg-[#0b141a] flex relative overflow-hidden">
+  const proof = (
+    <div className="max-w-md">
+      <ul className="space-y-3.5">
+        {[
+          'Verified mentors from IITs, NITs & top universities',
+          '1-on-1 sessions, booked in minutes — not weeks',
+          'Personalised roadmaps for placements, GATE & higher studies',
+        ].map((item) => (
+          <li key={item} className="flex items-start gap-3 text-white/85">
+            <span className="mt-0.5 grid place-items-center w-5 h-5 rounded-full bg-teal-400/20 text-teal-300 flex-shrink-0">
+              <CheckCircle size={14} />
+            </span>
+            <span className="text-[15px] leading-snug">{item}</span>
+          </li>
+        ))}
+      </ul>
 
-      {/* LEFT: Illustrative Side (Desktop Only) */}
-      <div className="hidden lg:flex w-1/2 bg-slate-100 dark:bg-slate-900 relative items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1523240795612-9a054b0db644?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80')] bg-cover bg-center opacity-20"></div>
-        <div className="absolute inset-0 bg-gradient-to-br from-indigo-900/90 to-violet-900/90"></div>
-
-        <div className="relative z-10 p-12 max-w-lg glass-dark text-white">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="animate-float mb-8"
-          >
-            <div className="inline-flex items-center gap-2 px-3 py-1 bg-purple-500/20 border border-purple-400/30 rounded-full text-purple-200 text-sm font-medium mb-6">
-              <Sparkles size={14} /> Join the Community
-            </div>
-            <h1 className="text-5xl font-extrabold tracking-tight leading-tight mb-6">Start Your <br />Journey Today.</h1>
-            <p className="text-lg text-blue-100/80 leading-relaxed">
-              Whether you&apos;re looking for guidance or ready to guide others, you&apos;re in the right place.
-            </p>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.5 }}
-            className="grid grid-cols-2 gap-6"
-          >
-            <div className="bg-white/10 backdrop-blur-sm p-4 rounded-2xl border border-white/10">
-              <GraduationCap className="text-blue-300 mb-2" size={24} />
-              <h3 className="font-bold text-lg">For Students</h3>
-              <p className="text-sm text-blue-200/70">Get advice from the best.</p>
-            </div>
-            <div className="bg-white/10 backdrop-blur-sm p-4 rounded-2xl border border-white/10">
-              <Briefcase className="text-purple-300 mb-2" size={24} />
-              <h3 className="font-bold text-lg">For Mentors</h3>
-              <p className="text-sm text-blue-200/70">Share your experience.</p>
-            </div>
-          </motion.div>
+      <div className="mt-7 flex items-center gap-4 pt-6 border-t border-white/10">
+        <div className="flex -space-x-2.5">
+          {['A', 'R', 'P', 'S'].map((l) => (
+            <span key={l} className="grid place-items-center w-9 h-9 rounded-full bg-gradient-to-br from-teal-400 to-cyan-500 border-2 border-[#0a1622] text-white text-xs font-bold">{l}</span>
+          ))}
         </div>
-      </div>
-
-      {/* RIGHT: Login Form */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-6 bg-slate-50 dark:bg-[#080d14] relative">
-        <Link to="/" className="absolute top-8 left-8 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white flex items-center gap-2 font-medium transition-colors">
-          <ArrowLeft size={20} /> Back to Home
-        </Link>
-        <button type="button" aria-label="Toggle dark mode" onClick={toggleTheme} className="absolute top-8 right-8 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white">
-          {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
-        </button>
-
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.4 }}
-          className="w-full max-w-md glass-card p-10"
-        >
-          <div className="text-center mb-10">
-            <h2 className="text-3xl font-bold text-gradient">Create Account</h2>
-            <p className="text-slate-500 dark:text-slate-400 mt-2">Join us and start achieving your goals.</p>
-          </div>
-
-          <form onSubmit={handleSubmit} className="space-y-5">
-
-             <div className="space-y-2">
-              <label className="text-sm font-semibold text-slate-700 dark:text-slate-200 ml-1">Full Name</label>
-              <div className="relative">
-                <UserIcon className="absolute left-4 top-3.5 text-slate-400 dark:text-slate-500" size={20} />
-                <input
-                  type="text"
-                  name="username"
-                  onChange={handleChange}
-                  placeholder="John Doe"
-                  required
-                  className="input-premium !pl-12"
-                />
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-sm font-semibold text-slate-700 dark:text-slate-200 ml-1">Email Address</label>
-              <div className="relative">
-                <Mail className="absolute left-4 top-3.5 text-slate-400 dark:text-slate-500" size={20} />
-                <input
-                  type="email"
-                  name="email"
-                  onChange={handleChange}
-                  placeholder="john@example.com"
-                  required
-                  className="input-premium !pl-12"
-                />
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-sm font-semibold text-slate-700 dark:text-slate-200 ml-1">Password</label>
-              <div className="relative">
-                <Lock className="absolute left-4 top-3.5 text-slate-400 dark:text-slate-500" size={20} />
-                <input
-                  type="password"
-                  name="password"
-                  onChange={handleChange}
-                  placeholder="Min 6 characters"
-                  required
-                  className="input-premium !pl-12"
-                />
-              </div>
-            </div>
-
-            <div className="space-y-4">
-              <label className="text-sm font-semibold text-slate-700 dark:text-slate-200 ml-1">I want to apply as</label>
-
-              <div className="grid grid-cols-2 gap-4">
-                {/* Student Option (Selected) */}
-                <div className="border-2 border-indigo-500 bg-indigo-50/50 dark:bg-[#151f2e] dark:border-indigo-500 p-4 rounded-xl flex items-center justify-center gap-2 cursor-default">
-                  <div className="w-5 h-5 rounded-full border-[6px] border-indigo-600 dark:border-indigo-400 bg-white"></div>
-                  <span className="font-bold text-indigo-700 dark:text-indigo-400">Student</span>
-                </div>
-
-                {/* Mentor Option (Link) */}
-                <Link to="/become-mentor" className="border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-[#111b21] p-4 rounded-xl flex items-center justify-center gap-2 transition-all group">
-                  <div className="w-5 h-5 rounded-full border-2 border-slate-300 dark:border-slate-500 group-hover:border-purple-500 transition-colors"></div>
-                  <span className="font-bold text-slate-600 dark:text-slate-400 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">Mentor</span>
-                </Link>
-              </div>
-              <p className="text-xs text-slate-500 dark:text-slate-400 px-1">
-                Mentors require a dedicated verification process. <Link to="/become-mentor" className="text-purple-600 dark:text-purple-400 hover:underline">Register here</Link>.
-              </p>
-            </div>
-
-            <button type="submit" className="w-full btn-primary py-4 rounded-xl text-base group mt-2">
-              Create Account <ChevronRight size={20} className="group-hover:translate-x-1 transition-transform" />
-            </button>
-          </form>
-
-          <p className="mt-8 text-center text-slate-600 dark:text-slate-400">
-            Already have an account? <Link to="/login" className="text-indigo-600 dark:text-indigo-400 font-bold hover:underline">Log In</Link>
-          </p>
-        </motion.div>
+        <p className="text-sm text-white/70">
+          <span className="font-bold text-white">500+</span> students already winning
+        </p>
       </div>
     </div>
+  );
+
+  return (
+    <AuthLayout
+      eyebrow="Join the community"
+      title="Start your journey"
+      highlight="today."
+      subtitle="Create a free account and connect with mentors who've walked the exact path you're on."
+      proof={proof}
+    >
+      <div className="mb-8">
+        <h2 className="text-3xl font-extrabold text-slate-900 dark:text-white">Create your account</h2>
+        <p className="text-slate-500 dark:text-slate-400 mt-2">Free forever for students. Takes under 2 minutes.</p>
+      </div>
+
+      <form onSubmit={handleSubmit} className="space-y-5">
+        <div className="space-y-2">
+          <label htmlFor="username" className="text-sm font-semibold text-slate-700 dark:text-slate-200 ml-1">Full name</label>
+          <div className="relative">
+            <UserIcon className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500" size={19} />
+            <input
+              id="username"
+              type="text"
+              name="username"
+              onChange={handleChange}
+              placeholder="John Doe"
+              required
+              className="input-premium !pl-12"
+            />
+          </div>
+        </div>
+
+        <div className="space-y-2">
+          <label htmlFor="email" className="text-sm font-semibold text-slate-700 dark:text-slate-200 ml-1">Email address</label>
+          <div className="relative">
+            <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500" size={19} />
+            <input
+              id="email"
+              type="email"
+              name="email"
+              onChange={handleChange}
+              placeholder="john@example.com"
+              required
+              className="input-premium !pl-12"
+            />
+          </div>
+        </div>
+
+        <div className="space-y-2">
+          <label htmlFor="password" className="text-sm font-semibold text-slate-700 dark:text-slate-200 ml-1">Password</label>
+          <div className="relative">
+            <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500" size={19} />
+            <input
+              id="password"
+              type={showPassword ? 'text' : 'password'}
+              name="password"
+              onChange={handleChange}
+              placeholder="Min 6 characters"
+              required
+              className="input-premium !pl-12 !pr-12"
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword((s) => !s)}
+              aria-label={showPassword ? 'Hide password' : 'Show password'}
+              className="absolute right-3 top-1/2 -translate-y-1/2 grid place-items-center w-8 h-8 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"
+            >
+              {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+            </button>
+          </div>
+        </div>
+
+        <div className="space-y-2.5">
+          <label className="text-sm font-semibold text-slate-700 dark:text-slate-200 ml-1">I&apos;m joining as a</label>
+          <div className="grid grid-cols-2 gap-3">
+            {/* Student (selected) */}
+            <div className="relative border-2 border-teal-500 bg-teal-50/60 dark:bg-teal-500/10 p-3.5 rounded-xl flex items-center gap-2.5 cursor-default">
+              <GraduationCap size={20} className="text-teal-600 dark:text-teal-400" />
+              <span className="font-bold text-sm text-teal-700 dark:text-teal-300">Student</span>
+              <CheckCircle size={16} className="ml-auto text-teal-600 dark:text-teal-400" />
+            </div>
+            {/* Mentor (link) */}
+            <Link
+              to="/become-mentor"
+              className="border border-slate-200 dark:border-slate-800 hover:border-amber-400 dark:hover:border-amber-500/60 hover:bg-amber-50/50 dark:hover:bg-amber-500/5 p-3.5 rounded-xl flex items-center gap-2.5 transition-all group"
+            >
+              <Briefcase size={20} className="text-slate-400 group-hover:text-amber-500 transition-colors" />
+              <span className="font-bold text-sm text-slate-600 dark:text-slate-400 group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors">Mentor</span>
+            </Link>
+          </div>
+          <p className="text-xs text-slate-500 dark:text-slate-400 px-1">
+            Mentors go through a quick verification. <Link to="/become-mentor" className="text-amber-600 dark:text-amber-400 font-medium hover:underline">Apply here</Link>.
+          </p>
+        </div>
+
+        <button type="submit" className="w-full btn-primary py-4 rounded-xl text-base group mt-1">
+          Create account <ChevronRight size={20} className="group-hover:translate-x-1 transition-transform" />
+        </button>
+      </form>
+
+      <p className="mt-8 text-center text-sm text-slate-600 dark:text-slate-400">
+        Already have an account? <Link to="/login" className="text-teal-600 dark:text-teal-400 font-bold hover:underline">Log in</Link>
+      </p>
+    </AuthLayout>
   );
 }
 

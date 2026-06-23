@@ -27,38 +27,38 @@ const socialLinks = [
 
 const Footer = () => {
   return (
-    <footer className="relative bg-slate-950 text-slate-400 overflow-hidden">
+    <footer className="relative bg-slate-100 dark:bg-slate-950 text-slate-600 dark:text-slate-400 overflow-hidden border-t border-slate-200 dark:border-transparent">
 
       {/* Top gradient line */}
-      <div className="h-px w-full bg-gradient-to-r from-transparent via-indigo-500 to-transparent opacity-30" />
+      <div className="h-px w-full bg-gradient-to-r from-transparent via-teal-500 to-transparent opacity-40 dark:opacity-30" />
 
       {/* Background orbs */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-indigo-600/10 rounded-full blur-3xl translate-x-1/2 -translate-y-1/2" />
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-violet-600/10 rounded-full blur-3xl -translate-x-1/2 translate-y-1/2" />
+        <div className="absolute top-0 right-0 w-96 h-96 bg-teal-500/10 dark:bg-teal-600/10 rounded-full blur-3xl translate-x-1/2 -translate-y-1/2" />
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-cyan-500/10 dark:bg-cyan-600/10 rounded-full blur-3xl -translate-x-1/2 translate-y-1/2" />
       </div>
 
       {/* ====== CTA BANNER ====== */}
       <div className="relative z-10 container mx-auto px-6 pt-20 pb-8">
         <div className="relative overflow-hidden rounded-3xl p-8 md:p-12 mb-20 border border-white/10"
-          style={{ background: 'linear-gradient(135deg, rgba(79,70,229,0.3) 0%, rgba(124,58,237,0.3) 50%, rgba(168,85,247,0.2) 100%)' }}
+          style={{ background: 'linear-gradient(135deg, #0d9488 0%, #0891b2 55%, #0ea5e9 100%)' }}
         >
           <div className="absolute inset-0 pointer-events-none">
-            <div className="absolute -top-10 -right-10 w-48 h-48 bg-white/5 rounded-full blur-2xl" />
-            <div className="absolute -bottom-10 -left-10 w-48 h-48 bg-white/5 rounded-full blur-2xl" />
+            <div className="absolute -top-10 -right-10 w-48 h-48 bg-white/10 rounded-full blur-2xl" />
+            <div className="absolute -bottom-10 -left-10 w-48 h-48 bg-white/10 rounded-full blur-2xl" />
           </div>
           <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
             <div>
-              <div className="flex items-center gap-2 text-indigo-400 font-semibold text-sm mb-3">
-                <Sparkles size={14} className="text-yellow-400" />
+              <div className="flex items-center gap-2 text-teal-50 font-semibold text-sm mb-3">
+                <Sparkles size={14} className="text-amber-300" />
                 Share Your Experience
               </div>
               <h2 className="text-3xl md:text-4xl font-extrabold text-white mb-2">Your Feedback Matters</h2>
-              <p className="text-slate-400 max-w-md">Help us build a better NaviGreat. Share your thoughts and experience with the community.</p>
+              <p className="text-teal-50/90 max-w-md">Help us build a better NaviGreat. Share your thoughts and experience with the community.</p>
             </div>
             <Link
               to="/contact"
-              className="flex-shrink-0 flex items-center gap-2 bg-white text-indigo-700 px-7 py-4 rounded-2xl font-bold hover:bg-indigo-50 transition-all hover:-translate-y-1 shadow-xl shadow-black/20 group whitespace-nowrap"
+              className="flex-shrink-0 flex items-center gap-2 bg-white text-teal-700 px-7 py-4 rounded-2xl font-bold hover:bg-teal-50 transition-all hover:-translate-y-1 shadow-xl shadow-black/20 group whitespace-nowrap"
             >
               Give Feedback <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
             </Link>
@@ -70,10 +70,10 @@ const Footer = () => {
 
           {/* Brand */}
           <div className="lg:col-span-1">
-            <h3 className="text-2xl font-extrabold text-white mb-4">
-              Navi<span className="text-indigo-400">Great</span>
+            <h3 className="text-2xl font-extrabold text-slate-900 dark:text-white mb-4">
+              Navi<span className="text-teal-600 dark:text-teal-400">Great</span>
             </h3>
-            <p className="text-slate-400 text-sm leading-relaxed mb-6">
+            <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed mb-6">
               Bridging the gap between ambition and achievement. We connect aspiring engineers with verified mentors from IITs, NITs & Top Universities.
             </p>
             <div className="flex gap-3">
@@ -85,7 +85,7 @@ const Footer = () => {
                   rel={href !== '#' ? 'noopener noreferrer' : undefined}
                   aria-label={label}
                   whileHover={{ y: -3 }}
-                  className={`w-10 h-10 rounded-xl bg-slate-800 flex items-center justify-center text-slate-400 hover:text-white ${color} transition-all duration-200 border border-slate-700/50`}
+                  className={`w-10 h-10 rounded-xl bg-white dark:bg-slate-800 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-white ${color} transition-all duration-200 border border-slate-200 dark:border-slate-700/50 shadow-sm dark:shadow-none`}
                 >
                   <Icon size={17} />
                 </motion.a>
@@ -95,8 +95,8 @@ const Footer = () => {
 
           {/* Platform Links */}
           <div>
-            <h4 className="text-white font-bold text-sm uppercase tracking-wider mb-6 flex items-center gap-2">
-              <span className="w-6 h-0.5 bg-indigo-500 rounded-full" />
+            <h4 className="text-slate-900 dark:text-white font-bold text-sm uppercase tracking-wider mb-6 flex items-center gap-2">
+              <span className="w-6 h-0.5 bg-teal-500 rounded-full" />
               Platform
             </h4>
             <ul className="space-y-3">
@@ -104,9 +104,9 @@ const Footer = () => {
                 <li key={i}>
                   <Link
                     to={link.path}
-                    className="text-slate-400 hover:text-white text-sm font-medium transition-all duration-200 flex items-center gap-2 group"
+                    className="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white text-sm font-medium transition-all duration-200 flex items-center gap-2 group"
                   >
-                    <span className="w-1 h-1 rounded-full bg-indigo-600 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <span className="w-1 h-1 rounded-full bg-teal-600 opacity-0 group-hover:opacity-100 transition-opacity" />
                     {link.name}
                   </Link>
                 </li>
@@ -116,8 +116,8 @@ const Footer = () => {
 
           {/* Company Links */}
           <div>
-            <h4 className="text-white font-bold text-sm uppercase tracking-wider mb-6 flex items-center gap-2">
-              <span className="w-6 h-0.5 bg-violet-500 rounded-full" />
+            <h4 className="text-slate-900 dark:text-white font-bold text-sm uppercase tracking-wider mb-6 flex items-center gap-2">
+              <span className="w-6 h-0.5 bg-cyan-500 rounded-full" />
               Company
             </h4>
             <ul className="space-y-3">
@@ -125,9 +125,9 @@ const Footer = () => {
                 <li key={i}>
                   <Link
                     to={link.path}
-                    className="text-slate-400 hover:text-white text-sm font-medium transition-all duration-200 flex items-center gap-2 group"
+                    className="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white text-sm font-medium transition-all duration-200 flex items-center gap-2 group"
                   >
-                    <span className="w-1 h-1 rounded-full bg-violet-600 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <span className="w-1 h-1 rounded-full bg-cyan-600 opacity-0 group-hover:opacity-100 transition-opacity" />
                     {link.name}
                   </Link>
                 </li>
@@ -137,7 +137,7 @@ const Footer = () => {
 
           {/* Contact & Newsletter */}
           <div>
-            <h4 className="text-white font-bold text-sm uppercase tracking-wider mb-6 flex items-center gap-2">
+            <h4 className="text-slate-900 dark:text-white font-bold text-sm uppercase tracking-wider mb-6 flex items-center gap-2">
               <span className="w-6 h-0.5 bg-emerald-500 rounded-full" />
               Get In Touch
             </h4>
@@ -149,15 +149,15 @@ const Footer = () => {
               ].map(({ Icon, text, href }, i) => (
                 <li key={i}>
                   {href ? (
-                    <a href={href} className="flex items-start gap-3 group hover:text-white transition-colors">
-                      <div className="mt-0.5 p-1.5 rounded-lg bg-slate-800 text-indigo-400 group-hover:bg-indigo-600 group-hover:text-white transition-all flex-shrink-0">
+                    <a href={href} className="flex items-start gap-3 group hover:text-slate-900 dark:hover:text-white transition-colors">
+                      <div className="mt-0.5 p-1.5 rounded-lg bg-white dark:bg-slate-800 text-teal-600 dark:text-teal-400 group-hover:bg-teal-600 group-hover:text-white transition-all flex-shrink-0 border border-slate-200 dark:border-transparent">
                         <Icon size={14} />
                       </div>
                       <span className="text-sm leading-relaxed">{text}</span>
                     </a>
                   ) : (
                     <div className="flex items-start gap-3">
-                      <div className="mt-0.5 p-1.5 rounded-lg bg-slate-800 text-indigo-400 flex-shrink-0">
+                      <div className="mt-0.5 p-1.5 rounded-lg bg-white dark:bg-slate-800 text-teal-600 dark:text-teal-400 flex-shrink-0 border border-slate-200 dark:border-transparent">
                         <Icon size={14} />
                       </div>
                       <span className="text-sm leading-relaxed">{text}</span>
@@ -168,16 +168,16 @@ const Footer = () => {
             </ul>
 
             {/* Newsletter */}
-            <p className="text-xs text-slate-500 mb-3 font-medium uppercase tracking-wider">Newsletter</p>
+            <p className="text-xs text-slate-500 dark:text-slate-500 mb-3 font-medium uppercase tracking-wider">Newsletter</p>
             <form className="flex gap-2" onSubmit={(e) => e.preventDefault()}>
               <input
                 type="email"
                 placeholder="your@email.com"
-                className="flex-1 min-w-0 bg-slate-800/70 border border-slate-700 text-white text-sm pl-4 pr-3 py-2.5 rounded-xl focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all placeholder:text-slate-500"
+                className="flex-1 min-w-0 bg-white dark:bg-slate-800/70 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white text-sm pl-4 pr-3 py-2.5 rounded-xl focus:outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 transition-all placeholder:text-slate-400 dark:placeholder:text-slate-500"
               />
               <button
                 type="button"
-                className="flex-shrink-0 p-2.5 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 transition-all shadow-lg"
+                className="flex-shrink-0 p-2.5 rounded-xl bg-teal-600 text-white hover:bg-teal-700 transition-all shadow-lg"
               >
                 <Send size={16} />
               </button>
@@ -186,15 +186,15 @@ const Footer = () => {
         </div>
 
         {/* Bottom Bar */}
-        <div className="border-t border-slate-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+        <div className="border-t border-slate-200 dark:border-slate-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-slate-500 text-sm flex items-center gap-1.5">
-            © {new Date().getFullYear()} <span className="text-slate-300 font-bold">NaviGreat</span>. Made with
+            © {new Date().getFullYear()} <span className="text-slate-700 dark:text-slate-300 font-bold">NaviGreat</span>. Made with
             <Heart size={13} className="text-rose-500 fill-rose-500 mx-0.5" /> in India.
           </p>
           <div className="flex items-center gap-6 text-sm text-slate-500">
-            <Link to="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
-            <span className="w-1 h-1 rounded-full bg-slate-700" />
-            <Link to="/terms" className="hover:text-white transition-colors">Terms of Service</Link>
+            <Link to="/privacy" className="hover:text-slate-900 dark:hover:text-white transition-colors">Privacy Policy</Link>
+            <span className="w-1 h-1 rounded-full bg-slate-300 dark:bg-slate-700" />
+            <Link to="/terms" className="hover:text-slate-900 dark:hover:text-white transition-colors">Terms of Service</Link>
           </div>
         </div>
       </div>

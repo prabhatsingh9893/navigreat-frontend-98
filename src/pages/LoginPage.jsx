@@ -2,16 +2,15 @@ import { signInWithPopup, signInWithRedirect, getRedirectResult } from 'firebase
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { auth, provider } from '../firebaseConfig';
-import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
 import { API_BASE_URL } from '../config';
-import { ArrowLeft, User as UserIcon, Lock, Mail, ChevronRight, Sparkles, Sun, Moon } from 'lucide-react';
-import { useTheme } from '../context/ThemeContext';
+import { Lock, Mail, ChevronRight, Eye, EyeOff, Star } from 'lucide-react';
+import AuthLayout from '../components/AuthLayout';
 
 // Simple Loader Component for internal use
 const ProcessingOverlay = ({ text, onCancel }) => (
   <div className="fixed inset-0 bg-white/90 z-50 flex flex-col items-center justify-center p-4 backdrop-blur-sm">
-    <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-600 mb-4"></div>
+    <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-teal-600 mb-4"></div>
     <h3 className="text-xl font-semibold text-gray-800 animate-pulse">{text}</h3>
     <p className="text-sm text-gray-500 mt-2">Please wait while we secure your session...</p>
     {onCancel && (
@@ -29,8 +28,8 @@ function LoginPage() {
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [verifying, setVerifying] = useState(false);
   const [statusMessage, setStatusMessage] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
-  const { theme, toggleTheme } = useTheme();
 
   // Redirect if already logged in
   useEffect(() => {
@@ -176,145 +175,129 @@ function LoginPage() {
     return <ProcessingOverlay text={statusMessage} onCancel={() => setVerifying(false)} />;
   }
 
-  return (
-    <div className="min-h-screen bg-mesh-hero dark:bg-[#0b141a] flex relative overflow-hidden">
-
-      {/* LEFT: Illustrative Side (Desktop Only) */}
-      <div className="hidden lg:flex w-1/2 bg-slate-100 dark:bg-slate-900 relative items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1543269865-cbf427effbad?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80')] bg-cover bg-center opacity-20"></div>
-        <div className="absolute inset-0 bg-gradient-to-tr from-indigo-900/90 to-violet-900/90"></div>
-
-        <div className="relative z-10 p-12 max-w-lg glass-dark text-white">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="animate-float mb-8"
-            transition={{ delay: 0.2 }}
-          >
-            <div className="inline-flex items-center gap-2 px-3 py-1 bg-indigo-500/20 border border-indigo-400/30 rounded-full text-indigo-200 text-sm font-medium mb-6">
-              <Sparkles size={14} /> Future awaits
-            </div>
-            <h1 className="text-5xl font-extrabold tracking-tight leading-tight mb-6">Welcome to <br />NaviGreat.</h1>
-            <p className="text-lg text-blue-100/80 leading-relaxed">
-              Connect with mentors from top IITs & NITs. Your journey to a dream career starts with a single step.
-            </p>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.5 }}
-            className="flex gap-4"
-          >
-            <div className="flex -space-x-4">
-              {[1, 2, 3].map(i => (
-                <div key={i} className="w-12 h-12 rounded-full border-2 border-slate-900 bg-slate-700 flex items-center justify-center text-xs">
-                  <UserIcon size={20} className="text-slate-400" />
-                </div>
-              ))}
-            </div>
-            <div className="flex flex-col justify-center">
-              <span className="font-bold text-lg">500+</span>
-              <span className="text-sm text-blue-200">Students active now</span>
-            </div>
-          </motion.div>
+  const proof = (
+    <div className="max-w-md">
+      <figure className="rounded-2xl bg-white/10 backdrop-blur-md border border-white/15 p-6">
+        <div className="flex gap-1 mb-3">
+          {[1, 2, 3, 4, 5].map((i) => (
+            <Star key={i} size={15} className="text-amber-400 fill-amber-400" />
+          ))}
         </div>
-      </div>
+        <blockquote className="text-[15px] leading-relaxed text-white/90">
+          &ldquo;My mentor handed me the exact interview prep that landed my placement. One session did what months of guessing couldn&apos;t.&rdquo;
+        </blockquote>
+        <figcaption className="mt-4 flex items-center gap-3">
+          <span className="grid place-items-center w-9 h-9 rounded-full bg-gradient-to-br from-teal-400 to-cyan-500 text-white text-sm font-bold">P</span>
+          <span className="text-sm">
+            <span className="block font-semibold text-white">Priya Sharma</span>
+            <span className="block text-white/60">IIT Delhi &middot; CSE</span>
+          </span>
+        </figcaption>
+      </figure>
 
-      {/* RIGHT: Login Form */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-6 bg-slate-50 dark:bg-[#080d14] relative">
-        <Link to="/" className="absolute top-8 left-8 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white flex items-center gap-2 font-medium transition-colors">
-          <ArrowLeft size={20} /> Back to Home
-        </Link>
-        <button type="button" aria-label="Toggle dark mode" onClick={toggleTheme} className="absolute top-8 right-8 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white">
-          {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
-        </button>
-
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.4 }}
-          className="w-full max-w-md glass-card p-10"
-        >
-          <div className="text-center mb-10">
-            <h2 className="text-3xl font-bold text-gradient">Welcome Back</h2>
-            <p className="text-slate-500 dark:text-slate-400 mt-2">Please enter your details to sign in.</p>
-          </div>
-
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="space-y-2">
-              <label className="text-sm font-semibold text-slate-700 dark:text-slate-200 ml-1">Email Address</label>
-              <div className="relative">
-                <Mail className="absolute left-4 top-3.5 text-slate-400 dark:text-slate-500" size={20} />
-                <input
-                  type="email"
-                  name="email"
-                  onChange={handleChange}
-                  placeholder="Enter your email"
-                  required
-                  className="input-premium !pl-12"
-                />
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-sm font-semibold text-slate-700 dark:text-slate-200 ml-1">Password</label>
-              <div className="relative">
-                <Lock className="absolute left-4 top-3.5 text-slate-400 dark:text-slate-500" size={20} />
-                <input
-                  type="password"
-                  name="password"
-                  onChange={handleChange}
-                  placeholder="Enter your password"
-                  required
-                  className="input-premium !pl-12"
-                />
-              </div>
-              <div className="text-right pt-1">
-                <Link to="/forgot-password" className="text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 hover:underline">Forgot Password?</Link>
-              </div>
-            </div>
-
-            <button type="submit" className="w-full btn-primary py-4 rounded-xl text-base group">
-              Sign In <ChevronRight size={20} className="group-hover:translate-x-1 transition-transform" />
-            </button>
-          </form>
-
-          <div className="my-8 flex items-center gap-4">
-            <div className="h-px bg-slate-200 dark:bg-slate-800 flex-1"></div>
-            <span className="text-slate-400 dark:text-slate-500 text-sm font-medium uppercase tracking-wider">Or continue with</span>
-            <div className="h-px bg-slate-200 dark:bg-slate-800 flex-1"></div>
-          </div>
-
-          <button
-            onClick={handleGoogleLogin}
-            className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-200 py-3.5 rounded-xl font-bold hover:bg-slate-50 dark:hover:bg-slate-800 hover:border-indigo-300 dark:hover:border-indigo-600 transition-all flex items-center justify-center gap-3 group"
-          >
-            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" className="w-5 h-5 group-hover:scale-110 transition-transform" />
-            Sign in with Google
-          </button>
-
-          {/* Fallback Button for Stubborn Mobile Devices */}
-          <div className="mt-6 text-center">
-            <button
-              type="button"
-              onClick={async () => {
-                setVerifying(true);
-                setStatusMessage("Redirecting...");
-                await signInWithRedirect(auth, provider);
-              }}
-              className="text-xs text-slate-400 dark:text-slate-500 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium transition-colors"
-            >
-              Having specific trouble? Use Alternate Login
-            </button>
-          </div>
-
-          <p className="mt-8 text-center text-slate-600 dark:text-slate-400">
-            Don&apos;t have an account? <Link to="/signup" className="text-indigo-600 dark:text-indigo-400 font-bold hover:underline">Create Account</Link>
-          </p>
-        </motion.div>
+      <div className="mt-6 flex flex-wrap items-center gap-2">
+        {['IIT Delhi', 'IIT Bombay', 'NIT Trichy', 'BITS Pilani'].map((c) => (
+          <span key={c} className="px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-medium text-white/70">{c}</span>
+        ))}
+        <span className="px-3 py-1 rounded-full bg-teal-500/20 border border-teal-400/30 text-xs font-semibold text-teal-100">+30 more</span>
       </div>
     </div>
+  );
+
+  return (
+    <AuthLayout
+      eyebrow="Trusted by 500+ students"
+      title="Guidance from those who've"
+      highlight="already made it."
+      subtitle="Log in to book 1-on-1 sessions with verified seniors from India's top engineering colleges."
+      proof={proof}
+    >
+      <div className="mb-8">
+        <h2 className="text-3xl font-extrabold text-slate-900 dark:text-white">Welcome back</h2>
+        <p className="text-slate-500 dark:text-slate-400 mt-2">Sign in to pick up where you left off.</p>
+      </div>
+
+      <form onSubmit={handleSubmit} className="space-y-5">
+        <div className="space-y-2">
+          <label htmlFor="email" className="text-sm font-semibold text-slate-700 dark:text-slate-200 ml-1">Email address</label>
+          <div className="relative">
+            <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500" size={19} />
+            <input
+              id="email"
+              type="email"
+              name="email"
+              onChange={handleChange}
+              placeholder="you@example.com"
+              required
+              className="input-premium !pl-12"
+            />
+          </div>
+        </div>
+
+        <div className="space-y-2">
+          <div className="flex items-center justify-between ml-1">
+            <label htmlFor="password" className="text-sm font-semibold text-slate-700 dark:text-slate-200">Password</label>
+            <Link to="/forgot-password" className="text-sm font-medium text-teal-600 dark:text-teal-400 hover:underline">Forgot password?</Link>
+          </div>
+          <div className="relative">
+            <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500" size={19} />
+            <input
+              id="password"
+              type={showPassword ? 'text' : 'password'}
+              name="password"
+              onChange={handleChange}
+              placeholder="Enter your password"
+              required
+              className="input-premium !pl-12 !pr-12"
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword((s) => !s)}
+              aria-label={showPassword ? 'Hide password' : 'Show password'}
+              className="absolute right-3 top-1/2 -translate-y-1/2 grid place-items-center w-8 h-8 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"
+            >
+              {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+            </button>
+          </div>
+        </div>
+
+        <button type="submit" className="w-full btn-primary py-4 rounded-xl text-base group">
+          Sign in <ChevronRight size={20} className="group-hover:translate-x-1 transition-transform" />
+        </button>
+      </form>
+
+      <div className="my-7 flex items-center gap-4">
+        <div className="h-px bg-slate-200 dark:bg-slate-800 flex-1" />
+        <span className="text-slate-400 dark:text-slate-500 text-xs font-semibold uppercase tracking-wider">or</span>
+        <div className="h-px bg-slate-200 dark:bg-slate-800 flex-1" />
+      </div>
+
+      <button
+        onClick={handleGoogleLogin}
+        className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-200 py-3.5 rounded-xl font-bold hover:bg-slate-50 dark:hover:bg-slate-800 hover:border-teal-300 dark:hover:border-teal-600 transition-all flex items-center justify-center gap-3 group"
+      >
+        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="" className="w-5 h-5 group-hover:scale-110 transition-transform" />
+        Sign in with Google
+      </button>
+
+      <div className="mt-5 text-center">
+        <button
+          type="button"
+          onClick={async () => {
+            setVerifying(true);
+            setStatusMessage("Redirecting...");
+            await signInWithRedirect(auth, provider);
+          }}
+          className="text-xs text-slate-400 dark:text-slate-500 hover:text-teal-600 dark:hover:text-teal-400 font-medium transition-colors"
+        >
+          Having trouble? Use alternate login
+        </button>
+      </div>
+
+      <p className="mt-8 text-center text-sm text-slate-600 dark:text-slate-400">
+        Don&apos;t have an account? <Link to="/signup" className="text-teal-600 dark:text-teal-400 font-bold hover:underline">Create one free</Link>
+      </p>
+    </AuthLayout>
   );
 }
 

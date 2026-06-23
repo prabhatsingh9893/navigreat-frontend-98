@@ -78,32 +78,32 @@ const steps = [
     icon: <GraduationCap size={28} />,
     title: 'Create Your Profile',
     desc: 'Sign up as a student in under 2 minutes. Tell us about your goals and the exam or career path you are targeting.',
-    color: 'from-blue-500 to-indigo-600',
-    glow: 'shadow-blue-500/20',
+    color: 'from-teal-500 to-teal-600',
+    glow: 'shadow-teal-500/20',
   },
   {
     step: '02',
     icon: <Users size={28} />,
     title: 'Browse Top Mentors',
     desc: 'Filter mentors by IIT, NIT, branch, and expertise. Read reviews and view full profiles before you connect.',
-    color: 'from-violet-500 to-purple-600',
-    glow: 'shadow-purple-500/20',
+    color: 'from-cyan-500 to-cyan-600',
+    glow: 'shadow-cyan-500/20',
   },
   {
     step: '03',
     icon: <MessageSquare size={28} />,
     title: 'Book a Session',
     desc: 'Book a priority 1-on-1 session directly. Pay securely and get a confirmed calendar invite instantly.',
-    color: 'from-pink-500 to-rose-600',
-    glow: 'shadow-pink-500/20',
+    color: 'from-sky-500 to-blue-600',
+    glow: 'shadow-sky-500/20',
   },
   {
     step: '04',
     icon: <TrendingUp size={28} />,
     title: 'Achieve Your Goals',
     desc: 'Get personalised roadmaps, resume reviews, and insider tips. Track your progress toward your dream.',
-    color: 'from-emerald-500 to-teal-600',
-    glow: 'shadow-emerald-500/20',
+    color: 'from-amber-400 to-amber-500',
+    glow: 'shadow-amber-500/20',
   },
 ];
 
@@ -112,51 +112,45 @@ const features = [
     icon: <Shield size={24} />,
     title: 'Verified Mentors',
     desc: 'Every mentor is manually verified. We confirm their college ID and academic credentials.',
-    color: 'text-blue-600 dark:text-blue-400',
-    bg: 'bg-blue-50 dark:bg-blue-900/20',
+    grad: 'from-teal-500 to-teal-600',
   },
   {
     icon: <Zap size={24} />,
     title: 'Instant Booking',
     desc: 'Book a session in seconds. No back-and-forth emails. Get confirmed slots instantly.',
-    color: 'text-yellow-600 dark:text-yellow-400',
-    bg: 'bg-yellow-50 dark:bg-yellow-900/20',
+    grad: 'from-amber-400 to-amber-500',
   },
   {
     icon: <Target size={24} />,
     title: 'Goal-Focused',
     desc: 'Mentors tailor every session to your specific exam, internship, or placement target.',
-    color: 'text-rose-600 dark:text-rose-400',
-    bg: 'bg-rose-50 dark:bg-rose-900/20',
+    grad: 'from-sky-500 to-cyan-600',
   },
   {
     icon: <Star size={24} />,
     title: 'Rated & Reviewed',
     desc: 'See real student reviews before booking. Transparent ratings keep quality high.',
-    color: 'text-amber-600 dark:text-amber-400',
-    bg: 'bg-amber-50 dark:bg-amber-900/20',
+    grad: 'from-amber-400 to-orange-500',
   },
   {
     icon: <Calendar size={24} />,
     title: 'Flexible Scheduling',
     desc: 'Mentors post their available slots. Book at a time that fits your study timetable.',
-    color: 'text-violet-600 dark:text-violet-400',
-    bg: 'bg-violet-50 dark:bg-violet-900/20',
+    grad: 'from-cyan-500 to-teal-600',
   },
   {
     icon: <MessageSquare size={24} />,
     title: 'Live Chat',
     desc: 'Reach out to mentors via our built-in chat before and after your session.',
-    color: 'text-emerald-600 dark:text-emerald-400',
-    bg: 'bg-emerald-50 dark:bg-emerald-900/20',
+    grad: 'from-teal-400 to-emerald-500',
   },
 ];
 
 const stats = [
-  { label: 'IITs Covered', val: 23, suffix: '+', color: 'text-indigo-600 dark:text-indigo-400' },
-  { label: 'NITs Covered', val: 31, suffix: '+', color: 'text-violet-600 dark:text-violet-400' },
-  { label: 'Active Mentors', val: 50, suffix: '+', color: 'text-emerald-600 dark:text-emerald-400' },
-  { label: 'Happy Students', val: 500, suffix: '+', color: 'text-amber-600 dark:text-amber-400' },
+  { label: 'IITs Covered', val: 23, suffix: '+', color: 'text-teal-600 dark:text-teal-400' },
+  { label: 'NITs Covered', val: 31, suffix: '+', color: 'text-cyan-600 dark:text-cyan-400' },
+  { label: 'Active Mentors', val: 50, suffix: '+', color: 'text-sky-600 dark:text-sky-400' },
+  { label: 'Happy Students', val: 500, suffix: '+', color: 'text-amber-500 dark:text-amber-400' },
 ];
 
 const testimonials = [
@@ -210,9 +204,9 @@ function HomePage() {
           {/* Mesh gradient background */}
           <div className="absolute inset-0 bg-mesh-light dark:bg-mesh-hero" />
           {/* Floating orbs */}
-          <div className="absolute top-1/4 -left-32 w-96 h-96 bg-indigo-300/40 dark:bg-indigo-600/30 rounded-full blur-[100px] animate-float-slow" />
-          <div className="absolute bottom-1/4 -right-32 w-96 h-96 bg-violet-300/35 dark:bg-violet-600/20 rounded-full blur-[100px] animate-float" style={{ animationDelay: '2s' }} />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-purple-300/25 dark:bg-purple-600/10 rounded-full blur-[120px]" />
+          <div className="absolute top-1/4 -left-32 w-96 h-96 bg-teal-300/40 dark:bg-teal-600/30 rounded-full blur-[100px] animate-float-slow" />
+          <div className="absolute bottom-1/4 -right-32 w-96 h-96 bg-cyan-300/35 dark:bg-cyan-600/20 rounded-full blur-[100px] animate-float" style={{ animationDelay: '2s' }} />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-sky-300/25 dark:bg-sky-600/10 rounded-full blur-[120px]" />
 
           {/* Grid pattern overlay */}
           <div className="absolute inset-0 opacity-[0.15] dark:opacity-10"
@@ -235,8 +229,8 @@ function HomePage() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6 }}
                 >
-                  <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-50/80 dark:bg-white/10 backdrop-blur-md border border-indigo-100 dark:border-white/20 text-indigo-950 dark:text-white/90 text-sm font-semibold mb-8">
-                    <Sparkles size={14} className="text-yellow-500 dark:text-yellow-400" />
+                  <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-teal-50/80 dark:bg-white/10 backdrop-blur-md border border-teal-100 dark:border-white/20 text-teal-950 dark:text-white/90 text-sm font-semibold mb-8">
+                    <Sparkles size={14} className="text-amber-500 dark:text-amber-400" />
                     <span>India&apos;s #1 Mentorship Platform for Engineers</span>
                     <div className="dot-glow ml-1" />
                   </div>
@@ -270,7 +264,7 @@ function HomePage() {
                 >
                   <Link
                     to="/mentors"
-                    className="shimmer-btn text-white px-8 py-4 rounded-2xl font-bold shadow-2xl shadow-indigo-500/30 transition-all hover:-translate-y-1 flex items-center justify-center gap-2 group text-base"
+                    className="shimmer-btn text-white px-8 py-4 rounded-2xl font-bold shadow-2xl shadow-teal-500/30 transition-all hover:-translate-y-1 flex items-center justify-center gap-2 group text-base"
                   >
                     Find a Mentor
                     <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
@@ -292,7 +286,7 @@ function HomePage() {
                 >
                   <div className="flex -space-x-3">
                     {['A', 'R', 'S', 'P'].map((letter, i) => (
-                      <div key={i} className="w-9 h-9 rounded-full bg-gradient-to-br from-indigo-400 to-violet-500 border-2 border-white dark:border-slate-900 flex items-center justify-center text-white text-xs font-bold shadow-lg">
+                      <div key={i} className="w-9 h-9 rounded-full bg-gradient-to-br from-teal-400 to-cyan-500 border-2 border-white dark:border-slate-900 flex items-center justify-center text-white text-xs font-bold shadow-lg">
                         {letter}
                       </div>
                     ))}
@@ -336,7 +330,7 @@ function HomePage() {
                   <motion.div
                     animate={{ y: [0, -12, 0] }}
                     transition={{ repeat: Infinity, duration: 3.5, ease: 'easeInOut' }}
-                    className="absolute -left-14 top-12 bg-white/95 dark:bg-white/10 backdrop-blur-xl border border-slate-200/80 dark:border-white/20 p-4 rounded-2xl shadow-xl shadow-indigo-900/8 dark:shadow-black/40 flex items-center gap-3 z-20"
+                    className="absolute -left-14 top-12 bg-white/95 dark:bg-white/10 backdrop-blur-xl border border-slate-200/80 dark:border-white/20 p-4 rounded-2xl shadow-xl shadow-teal-900/8 dark:shadow-black/40 flex items-center gap-3 z-20"
                   >
                     <div className="bg-emerald-100/70 dark:bg-emerald-400/20 p-2.5 rounded-xl">
                       <CheckCircle size={22} className="text-emerald-600 dark:text-emerald-400" />
@@ -351,8 +345,17 @@ function HomePage() {
                   <motion.div
                     animate={{ y: [0, -8, 0] }}
                     transition={{ repeat: Infinity, duration: 5, ease: 'easeInOut', delay: 0.5 }}
-                    className="absolute -right-10 top-8 bg-white/95 dark:bg-white/10 backdrop-blur-xl border border-slate-200/80 dark:border-white/20 px-4 py-3 rounded-2xl shadow-xl shadow-indigo-900/8 dark:shadow-black/40 z-20"
+                    className="absolute -right-10 bottom-10 bg-white/95 dark:bg-white/10 backdrop-blur-xl border border-slate-200/80 dark:border-white/20 px-5 py-3.5 rounded-2xl shadow-xl shadow-teal-900/8 dark:shadow-black/40 z-20"
                   >
+                    <div className="flex items-center gap-3">
+                      <div className="bg-amber-100/80 dark:bg-amber-400/20 p-2.5 rounded-xl">
+                        <Star size={22} className="text-amber-500 fill-amber-500" />
+                      </div>
+                      <div>
+                        <p className="font-extrabold text-slate-800 dark:text-white text-base leading-none">4.9<span className="text-amber-500">/5</span></p>
+                        <p className="text-slate-500 dark:text-white/60 text-xs mt-1">Avg. session rating</p>
+                      </div>
+                    </div>
                   </motion.div>
                 </div>
               </motion.div>
@@ -384,49 +387,48 @@ function HomePage() {
         {/* ====== 3. HOW IT WORKS ====== */}
         <section className="py-24 relative overflow-hidden bg-slate-50 dark:bg-[#080d14]">
           <div className="absolute inset-0 pointer-events-none">
-            <div className="absolute top-0 left-1/4 w-72 h-72 bg-indigo-200/30 dark:bg-indigo-900/20 rounded-full blur-3xl" />
-            <div className="absolute bottom-0 right-1/4 w-72 h-72 bg-violet-200/30 dark:bg-violet-900/20 rounded-full blur-3xl" />
+            <div className="absolute top-0 left-1/4 w-72 h-72 bg-teal-200/30 dark:bg-teal-900/20 rounded-full blur-3xl" />
+            <div className="absolute bottom-0 right-1/4 w-72 h-72 bg-cyan-200/30 dark:bg-cyan-900/20 rounded-full blur-3xl" />
           </div>
           <div className="container mx-auto px-6 relative z-10">
             <FadeIn>
-              <div className="text-center mb-16">
-                <span className="inline-block px-4 py-1.5 rounded-full bg-indigo-100 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 text-sm font-bold tracking-wide mb-4 border border-indigo-200 dark:border-indigo-800">
-                  Simple Process
-                </span>
-                <h2 className="text-4xl md:text-5xl font-extrabold text-slate-900 dark:text-white mb-4">
-                  How It <span className="text-gradient-blue">Works</span>
-                </h2>
-                <p className="text-slate-500 dark:text-slate-400 max-w-2xl mx-auto text-lg">
+              <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 mb-16">
+                <div className="max-w-xl">
+                  <span className="inline-block px-4 py-1.5 rounded-full bg-teal-100 dark:bg-teal-900/40 text-teal-700 dark:text-teal-300 text-sm font-bold tracking-wide mb-4 border border-teal-200 dark:border-teal-800">
+                    Simple Process
+                  </span>
+                  <h2 className="text-4xl md:text-5xl font-extrabold text-slate-900 dark:text-white">
+                    How It <span className="text-gradient-blue">Works</span>
+                  </h2>
+                </div>
+                <p className="text-slate-500 dark:text-slate-400 lg:max-w-sm lg:text-right text-lg">
                   From signup to your first session in less than 10 minutes. It really is that simple.
                 </p>
               </div>
             </FadeIn>
 
-            {/* Steps with connecting line */}
-            <div className="relative">
-              {/* Connection line (desktop) */}
-              <div className="hidden md:block absolute top-16 left-[12.5%] right-[12.5%] h-0.5 bg-gradient-to-r from-blue-500 via-violet-500 to-emerald-500 z-0" />
-
-              <div className="grid md:grid-cols-4 gap-6 relative z-10">
-                {steps.map((s, idx) => (
-                  <FadeIn key={idx} delay={idx * 0.15}>
-                    <motion.div
-                      whileHover={{ y: -8 }}
-                      className={`step-card hover:shadow-2xl ${s.glow} group`}
-                    >
-                      {/* Step number circle */}
-                      <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${s.color} flex items-center justify-center text-white mb-6 shadow-lg ${s.glow} shadow-lg mx-auto`}>
+            {/* Steps */}
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch">
+              {steps.map((s, idx) => (
+                <FadeIn key={idx} delay={idx * 0.12} className="h-full">
+                  <motion.div
+                    whileHover={{ y: -8 }}
+                    className={`step-card group h-full flex flex-col items-start text-left hover:shadow-2xl ${s.glow}`}
+                  >
+                    {/* Top row: icon + step number */}
+                    <div className="flex items-center justify-between w-full mb-6">
+                      <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${s.color} flex items-center justify-center text-white shadow-lg ${s.glow} group-hover:scale-110 transition-transform duration-300`}>
                         {s.icon}
                       </div>
-                      <div className="absolute top-6 right-6 text-4xl font-black text-slate-100 dark:text-slate-800 group-hover:text-slate-200 dark:group-hover:text-slate-700 transition-colors">
+                      <span className={`text-5xl font-black leading-none bg-gradient-to-br ${s.color} bg-clip-text text-transparent opacity-40 group-hover:opacity-100 transition-opacity duration-300`}>
                         {s.step}
-                      </div>
-                      <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-3 text-center">{s.title}</h3>
-                      <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed text-center">{s.desc}</p>
-                    </motion.div>
-                  </FadeIn>
-                ))}
-              </div>
+                      </span>
+                    </div>
+                    <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2.5">{s.title}</h3>
+                    <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">{s.desc}</p>
+                  </motion.div>
+                </FadeIn>
+              ))}
             </div>
           </div>
         </section>
@@ -436,7 +438,7 @@ function HomePage() {
           <div className="container mx-auto px-6">
             <FadeIn>
               <div className="text-center mb-16">
-                <span className="inline-block px-4 py-1.5 rounded-full bg-violet-100 dark:bg-violet-900/40 text-violet-700 dark:text-violet-300 text-sm font-bold tracking-wide mb-4 border border-violet-200 dark:border-violet-800">
+                <span className="inline-block px-4 py-1.5 rounded-full bg-cyan-100 dark:bg-cyan-900/40 text-cyan-700 dark:text-cyan-300 text-sm font-bold tracking-wide mb-4 border border-cyan-200 dark:border-cyan-800">
                   Platform Features
                 </span>
                 <h2 className="text-4xl md:text-5xl font-extrabold text-slate-900 dark:text-white mb-4">
@@ -452,7 +454,7 @@ function HomePage() {
               {features.map((f, idx) => (
                 <FadeIn key={idx} delay={idx * 0.08}>
                   <motion.div whileHover={{ y: -6 }} className="feature-card group">
-                    <div className={`w-12 h-12 rounded-xl ${f.bg} ${f.color} flex items-center justify-center mb-5`}>
+                    <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${f.grad} text-white flex items-center justify-center mb-5 shadow-lg shadow-slate-200/60 dark:shadow-black/30 group-hover:scale-110 transition-transform duration-300`}>
                       {f.icon}
                     </div>
                     <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">{f.title}</h3>
@@ -467,13 +469,13 @@ function HomePage() {
         {/* ====== 5. TOP MENTORS ====== */}
         <section className="py-24 relative overflow-hidden bg-slate-50 dark:bg-[#080d14]">
           <div className="absolute inset-0 pointer-events-none">
-            <div className="absolute -top-32 -right-32 w-[500px] h-[500px] bg-indigo-100/60 dark:bg-indigo-900/10 rounded-full blur-3xl" />
-            <div className="absolute -bottom-32 -left-32 w-[500px] h-[500px] bg-violet-100/60 dark:bg-violet-900/10 rounded-full blur-3xl" />
+            <div className="absolute -top-32 -right-32 w-[500px] h-[500px] bg-teal-100/60 dark:bg-teal-900/10 rounded-full blur-3xl" />
+            <div className="absolute -bottom-32 -left-32 w-[500px] h-[500px] bg-cyan-100/60 dark:bg-cyan-900/10 rounded-full blur-3xl" />
           </div>
           <div className="container mx-auto px-6 relative z-10">
             <FadeIn>
               <div className="text-center mb-16">
-                <span className="inline-block px-4 py-1.5 rounded-full bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300 text-sm font-bold tracking-wide mb-4 border border-emerald-200 dark:border-emerald-800">
+                <span className="inline-block px-4 py-1.5 rounded-full bg-sky-100 dark:bg-sky-900/40 text-sky-700 dark:text-sky-300 text-sm font-bold tracking-wide mb-4 border border-sky-200 dark:border-sky-800">
                   Expert Guidance
                 </span>
                 <h2 className="text-4xl md:text-5xl font-extrabold text-slate-900 dark:text-white mb-4">
@@ -530,8 +532,8 @@ function HomePage() {
                       {/* Card Body */}
                       <div className="p-5">
                         <div className="flex items-center gap-2 mb-4">
-                          <div className="bg-indigo-100 dark:bg-indigo-900/30 p-1.5 rounded-lg">
-                            <BookOpen size={16} className="text-indigo-600 dark:text-indigo-400" />
+                          <div className="bg-teal-100 dark:bg-teal-900/30 p-1.5 rounded-lg">
+                            <BookOpen size={16} className="text-teal-600 dark:text-teal-400" />
                           </div>
                           <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">{mentor.branch || 'Engineering'}</span>
                         </div>
@@ -584,7 +586,7 @@ function HomePage() {
                       &quot;{t.text}&quot;
                     </p>
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center text-white text-sm font-bold">
+                      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-teal-500 to-cyan-600 flex items-center justify-center text-white text-sm font-bold">
                         {t.avatar}
                       </div>
                       <div>
@@ -604,7 +606,7 @@ function HomePage() {
           <div className="container mx-auto px-6">
             <FadeIn>
               <div className="relative overflow-hidden rounded-3xl p-12 md:p-16 text-center noise-overlay"
-                style={{ background: 'linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #a855f7 100%)' }}
+                style={{ background: 'linear-gradient(135deg, #0d9488 0%, #0891b2 50%, #0ea5e9 100%)' }}
               >
                 <div className="absolute inset-0 pointer-events-none">
                   <div className="absolute -top-16 -right-16 w-64 h-64 bg-white/10 rounded-full blur-3xl" />
@@ -614,12 +616,12 @@ function HomePage() {
                   <h2 className="text-4xl md:text-5xl font-extrabold text-white mb-4 leading-tight">
                     Ready to unlock your future?
                   </h2>
-                  <p className="text-indigo-200 text-lg max-w-2xl mx-auto mb-10">
+                  <p className="text-teal-50/90 text-lg max-w-2xl mx-auto mb-10">
                     Join thousands of students who are already getting the guidance they need from India&apos;s best engineers.
                   </p>
                   <div className="flex flex-col sm:flex-row gap-4 justify-center">
                     <Link to="/mentors"
-                      className="bg-white text-indigo-700 px-8 py-4 rounded-2xl font-bold hover:bg-indigo-50 transition-all hover:-translate-y-1 shadow-2xl shadow-black/20 flex items-center justify-center gap-2 group"
+                      className="bg-white text-teal-700 px-8 py-4 rounded-2xl font-bold hover:bg-teal-50 transition-all hover:-translate-y-1 shadow-2xl shadow-black/20 flex items-center justify-center gap-2 group"
                     >
                       Browse Mentors <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
                     </Link>

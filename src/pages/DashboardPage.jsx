@@ -427,27 +427,27 @@ const DashboardPage = () => {
                                     size="w-32 h-32"
                                     fontSize="text-4xl"
                                 />
-                                <label className="absolute bottom-0 right-0 bg-indigo-600 p-2.5 rounded-full text-white cursor-pointer hover:bg-indigo-700 shadow-lg transition hover:scale-110">
+                                <label className="absolute bottom-0 right-0 bg-teal-600 p-2.5 rounded-full text-white cursor-pointer hover:bg-teal-700 shadow-lg transition hover:scale-110">
                                     <Camera size={18} /><input type="file" accept="image/*" className="hidden" onChange={handleImageUpload} />
                                 </label>
                             </div>
                         </div>
 
                         <div className="space-y-4">
-                            <input value={editForm.username} onChange={e => setEditForm({ ...editForm, username: e.target.value })} className="w-full border border-slate-200 dark:border-slate-850 dark:bg-[#151f2e] dark:text-white p-3.5 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 transition" placeholder="Full Name" />
-                            <textarea value={editForm.about} onChange={e => setEditForm({ ...editForm, about: e.target.value })} className="w-full border border-slate-200 dark:border-slate-850 dark:bg-[#151f2e] dark:text-white p-3.5 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 transition" rows="4" placeholder="About yourself..." />
+                            <input value={editForm.username} onChange={e => setEditForm({ ...editForm, username: e.target.value })} className="w-full border border-slate-200 dark:border-slate-850 dark:bg-[#151f2e] dark:text-white p-3.5 rounded-xl outline-none focus:ring-2 focus:ring-teal-500 transition" placeholder="Full Name" />
+                            <textarea value={editForm.about} onChange={e => setEditForm({ ...editForm, about: e.target.value })} className="w-full border border-slate-200 dark:border-slate-850 dark:bg-[#151f2e] dark:text-white p-3.5 rounded-xl outline-none focus:ring-2 focus:ring-teal-500 transition" rows="4" placeholder="About yourself..." />
                             <div className="grid md:grid-cols-2 gap-4">
-                                <input value={editForm.college} onChange={e => setEditForm({ ...editForm, college: e.target.value })} className="w-full border border-slate-200 dark:border-slate-850 dark:bg-[#151f2e] dark:text-white p-3.5 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 transition" placeholder="College" />
-                                <input value={editForm.branch} onChange={e => setEditForm({ ...editForm, branch: e.target.value })} className="w-full border border-slate-200 dark:border-slate-850 dark:bg-[#151f2e] dark:text-white p-3.5 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 transition" placeholder="Branch" />
+                                <input value={editForm.college} onChange={e => setEditForm({ ...editForm, college: e.target.value })} className="w-full border border-slate-200 dark:border-slate-850 dark:bg-[#151f2e] dark:text-white p-3.5 rounded-xl outline-none focus:ring-2 focus:ring-teal-500 transition" placeholder="College" />
+                                <input value={editForm.branch} onChange={e => setEditForm({ ...editForm, branch: e.target.value })} className="w-full border border-slate-200 dark:border-slate-850 dark:bg-[#151f2e] dark:text-white p-3.5 rounded-xl outline-none focus:ring-2 focus:ring-teal-500 transition" placeholder="Branch" />
                             </div>
                             {(profile.role === 'mentor' || user?.role === 'mentor') && (
                                 <div className="mt-2">
                                     <label className="text-xs font-bold text-gray-500 dark:text-slate-400 mb-1.5 block">Session Fee (INR)</label>
-                                    <input type="number" min="0" value={editForm.sessionFee || ""} onChange={e => setEditForm({ ...editForm, sessionFee: Number(e.target.value) })} className="w-full border border-slate-200 dark:border-slate-850 dark:bg-[#151f2e] dark:text-white p-3.5 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 transition" placeholder="Session Fee (e.g. 500)" />
+                                    <input type="number" min="0" value={editForm.sessionFee || ""} onChange={e => setEditForm({ ...editForm, sessionFee: Number(e.target.value) })} className="w-full border border-slate-200 dark:border-slate-850 dark:bg-[#151f2e] dark:text-white p-3.5 rounded-xl outline-none focus:ring-2 focus:ring-teal-500 transition" placeholder="Session Fee (e.g. 500)" />
                                 </div>
                             )}
                         </div>
-                        <button onClick={handleSaveProfile} className="mt-6 w-full bg-gradient-to-r from-indigo-600 to-violet-600 text-white py-3.5 rounded-xl font-bold hover:from-indigo-700 hover:to-violet-700 shadow-lg flex items-center justify-center gap-2 transition"><Save size={18} /> Save Changes</button>
+                        <button onClick={handleSaveProfile} className="mt-6 w-full bg-gradient-to-r from-teal-600 to-cyan-600 text-white py-3.5 rounded-xl font-bold hover:from-teal-700 hover:to-cyan-700 shadow-lg flex items-center justify-center gap-2 transition"><Save size={18} /> Save Changes</button>
                     </div>
                 </div>
             )}
@@ -464,13 +464,13 @@ const DashboardPage = () => {
                             <button onClick={() => setIsZoomModal(false)} className="hover:bg-gray-100 p-2 rounded-full"><X /></button>
                         </div>
                         <div className="space-y-4 mb-6">
-                            <div className="bg-blue-50 p-4 rounded-xl text-sm text-blue-700 space-y-2">
+                            <div className="bg-teal-50 p-4 rounded-xl text-sm text-teal-700 space-y-2">
                                 <p>Enter your <b>Zoom Personal Meeting ID</b>.</p>
                                 <p className="font-bold text-red-600">⚠️ Please DISABLE &quot;Waiting Room&quot; in your Zoom Settings so students can join automatically.</p>
                             </div>
                             <div className="relative">
                                 <input value={editForm.meetingId} onChange={e => setEditForm({ ...editForm, meetingId: e.target.value })} className="w-full border-2 border-gray-200 p-3 rounded-xl focus:border-red-500 outline-none font-mono text-lg pr-10" placeholder="Zoom ID" />
-                                {editForm.meetingId && <button onClick={() => copyToClipboard(editForm.meetingId)} className="absolute right-3 top-3.5 text-gray-400 hover:text-blue-600"><Copy size={18} /></button>}
+                                {editForm.meetingId && <button onClick={() => copyToClipboard(editForm.meetingId)} className="absolute right-3 top-3.5 text-gray-400 hover:text-teal-600"><Copy size={18} /></button>}
                             </div>
                             <input value={editForm.passcode} onChange={e => setEditForm({ ...editForm, passcode: e.target.value })} className="w-full border-2 border-gray-200 p-3 rounded-xl focus:border-red-500 outline-none font-mono text-lg" placeholder="Passcode" />
                         </div>
@@ -480,7 +480,7 @@ const DashboardPage = () => {
             )}
 
             {/* --- HEADER --- */}
-            <div className="h-72 bg-gradient-to-r from-slate-900 via-blue-900 to-slate-900 relative shadow-2xl overflow-hidden">
+            <div className="h-72 bg-gradient-to-r from-slate-900 via-teal-900 to-slate-900 relative shadow-2xl overflow-hidden">
                 <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10 animate-pulse"></div>
                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
 
@@ -493,7 +493,7 @@ const DashboardPage = () => {
                 <div className="flex flex-col md:flex-row items-end gap-8 mb-12">
                     {/* Profile Image */}
                     <div className="relative group">
-                        <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-cyan-400 rounded-full blur opacity-25 group-hover:opacity-75 transition duration-500"></div>
+                        <div className="absolute -inset-1 bg-gradient-to-r from-teal-600 to-cyan-400 rounded-full blur opacity-25 group-hover:opacity-75 transition duration-500"></div>
                         <Avatar
                             src={profile.image}
                             name={profile.username}
@@ -503,7 +503,7 @@ const DashboardPage = () => {
                         />
                         {/* Badge Logic */}
                         {profile.isVerified && (
-                            <div className="absolute bottom-5 right-5 bg-blue-600 text-white p-2 rounded-full border-4 border-white shadow-lg" title="Verified Mentor"><BadgeCheck size={24} /></div>
+                            <div className="absolute bottom-5 right-5 bg-teal-600 text-white p-2 rounded-full border-4 border-white shadow-lg" title="Verified Mentor"><BadgeCheck size={24} /></div>
                         )}
                         {!profile.isVerified && profile.verificationStatus === 'pending' && (
                             <div className="absolute bottom-5 right-5 bg-yellow-500 text-white p-2 rounded-full border-4 border-white shadow-lg" title="Verification Pending"><Clock size={24} /></div>
@@ -514,7 +514,7 @@ const DashboardPage = () => {
                     <div className="flex-1 mb-2 text-center md:text-left">
                         <h1 className="text-3xl font-bold text-white drop-shadow-md tracking-tight mb-2">{profile.username || "Mentor Name"}</h1>
                         <p className="text-white text-lg font-medium flex items-center justify-center md:justify-start gap-3 mt-2">
-                            <span className="bg-white text-blue-900 px-4 py-1 rounded-full font-bold shadow-lg uppercase text-xs tracking-wider">{profile.role}</span>
+                            <span className="bg-white text-teal-900 px-4 py-1 rounded-full font-bold shadow-lg uppercase text-xs tracking-wider">{profile.role}</span>
                             <span className="hidden md:inline text-white/40">•</span>
                             <span className="flex items-center gap-2 text-white font-semibold drop-shadow-md"><GraduationCap size={20} /> {profile.college || "University Not Set"}</span>
                         </p>
@@ -523,7 +523,7 @@ const DashboardPage = () => {
                     {/* Action Buttons */}
                     <div className="flex gap-4 mb-4 w-full md:w-auto">
                         {user?.role === 'mentor' && (
-                            <button onClick={() => { setEditForm(profile); setIsZoomModal(true); }} className="flex-1 md:flex-none bg-white dark:bg-slate-900 text-gray-900 dark:text-white border border-slate-200 dark:border-slate-800 px-6 py-3 rounded-xl font-bold hover:bg-gray-50 dark:hover:bg-slate-800 hover:border-indigo-300 dark:hover:border-indigo-600 hover:text-indigo-600 dark:hover:text-indigo-400 transition-all shadow-sm flex items-center justify-center gap-2 group">
+                            <button onClick={() => { setEditForm(profile); setIsZoomModal(true); }} className="flex-1 md:flex-none bg-white dark:bg-slate-900 text-gray-900 dark:text-white border border-slate-200 dark:border-slate-800 px-6 py-3 rounded-xl font-bold hover:bg-gray-50 dark:hover:bg-slate-800 hover:border-teal-300 dark:hover:border-teal-600 hover:text-teal-600 dark:hover:text-teal-400 transition-all shadow-sm flex items-center justify-center gap-2 group">
                                 <div className="p-1.5 bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 rounded-lg group-hover:scale-110 transition"><Video size={18} /></div> Setup Class
                             </button>
                         )}
@@ -542,9 +542,9 @@ const DashboardPage = () => {
                         {/* 0. STUDENT STATS GRID */}
                         <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
                             {[
-                                { label: "Requests Sent", val: bookings?.length || 0, icon: Users, color: "text-indigo-600", bg: "bg-indigo-50 dark:bg-indigo-950/40", border: "border-indigo-100 dark:border-indigo-900/30" },
-                                { label: "University", val: profile.college || "Not Set", icon: GraduationCap, color: "text-violet-600", bg: "bg-violet-50 dark:bg-violet-950/40", border: "border-violet-100 dark:border-violet-900/30" },
-                                { label: "Branch", val: profile.branch || "Not Set", icon: BadgeCheck, color: "text-indigo-600", bg: "bg-indigo-50 dark:bg-indigo-950/40", border: "border-indigo-100 dark:border-indigo-900/30" },
+                                { label: "Requests Sent", val: bookings?.length || 0, icon: Users, color: "text-teal-600", bg: "bg-teal-50 dark:bg-teal-950/40", border: "border-teal-100 dark:border-teal-900/30" },
+                                { label: "University", val: profile.college || "Not Set", icon: GraduationCap, color: "text-cyan-600", bg: "bg-cyan-50 dark:bg-cyan-950/40", border: "border-cyan-100 dark:border-cyan-900/30" },
+                                { label: "Branch", val: profile.branch || "Not Set", icon: BadgeCheck, color: "text-teal-600", bg: "bg-teal-50 dark:bg-teal-950/40", border: "border-teal-100 dark:border-teal-900/30" },
                             ].map((s, i) => (
                                 <div key={i} className={`bg-white dark:bg-[#0d1520] p-5 rounded-2xl shadow-sm border ${s.border} flex items-center gap-4 hover:shadow-md hover:scale-[1.02] transition-all duration-300 cursor-default`}>
                                     <div className={`p-3.5 rounded-xl ${s.bg} ${s.color}`}><s.icon size={24} /></div>
@@ -560,7 +560,7 @@ const DashboardPage = () => {
                         <div className="bg-white dark:bg-[#0d1520] p-8 rounded-3xl shadow-sm border border-slate-150/80 dark:border-slate-800/80 relative overflow-hidden">
                             <div className="absolute top-0 right-0 p-8 opacity-5 dark:opacity-[0.02]"><BadgeCheck size={120} /></div>
                             <h2 className="text-2xl font-bold mb-6 flex items-center gap-3 text-gray-800 dark:text-white relative z-10">
-                                <span className="bg-indigo-100/80 dark:bg-indigo-900/20 p-2 rounded-lg text-indigo-600 dark:text-indigo-400"><BadgeCheck size={24} /></span> About Me
+                                <span className="bg-teal-100/80 dark:bg-teal-900/20 p-2 rounded-lg text-teal-600 dark:text-teal-400"><BadgeCheck size={24} /></span> About Me
                             </h2>
                             <div className="relative z-10">
                                 <p className="text-gray-600 dark:text-gray-350 leading-loose text-lg whitespace-pre-wrap font-medium">
@@ -610,7 +610,7 @@ const DashboardPage = () => {
                         {/* 1. MY REQUESTS */}
                         <div className="bg-white dark:bg-[#0d1520] rounded-3xl shadow-sm border border-slate-150/80 dark:border-slate-800/80 overflow-hidden">
                             <div className="p-6 border-b border-slate-150 dark:border-slate-800 flex items-center justify-between">
-                                <h3 className="font-bold text-xl text-gray-800 dark:text-white flex items-center gap-2"><Clock size={22} className="text-indigo-600" /> My Booking Requests</h3>
+                                <h3 className="font-bold text-xl text-gray-800 dark:text-white flex items-center gap-2"><Clock size={22} className="text-teal-600" /> My Booking Requests</h3>
                             </div>
                             <div className="p-0">
                                 {bookings?.length === 0 ? (
@@ -639,22 +639,22 @@ const DashboardPage = () => {
                         </div>
 
                         {/* 2. FIND MENTORS CTA */}
-                        <div className="bg-gradient-to-r from-indigo-600 to-violet-600 rounded-3xl p-8 text-white shadow-xl flex flex-col md:flex-row items-center justify-between gap-6">
+                        <div className="bg-gradient-to-r from-teal-600 to-cyan-600 rounded-3xl p-8 text-white shadow-xl flex flex-col md:flex-row items-center justify-between gap-6">
                             <div>
                                 <h3 className="text-2xl font-bold mb-2">Need Guidance?</h3>
-                                <p className="text-indigo-100">Browse our list of expert mentors and book your session today.</p>
+                                <p className="text-teal-100">Browse our list of expert mentors and book your session today.</p>
                             </div>
-                            <button onClick={() => navigate('/mentors')} className="bg-white text-indigo-600 px-8 py-3 rounded-xl font-bold hover:bg-slate-50 transition shadow-lg whitespace-nowrap">Find Mentors</button>
+                            <button onClick={() => navigate('/mentors')} className="bg-white text-teal-600 px-8 py-3 rounded-xl font-bold hover:bg-slate-50 transition shadow-lg whitespace-nowrap">Find Mentors</button>
                         </div>
                     </div>
 
                     <div className="space-y-6">
                         <div className="bg-white dark:bg-[#0d1520] rounded-3xl shadow-sm border border-slate-150/80 dark:border-slate-800/80 p-6">
                             <h3 className="font-bold text-gray-800 dark:text-white mb-4">Quick Actions</h3>
-                            <button onClick={() => navigate('/mentors')} className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 rounded-xl font-bold text-gray-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 hover:border-indigo-300 dark:hover:border-indigo-600 hover:text-indigo-600 dark:hover:text-indigo-400 flex items-center gap-3 transition mb-3">
+                            <button onClick={() => navigate('/mentors')} className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 rounded-xl font-bold text-gray-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 hover:border-teal-300 dark:hover:border-teal-600 hover:text-teal-600 dark:hover:text-teal-400 flex items-center gap-3 transition mb-3">
                                 <Users size={20} /> Browse Mentors
                             </button>
-                            <button onClick={() => { setEditForm(profile); setIsEditing(true); }} className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 rounded-xl font-bold text-gray-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 hover:border-indigo-300 dark:hover:border-indigo-600 hover:text-indigo-600 dark:hover:text-indigo-400 flex items-center gap-3 transition">
+                            <button onClick={() => { setEditForm(profile); setIsEditing(true); }} className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 rounded-xl font-bold text-gray-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 hover:border-teal-300 dark:hover:border-teal-600 hover:text-teal-600 dark:hover:text-teal-400 flex items-center gap-3 transition">
                                 <Settings size={20} /> Profile Settings
                             </button>
                         </div>
@@ -706,10 +706,10 @@ const DashboardPage = () => {
                         {/* Stats Grid */}
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                             {[
-                                { label: "Students", val: "100+", icon: Users, color: "text-indigo-600", bg: "bg-indigo-50 dark:bg-indigo-950/40", border: "border-indigo-100 dark:border-indigo-900/30" },
-                                { label: "Lectures", val: lectures?.length || 0, icon: Video, color: "text-violet-600", bg: "bg-violet-50 dark:bg-violet-950/40", border: "border-violet-100 dark:border-violet-900/30" },
+                                { label: "Students", val: "100+", icon: Users, color: "text-teal-600", bg: "bg-teal-50 dark:bg-teal-950/40", border: "border-teal-100 dark:border-teal-900/30" },
+                                { label: "Lectures", val: lectures?.length || 0, icon: Video, color: "text-cyan-600", bg: "bg-cyan-50 dark:bg-cyan-950/40", border: "border-cyan-100 dark:border-cyan-900/30" },
                                 { label: "Rating", val: "4.9", icon: Star, color: "text-amber-500", bg: "bg-amber-50 dark:bg-amber-900/10", border: "border-amber-100 dark:border-amber-900/30" },
-                                { label: "Experience", val: "2+ Yrs", icon: Clock, color: "text-indigo-600", bg: "bg-indigo-50 dark:bg-indigo-950/40", border: "border-indigo-100 dark:border-indigo-900/30" },
+                                { label: "Experience", val: "2+ Yrs", icon: Clock, color: "text-teal-600", bg: "bg-teal-50 dark:bg-teal-950/40", border: "border-teal-100 dark:border-teal-900/30" },
                             ].map((s, i) => (
                                 <div key={i} className={`bg-white dark:bg-[#0d1520] p-5 rounded-2xl shadow-sm border ${s.border} flex items-center gap-4 hover:shadow-md hover:scale-[1.02] transition-all duration-300 cursor-default`}>
                                     <div className={`p-3.5 rounded-xl ${s.bg} ${s.color}`}><s.icon size={24} /></div>
@@ -722,7 +722,7 @@ const DashboardPage = () => {
                         <div className="bg-white dark:bg-[#0d1520] p-8 rounded-3xl shadow-sm border border-slate-150/80 dark:border-slate-800/80 relative overflow-hidden">
                             <div className="absolute top-0 right-0 p-8 opacity-5 dark:opacity-[0.02]"><BadgeCheck size={120} /></div>
                             <h2 className="text-2xl font-bold mb-6 flex items-center gap-3 text-gray-800 dark:text-white relative z-10">
-                                <span className="bg-indigo-100/80 dark:bg-indigo-900/20 p-2 rounded-lg text-indigo-600 dark:text-[#818cf8]"><BadgeCheck size={24} /></span> About Me
+                                <span className="bg-teal-100/80 dark:bg-teal-900/20 p-2 rounded-lg text-teal-600 dark:text-[#2dd4bf]"><BadgeCheck size={24} /></span> About Me
                             </h2>
                             <div className="relative z-10">
                                 <p className="text-gray-600 dark:text-gray-300 leading-loose text-lg whitespace-pre-wrap font-medium">{profile.about || "Write something about yourself to inspire students..."}</p>
@@ -741,7 +741,7 @@ const DashboardPage = () => {
                         <div className="bg-white dark:bg-[#0d1520] p-8 rounded-3xl shadow-sm border border-slate-150/80 dark:border-slate-800/80">
                             <div className="flex items-center justify-between mb-8">
                                 <h2 className="text-2xl font-bold text-gray-800 dark:text-white">Uploaded Resources <span className="text-slate-400 font-medium ml-2 text-lg">({lectures?.length || 0})</span></h2>
-                                <button onClick={() => document.getElementById('add-lecture').scrollIntoView({ behavior: 'smooth' })} className="text-indigo-600 dark:text-indigo-400 font-bold text-sm hover:underline md:hidden">Add New</button>
+                                <button onClick={() => document.getElementById('add-lecture').scrollIntoView({ behavior: 'smooth' })} className="text-teal-600 dark:text-teal-400 font-bold text-sm hover:underline md:hidden">Add New</button>
                             </div>
 
                             {lectures?.length === 0 ? (
@@ -763,7 +763,7 @@ const DashboardPage = () => {
                                                     </a>
                                                 </div>
                                                 <div className="p-5 flex-1 flex flex-col justify-between">
-                                                    <h4 className="font-bold text-gray-800 dark:text-slate-200 mb-2 leading-snug line-clamp-2 text-lg group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition">{l.title}</h4>
+                                                    <h4 className="font-bold text-gray-800 dark:text-slate-200 mb-2 leading-snug line-clamp-2 text-lg group-hover:text-teal-600 dark:group-hover:text-teal-400 transition">{l.title}</h4>
                                                     <div className="flex justify-between items-center mt-4 pt-4 border-t border-slate-150 dark:border-slate-800">
                                                         <span className="text-xs font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider">YouTube</span>
                                                         <button onClick={() => handleDeleteLecture(l._id)} className="text-gray-400 hover:text-red-500 p-2 rounded-lg hover:bg-red-50 transition"><Trash2 size={18} /></button>
@@ -781,31 +781,31 @@ const DashboardPage = () => {
                     <div className="space-y-8">
 
                         {/* CLASS SCHEDULER CARD */}
-                        <div className="bg-white dark:bg-[#0d1520] rounded-3xl shadow-xl shadow-indigo-100/10 dark:shadow-indigo-950/20 border border-slate-150/80 dark:border-slate-800/80 overflow-hidden sticky top-6 z-0">
-                            <div className="bg-gradient-to-r from-indigo-600 to-violet-600 p-6 text-white relative overflow-hidden">
+                        <div className="bg-white dark:bg-[#0d1520] rounded-3xl shadow-xl shadow-teal-100/10 dark:shadow-teal-950/20 border border-slate-150/80 dark:border-slate-800/80 overflow-hidden sticky top-6 z-0">
+                            <div className="bg-gradient-to-r from-teal-600 to-cyan-600 p-6 text-white relative overflow-hidden">
                                 <div className="absolute top-0 right-0 p-4 opacity-10"><Calendar size={80} /></div>
-                                <h3 className="font-bold text-xl relative z-10 flex items-center gap-2"><Calendar size={22} className="text-indigo-200" /> Schedule Class</h3>
-                                <p className="text-indigo-100 text-sm mt-1 relative z-10 font-medium">Create a new live session for students.</p>
+                                <h3 className="font-bold text-xl relative z-10 flex items-center gap-2"><Calendar size={22} className="text-teal-200" /> Schedule Class</h3>
+                                <p className="text-teal-100 text-sm mt-1 relative z-10 font-medium">Create a new live session for students.</p>
                             </div>
 
                             <div className="p-6 space-y-5">
                                 <div>
                                     <label className="text-xs font-extrabold text-gray-500 dark:text-slate-400 uppercase tracking-wider mb-1.5 block ml-1">Topic</label>
-                                    <input value={schedule.topic} onChange={e => setSchedule({ ...schedule, topic: e.target.value })} placeholder="e.g. Weekly Doubt Clearing" className="w-full p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 focus:border-indigo-500 outline-none bg-slate-50 dark:bg-[#151f2e] focus:bg-white dark:focus:bg-[#0d1520] dark:text-white transition-all font-medium" />
+                                    <input value={schedule.topic} onChange={e => setSchedule({ ...schedule, topic: e.target.value })} placeholder="e.g. Weekly Doubt Clearing" className="w-full p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 focus:border-teal-500 outline-none bg-slate-50 dark:bg-[#151f2e] focus:bg-white dark:focus:bg-[#0d1520] dark:text-white transition-all font-medium" />
                                 </div>
 
                                 <div className="grid grid-cols-2 gap-4">
                                     <div>
                                         <label className="text-xs font-extrabold text-gray-500 dark:text-slate-400 uppercase tracking-wider mb-1.5 block ml-1">Date</label>
-                                        <input type="date" value={schedule.date} onChange={e => setSchedule({ ...schedule, date: e.target.value })} className="w-full p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 focus:border-indigo-500 outline-none bg-slate-50 dark:bg-[#151f2e] focus:bg-white dark:focus:bg-[#0d1520] dark:text-white transition-all font-medium text-sm" />
+                                        <input type="date" value={schedule.date} onChange={e => setSchedule({ ...schedule, date: e.target.value })} className="w-full p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 focus:border-teal-500 outline-none bg-slate-50 dark:bg-[#151f2e] focus:bg-white dark:focus:bg-[#0d1520] dark:text-white transition-all font-medium text-sm" />
                                     </div>
                                     <div>
                                         <label className="text-xs font-extrabold text-gray-500 dark:text-slate-400 uppercase tracking-wider mb-1.5 block ml-1">Time</label>
-                                        <input type="time" value={schedule.startTime} onChange={e => setSchedule({ ...schedule, startTime: e.target.value })} className="w-full p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 focus:border-indigo-500 outline-none bg-slate-50 dark:bg-[#151f2e] focus:bg-white dark:focus:bg-[#0d1520] dark:text-white transition-all font-medium text-sm" />
+                                        <input type="time" value={schedule.startTime} onChange={e => setSchedule({ ...schedule, startTime: e.target.value })} className="w-full p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 focus:border-teal-500 outline-none bg-slate-50 dark:bg-[#151f2e] focus:bg-white dark:focus:bg-[#0d1520] dark:text-white transition-all font-medium text-sm" />
                                     </div>
                                 </div>
 
-                                <button onClick={handleScheduleClass} className="w-full bg-gradient-to-r from-indigo-600 to-violet-600 text-white py-4 rounded-xl font-bold hover:from-indigo-700 hover:to-violet-700 shadow-lg shadow-indigo-500/20 hover:-translate-y-0.5 transition-all flex justify-center gap-2 items-center group">
+                                <button onClick={handleScheduleClass} className="w-full bg-gradient-to-r from-teal-600 to-cyan-600 text-white py-4 rounded-xl font-bold hover:from-teal-700 hover:to-cyan-700 shadow-lg shadow-teal-500/20 hover:-translate-y-0.5 transition-all flex justify-center gap-2 items-center group">
                                     <Plus size={20} className="group-hover:rotate-90 transition duration-300" /> Schedule Session
                                 </button>
                             </div>
@@ -816,10 +816,10 @@ const DashboardPage = () => {
                                     <h4 className="text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wider mb-3 px-2">Upcoming Classes</h4>
                                     <div className="space-y-3 max-h-64 overflow-y-auto custom-scrollbar pr-1">
                                         {sessions.map(s => (
-                                            <div key={s._id} className="bg-white dark:bg-[#0d1520] border border-slate-200 dark:border-slate-800 p-4 rounded-xl flex justify-between items-center group hover:border-indigo-300 dark:hover:border-indigo-800 transition-colors shadow-sm">
+                                            <div key={s._id} className="bg-white dark:bg-[#0d1520] border border-slate-200 dark:border-slate-800 p-4 rounded-xl flex justify-between items-center group hover:border-teal-300 dark:hover:border-teal-800 transition-colors shadow-sm">
                                                 <div>
                                                     <div className="font-bold text-gray-800 dark:text-slate-250 text-sm mb-1">{s.title}</div>
-                                                    <div className="text-xs text-indigo-600 dark:text-indigo-400 font-bold bg-indigo-50 dark:bg-indigo-950/40 px-2 py-1 rounded-md inline-block border border-indigo-150 dark:border-indigo-900/30">
+                                                    <div className="text-xs text-teal-600 dark:text-teal-400 font-bold bg-teal-50 dark:bg-teal-950/40 px-2 py-1 rounded-md inline-block border border-teal-150 dark:border-teal-900/30">
                                                         {new Date(s.startTime).toLocaleDateString(undefined, { weekday: 'short' })}, {new Date(s.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                                     </div>
                                                 </div>
@@ -840,8 +840,8 @@ const DashboardPage = () => {
                         {/* BOOKINGS CARD */}
                         <div className="bg-white dark:bg-[#0d1520] rounded-3xl shadow-sm border border-slate-150/80 dark:border-slate-800/80 overflow-hidden">
                             <div className="p-5 border-b border-slate-150 dark:border-slate-800 flex items-center justify-between">
-                                <h3 className="font-bold text-lg text-gray-800 dark:text-white flex items-center gap-2"><Users size={20} className="text-violet-600" /> Requests</h3>
-                                <span className="bg-indigo-50 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-400 text-xs font-bold px-2 py-1 rounded-full border border-indigo-100 dark:border-indigo-900/30">{bookings?.length || 0} New</span>
+                                <h3 className="font-bold text-lg text-gray-800 dark:text-white flex items-center gap-2"><Users size={20} className="text-cyan-600" /> Requests</h3>
+                                <span className="bg-teal-50 dark:bg-teal-950 text-teal-700 dark:text-teal-400 text-xs font-bold px-2 py-1 rounded-full border border-teal-100 dark:border-teal-900/30">{bookings?.length || 0} New</span>
                             </div>
 
                             {bookings?.length === 0 ? (
@@ -851,7 +851,7 @@ const DashboardPage = () => {
                             ) : (
                                 <div className="max-h-80 overflow-y-auto custom-scrollbar p-0">
                                     {bookings?.map((b, idx) => (
-                                        <div key={b._id} className={`p-5 hover:bg-indigo-50/30 dark:hover:bg-indigo-950/25 transition-colors ${idx !== (bookings?.length || 0) - 1 ? 'border-b border-slate-150 dark:border-slate-800' : ''}`}>
+                                        <div key={b._id} className={`p-5 hover:bg-teal-50/30 dark:hover:bg-teal-950/25 transition-colors ${idx !== (bookings?.length || 0) - 1 ? 'border-b border-slate-150 dark:border-slate-800' : ''}`}>
                                             <div className="flex justify-between items-start mb-2">
                                                 <h4 className="font-bold text-gray-800 dark:text-slate-200 text-sm">{b.studentEmail || "Student"}</h4>
                                                 <span className="text-[10px] uppercase font-bold text-gray-400 dark:text-slate-500 tracking-wide">
@@ -864,7 +864,7 @@ const DashboardPage = () => {
 
                                             <div className="mt-3 flex gap-2">
                                                 <button className="flex-1 text-xs font-bold bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 py-2 rounded-lg text-slate-700 dark:text-slate-350 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-slate-900 transition">Dismiss</button>
-                                                <button className="flex-1 text-xs font-bold bg-gradient-to-r from-indigo-600 to-violet-600 text-white py-2 rounded-lg hover:from-indigo-700 hover:to-violet-700 transition shadow-md shadow-indigo-500/10" onClick={() => navigate(`/chat/${b.studentId}`)}>Reply</button>
+                                                <button className="flex-1 text-xs font-bold bg-gradient-to-r from-teal-600 to-cyan-600 text-white py-2 rounded-lg hover:from-teal-700 hover:to-cyan-700 transition shadow-md shadow-teal-500/10" onClick={() => navigate(`/chat/${b.studentId}`)}>Reply</button>
                                             </div>
                                         </div>
                                     ))}
@@ -876,17 +876,17 @@ const DashboardPage = () => {
                         <div id="add-lecture" className="bg-mesh-hero noise-overlay p-8 rounded-3xl text-white shadow-2xl relative overflow-hidden">
                             <div className="absolute top-0 right-0 p-8 opacity-5"><UploadCloud size={100} /></div>
                             <div className="flex items-center gap-4 mb-6 relative z-10">
-                                <div className="bg-white/10 backdrop-blur-md p-3 rounded-2xl border border-white/10"><UploadCloud size={24} className="text-indigo-400" /></div>
+                                <div className="bg-white/10 backdrop-blur-md p-3 rounded-2xl border border-white/10"><UploadCloud size={24} className="text-teal-400" /></div>
                                 <div>
                                     <h3 className="font-bold text-lg leading-tight">Upload Content</h3>
                                     <p className="text-gray-400 text-xs font-medium mt-0.5">Share knowledge with students</p>
                                 </div>
                             </div>
                             <div className="space-y-4 relative z-10">
-                                <input placeholder="Video Title" value={newLecture.title} onChange={e => setNewLecture({ ...newLecture, title: e.target.value })} className="w-full p-4 rounded-xl text-white bg-black/20 border border-white/10 focus:border-indigo-500/50 outline-none focus:bg-black/40 placeholder:text-gray-500 transition-all font-medium text-sm" />
-                                <input placeholder="YouTube URL" value={newLecture.url} onChange={e => setNewLecture({ ...newLecture, url: e.target.value })} className="w-full p-4 rounded-xl text-white bg-black/20 border border-white/10 focus:border-indigo-500/50 outline-none focus:bg-black/40 placeholder:text-gray-500 transition-all font-medium text-sm" />
+                                <input placeholder="Video Title" value={newLecture.title} onChange={e => setNewLecture({ ...newLecture, title: e.target.value })} className="w-full p-4 rounded-xl text-white bg-black/20 border border-white/10 focus:border-teal-500/50 outline-none focus:bg-black/40 placeholder:text-gray-500 transition-all font-medium text-sm" />
+                                <input placeholder="YouTube URL" value={newLecture.url} onChange={e => setNewLecture({ ...newLecture, url: e.target.value })} className="w-full p-4 rounded-xl text-white bg-black/20 border border-white/10 focus:border-teal-500/50 outline-none focus:bg-black/40 placeholder:text-gray-500 transition-all font-medium text-sm" />
 
-                                <button onClick={handleAddLecture} disabled={uploading} className="w-full bg-gradient-to-r from-indigo-500 to-violet-500 text-white font-extrabold py-4 rounded-xl hover:from-indigo-600 hover:to-violet-600 transition shadow-lg shadow-indigo-500/20 flex items-center justify-center gap-2 disabled:opacity-70 mt-2">
+                                <button onClick={handleAddLecture} disabled={uploading} className="w-full bg-gradient-to-r from-teal-500 to-cyan-500 text-white font-extrabold py-4 rounded-xl hover:from-teal-600 hover:to-cyan-600 transition shadow-lg shadow-teal-500/20 flex items-center justify-center gap-2 disabled:opacity-70 mt-2">
                                     {uploading ? <Loader2 className="animate-spin" size={20} /> : <Plus size={20} />}
                                     {uploading ? "Publishing..." : "Upload Video"}
                                 </button>

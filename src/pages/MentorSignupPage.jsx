@@ -98,7 +98,7 @@ function MentorSignupPage() {
       {/* LEFT: Illustrative Side (Desktop Only) */}
       <div className="hidden lg:flex w-1/2 bg-slate-100 dark:bg-slate-900 relative items-center justify-center overflow-hidden">
         <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80')] bg-cover bg-center opacity-20"></div>
-        <div className="absolute inset-0 bg-gradient-to-tr from-indigo-900/90 to-violet-900/90"></div>
+        <div className="absolute inset-0 bg-gradient-to-tr from-teal-900/90 to-cyan-900/90"></div>
 
         <div className="relative z-10 p-12 max-w-lg glass-dark text-white">
           <motion.div
@@ -107,11 +107,11 @@ function MentorSignupPage() {
             className="animate-float mb-8"
             transition={{ delay: 0.2 }}
           >
-            <div className="inline-flex items-center gap-2 px-3 py-1 bg-purple-500/20 border border-purple-400/30 rounded-full text-purple-200 text-sm font-medium mb-6">
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-amber-500/20 border border-amber-400/30 rounded-full text-amber-200 text-sm font-medium mb-6">
               <Sparkles size={14} /> Join the Network
             </div>
             <h1 className="text-5xl font-extrabold tracking-tight leading-tight mb-6">Share Your <br />Experience.</h1>
-            <p className="text-lg text-blue-100/80 leading-relaxed">
+            <p className="text-lg text-teal-100/80 leading-relaxed">
               Guide the next generation of engineers. Share your experience, help students navigate their careers, and build your professional brand.
             </p>
           </motion.div>
@@ -123,21 +123,21 @@ function MentorSignupPage() {
             className="grid grid-cols-1 gap-4"
           >
             <div className="bg-white/10 backdrop-blur-sm p-4 rounded-2xl border border-white/10 flex gap-3 items-start">
-              <div className="p-2 bg-indigo-500/20 rounded-xl text-indigo-300 flex-shrink-0">
+              <div className="p-2 bg-teal-500/20 rounded-xl text-teal-300 flex-shrink-0">
                 <Sparkles size={20} />
               </div>
               <div>
                 <h3 className="font-bold text-base">Personal Brand</h3>
-                <p className="text-sm text-blue-200/70">Build credibility among thousands of aspiring students.</p>
+                <p className="text-sm text-teal-200/70">Build credibility among thousands of aspiring students.</p>
               </div>
             </div>
             <div className="bg-white/10 backdrop-blur-sm p-4 rounded-2xl border border-white/10 flex gap-3 items-start">
-              <div className="p-2 bg-purple-500/20 rounded-xl text-purple-300 flex-shrink-0">
+              <div className="p-2 bg-amber-500/20 rounded-xl text-amber-300 flex-shrink-0">
                 <Briefcase size={20} />
               </div>
               <div>
                 <h3 className="font-bold text-base">Earn for Mentorship</h3>
-                <p className="text-sm text-blue-200/70">Set your own session fees and get paid securely for your sessions.</p>
+                <p className="text-sm text-teal-200/70">Set your own session fees and get paid securely for your sessions.</p>
               </div>
             </div>
             <div className="bg-white/10 backdrop-blur-sm p-4 rounded-2xl border border-white/10 flex gap-3 items-start">
@@ -146,7 +146,7 @@ function MentorSignupPage() {
               </div>
               <div>
                 <h3 className="font-bold text-base">Flexible Hours</h3>
-                <p className="text-sm text-blue-200/70">Post your available time slots and coordinate sessions at your convenience.</p>
+                <p className="text-sm text-teal-200/70">Post your available time slots and coordinate sessions at your convenience.</p>
               </div>
             </div>
           </motion.div>
@@ -176,7 +176,7 @@ function MentorSignupPage() {
           <form className="space-y-5" onSubmit={handleSubmit}>
             {/* Profile Image Upload with Preview */}
             <div className="flex flex-col items-center space-y-3 mb-6">
-              <div className="relative w-24 h-24 rounded-full overflow-hidden bg-slate-100 dark:bg-slate-800 border-2 border-dashed border-slate-300 dark:border-slate-700 flex items-center justify-center group hover:border-indigo-500 transition duration-300 cursor-pointer ring-4 ring-indigo-500/10 hover:ring-indigo-500/30">
+              <div className="relative w-24 h-24 rounded-full overflow-hidden bg-slate-100 dark:bg-slate-800 border-2 border-dashed border-slate-300 dark:border-slate-700 flex items-center justify-center group hover:border-teal-500 transition duration-300 cursor-pointer ring-4 ring-teal-500/10 hover:ring-teal-500/30">
                 {imagePreview ? (
                   <img src={imagePreview} alt="Profile" className="w-full h-full object-cover" />
                 ) : (
@@ -292,7 +292,7 @@ function MentorSignupPage() {
           </form>
 
           <p className="mt-8 text-center text-slate-600 dark:text-slate-400 text-sm">
-            Already have an account? <Link to="/login" className="text-indigo-600 dark:text-indigo-400 font-bold hover:underline">Log In</Link>
+            Already have an account? <Link to="/login" className="text-teal-600 dark:text-teal-400 font-bold hover:underline">Log In</Link>
           </p>
         </motion.div>
       </div>
