@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import {
     CheckCircle, Video, Share2, MessageSquare, Zap,
     Briefcase, Calendar, Clock, Radio, MapPin,
-    ExternalLink, ArrowLeft, User as UserIcon, X
+    ExternalLink, ArrowLeft, User as UserIcon, X, BookOpen
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
@@ -400,13 +400,20 @@ const MentorProfile = () => {
 
                                 <h1 className="text-3xl font-extrabold text-slate-900 dark:text-white capitalize mb-2">{mentor.username}</h1>
 
-                                <div className="flex items-center justify-center gap-2 mb-6">
-                                    <span className="px-3 py-1 rounded-full bg-teal-50/80 dark:bg-teal-900/20 text-teal-700 dark:text-teal-300 text-xs font-bold border border-teal-100/80 dark:border-teal-900/30 flex items-center gap-1">
+                                <div className="flex flex-wrap items-center justify-center gap-2 mb-6">
+                                    <span className="px-3 py-1 rounded-full bg-teal-50/80 dark:bg-teal-900/20 text-teal-700 dark:text-teal-300 text-xs font-bold border border-teal-100/80 dark:border-teal-900/30 flex items-center gap-1 capitalize">
                                         <Briefcase size={12} /> {mentor.role || "Mentor"}
                                     </span>
-                                    <span className="px-3 py-1 rounded-full bg-cyan-50/80 dark:bg-cyan-900/20 text-cyan-700 dark:text-cyan-300 text-xs font-bold border border-cyan-100/80 dark:border-cyan-900/30 flex items-center gap-1">
-                                        <MapPin size={12} /> {mentor.college?.split(',')[0]}
-                                    </span>
+                                    {mentor.college && (
+                                        <span className="px-3 py-1 rounded-full bg-cyan-50/80 dark:bg-cyan-900/20 text-cyan-700 dark:text-cyan-300 text-xs font-bold border border-cyan-100/80 dark:border-cyan-900/30 flex items-center gap-1">
+                                            <MapPin size={12} /> {mentor.college?.split(',')[0]}
+                                        </span>
+                                    )}
+                                    {mentor.branch && (
+                                        <span className="px-3 py-1 rounded-full bg-amber-50/80 dark:bg-amber-900/20 text-amber-700 dark:text-amber-300 text-xs font-bold border border-amber-100/80 dark:border-amber-900/30 flex items-center gap-1">
+                                            <BookOpen size={12} /> {mentor.branch}
+                                        </span>
+                                    )}
                                 </div>
 
                                 <div className="w-full space-y-3">
@@ -515,6 +522,32 @@ const MentorProfile = () => {
                                         </div>
                                     </div>
 
+                                    {/* What you'll get — only for mentors */}
+                                    {mentor.role === 'mentor' && (
+                                        <div>
+                                            <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+                                                <div className="p-2 bg-amber-50 dark:bg-amber-900/20 rounded-lg text-amber-600 dark:text-amber-400"><Zap size={20} /></div>
+                                                What you&apos;ll get
+                                            </h3>
+                                            <div className="grid sm:grid-cols-2 gap-4">
+                                                {[
+                                                    { icon: <Video size={18} />, title: 'A private 1-on-1 session', desc: 'Live video call, focused entirely on you.' },
+                                                    { icon: <Zap size={18} />, title: 'A personalised action plan', desc: 'Concrete next steps for your goal.' },
+                                                    { icon: <MessageSquare size={18} />, title: 'Ask anything', desc: 'Placements, GATE, internships, higher studies.' },
+                                                    { icon: <CheckCircle size={18} />, title: 'Secure booking', desc: 'Pay safely, get instant confirmation.' },
+                                                ].map((item, i) => (
+                                                    <div key={i} className="flex items-start gap-3 p-4 rounded-2xl bg-slate-50/50 dark:bg-[#151f2e]/30 border border-slate-150/80 dark:border-slate-800/80">
+                                                        <div className="mt-0.5 p-2 rounded-lg bg-teal-100 dark:bg-teal-900/30 text-teal-600 dark:text-teal-400 flex-shrink-0">{item.icon}</div>
+                                                        <div>
+                                                            <p className="font-bold text-slate-800 dark:text-slate-100 text-sm">{item.title}</p>
+                                                            <p className="text-slate-500 dark:text-slate-400 text-xs mt-0.5 leading-relaxed">{item.desc}</p>
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
+
                                     {/* Schedule Section */}
                                     <div>
                                         <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
@@ -527,8 +560,17 @@ const MentorProfile = () => {
                                             <div className="absolute left-4 top-4 bottom-4 w-0.5 bg-slate-150 dark:bg-slate-800"></div>
 
                                             {sessions.filter(s => new Date(s.endTime) > new Date()).length === 0 ? (
-                                                <div className="text-center py-10 bg-slate-50 dark:bg-[#151f2e]/20 rounded-2xl border border-dashed border-slate-200 dark:border-slate-850">
-                                                    <p className="text-slate-400 font-medium">No upcoming sessions scheduled.</p>
+                                                <div className="text-center py-12 px-6 bg-slate-50 dark:bg-[#151f2e]/20 rounded-2xl border border-dashed border-slate-200 dark:border-slate-800">
+                                                    <div className="w-14 h-14 rounded-2xl bg-white dark:bg-[#0d1520] border border-slate-150 dark:border-slate-800 flex items-center justify-center mx-auto mb-4 text-cyan-500">
+                                                        <Calendar size={26} />
+                                                    </div>
+                                                    <p className="text-slate-600 dark:text-slate-300 font-bold mb-1">No public sessions scheduled</p>
+                                                    <p className="text-slate-400 dark:text-slate-500 text-sm mb-5 max-w-xs mx-auto">You don&apos;t have to wait — book a private 1-on-1 priority session at a time that works for you.</p>
+                                                    {mentor.role === 'mentor' && !isLiveNow && (
+                                                        <button onClick={handleOpenBookingModal} className="btn-primary px-6 py-3 rounded-xl text-sm">
+                                                            <Zap size={16} /> Book a priority session
+                                                        </button>
+                                                    )}
                                                 </div>
                                             ) : (
                                                 <div className="space-y-4">
