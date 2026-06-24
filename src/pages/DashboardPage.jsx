@@ -489,8 +489,8 @@ const DashboardPage = () => {
                 </button>
             </div>
 
-            <div className="max-w-7xl mx-auto px-6 -mt-32 relative z-10">
-                <div className="flex flex-col md:flex-row items-end gap-8 mb-12">
+            <div className="max-w-7xl mx-auto px-6 -mt-20 relative z-10">
+                <div className="flex flex-col md:flex-row items-end gap-6 md:gap-8 mb-12">
                     {/* Profile Image */}
                     <div className="relative group">
                         <div className="absolute -inset-1 bg-gradient-to-r from-teal-600 to-cyan-400 rounded-full blur opacity-25 group-hover:opacity-75 transition duration-500"></div>
