@@ -47,6 +47,10 @@ function App() {
   const authRoutes = ['/login', '/signup', '/become-mentor', '/signup/mentor', '/forgot-password'];
   const isAuthRoute = authRoutes.includes(location.pathname) || location.pathname.startsWith('/reset-password');
 
+  // Chat is a full-screen app view — keep the header for nav, but drop the
+  // marketing footer so it doesn't dangle below the conversation.
+  const hideFooter = isAuthRoute || location.pathname.startsWith('/chat');
+
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
@@ -131,7 +135,7 @@ function App() {
           </Suspense>
         </AnimatePresence>
       </main>
-      {!isAuthRoute && <Footer />}
+      {!hideFooter && <Footer />}
     </div >
   );
 }
