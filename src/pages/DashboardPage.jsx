@@ -899,20 +899,16 @@ const DashboardPage = () => {
                         </div>
 
                         {/* ADD LECTURE CARD */}
-                        <div id="add-lecture" className="bg-mesh-hero noise-overlay p-8 rounded-3xl text-white shadow-2xl relative overflow-hidden">
-                            <div className="absolute top-0 right-0 p-8 opacity-5"><UploadCloud size={100} /></div>
-                            <div className="flex items-center gap-4 mb-6 relative z-10">
-                                <div className="bg-white/10 backdrop-blur-md p-3 rounded-2xl border border-white/10"><UploadCloud size={24} className="text-teal-400" /></div>
-                                <div>
-                                    <h3 className="font-bold text-lg leading-tight">Upload Content</h3>
-                                    <p className="text-gray-400 text-xs font-medium mt-0.5">Share knowledge with students</p>
-                                </div>
+                        <div id="add-lecture" className="bg-white dark:bg-[#0d1520] rounded-3xl shadow-xl shadow-teal-100/10 dark:shadow-teal-950/20 border border-slate-150/80 dark:border-slate-800/80 overflow-hidden">
+                            <div className="bg-gradient-to-r from-teal-600 to-cyan-600 p-6 text-white relative overflow-hidden">
+                                <div className="absolute top-0 right-0 p-4 opacity-10"><UploadCloud size={80} /></div>
+                                <h3 className="font-bold text-xl relative z-10 flex items-center gap-2"><UploadCloud size={22} className="text-teal-200" /> Upload Content</h3>
+                                <p className="text-teal-100 text-sm mt-1 relative z-10 font-medium">Share knowledge with students</p>
                             </div>
-                            <div className="space-y-4 relative z-10">
-                                <input placeholder="Video Title" value={newLecture.title} onChange={e => setNewLecture({ ...newLecture, title: e.target.value })} className="w-full p-4 rounded-xl text-white bg-black/20 border border-white/10 focus:border-teal-500/50 outline-none focus:bg-black/40 placeholder:text-gray-500 transition-all font-medium text-sm" />
-                                <input placeholder="YouTube URL" value={newLecture.url} onChange={e => setNewLecture({ ...newLecture, url: e.target.value })} className="w-full p-4 rounded-xl text-white bg-black/20 border border-white/10 focus:border-teal-500/50 outline-none focus:bg-black/40 placeholder:text-gray-500 transition-all font-medium text-sm" />
-
-                                <button onClick={handleAddLecture} disabled={uploading} className="w-full bg-gradient-to-r from-teal-500 to-cyan-500 text-white font-extrabold py-4 rounded-xl hover:from-teal-600 hover:to-cyan-600 transition shadow-lg shadow-teal-500/20 flex items-center justify-center gap-2 disabled:opacity-70 mt-2">
+                            <div className="p-6 space-y-4">
+                                <input placeholder="Video Title" value={newLecture.title} onChange={e => setNewLecture({ ...newLecture, title: e.target.value })} className="input-premium" />
+                                <input placeholder="YouTube URL" value={newLecture.url} onChange={e => setNewLecture({ ...newLecture, url: e.target.value })} className="input-premium" />
+                                <button onClick={handleAddLecture} disabled={uploading} className="w-full bg-gradient-to-r from-teal-500 to-cyan-500 text-white font-extrabold py-4 rounded-xl hover:from-teal-600 hover:to-cyan-600 transition shadow-lg shadow-teal-500/20 flex items-center justify-center gap-2 disabled:opacity-70">
                                     {uploading ? <Loader2 className="animate-spin" size={20} /> : <Plus size={20} />}
                                     {uploading ? "Publishing..." : "Upload Video"}
                                 </button>
