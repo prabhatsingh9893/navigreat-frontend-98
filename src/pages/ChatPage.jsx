@@ -330,7 +330,7 @@ const ChatPage = () => {
                             <span className="w-2.5 h-2.5 bg-amber-500 rounded-full animate-pulse" title="Connecting to server..."></span>
                         )}
                     </div>
-                    <span className="text-xs bg-teal-50 dark:bg-teal-950/40 text-teal-650 dark:text-teal-400 border border-teal-100 dark:border-teal-900/30 px-2.5 py-1 rounded-full font-bold">{contactList.length} Contacts</span>
+                    <span className="text-xs bg-teal-50 dark:bg-teal-950/40 text-teal-700 dark:text-teal-400 border border-teal-100 dark:border-teal-900/30 px-2.5 py-1 rounded-full font-bold">{contactList.length} {contactList.length === 1 ? 'Contact' : 'Contacts'}</span>
                 </div>
                 <div className="flex-1 overflow-y-auto">
                     {contactList.map(contact => (
@@ -367,14 +367,24 @@ const ChatPage = () => {
                             </div>
                         </div>
                     ))}
-                    {contactList.length === 0 && <div className="p-8 text-center text-slate-400">No contacts found</div>}
+                    {contactList.length === 0 && (
+                        <div className="p-8 text-center">
+                            <div className="w-14 h-14 rounded-2xl bg-slate-100 dark:bg-[#151f2e] flex items-center justify-center mx-auto mb-4 text-teal-500">
+                                <MessageSquare size={24} />
+                            </div>
+                            <p className="font-bold text-slate-600 dark:text-slate-300 text-sm mb-1">No conversations yet</p>
+                            <p className="text-xs text-slate-400 dark:text-slate-500 mb-5">Message a mentor and your chats will appear here.</p>
+                            <button onClick={() => navigate('/mentors')} className="btn-primary px-5 py-2.5 rounded-xl text-xs">Find a mentor</button>
+                        </div>
+                    )}
                 </div>
             </div>
 
             {/* Chat Area */}
             {targetUserId ? (
                 <div className="flex-1 flex flex-col bg-slate-100 dark:bg-[#080d14] relative">
-                    <div className="absolute inset-0 opacity-5 dark:opacity-[0.02] pointer-events-none" style={{ backgroundImage: "url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png')" }}></div>
+                    {/* Subtle on-brand dot pattern (self-contained, no external asset) */}
+                    <div className="absolute inset-0 opacity-[0.05] dark:opacity-[0.04] pointer-events-none text-teal-600 dark:text-teal-400" style={{ backgroundImage: "radial-gradient(currentColor 1px, transparent 1px)", backgroundSize: "20px 20px" }}></div>
 
                     {/* Header */}
                     <div className="p-3 bg-white dark:bg-[#0d1520] border-b border-slate-200 dark:border-slate-800/80 flex items-center justify-between shadow-sm z-10">
