@@ -302,3 +302,8 @@
   opacity: 0.4;
   z-index: 1;
 }
+
+/* Dark mode logo filter: turns dark navy to light blue-white while keeping brand blues/cyans intact */
+.dark-logo-filter {
+  filter: invert(1) hue-rotate(180deg) brightness(1.2) contrast(1.1);
+}
