@@ -251,7 +251,7 @@ const Header = () => {
                     <p className={`text-[13px] font-semibold leading-tight ${isTransparent ? 'text-slate-800 dark:text-white' : 'text-slate-800 dark:text-slate-100'}`}>
                       {user.username?.split(' ')[0]}
                     </p>
-                    <p className={`text-[11px] capitalize ${isTransparent ? 'text-slate-500 dark:text-white/60' : 'text-slate-400 dark:text-slate-500'}`}>
+                    <p className={`text-[11px] capitalize ${isTransparent ? 'text-slate-500 dark:text-white/70' : 'text-slate-400 dark:text-slate-400'}`}>
                       {user.role}
                     </p>
                   </div>
