@@ -40,7 +40,7 @@ const ActiveDot = () => (
   <motion.span
     layoutId="nav-underline"
     className="absolute -bottom-px left-3 right-3 h-0.5 rounded-full"
-    style={{ background: 'linear-gradient(90deg, #0d9488, #0891b2)' }}
+    style={{ background: 'linear-gradient(90deg, #2563eb, #0284c7)' }}
     transition={{ type: 'spring', stiffness: 400, damping: 30 }}
   />
 );
@@ -332,7 +332,7 @@ const Header = () => {
                 <Link
                   to="/signup"
                   className="px-4 py-1.5 text-sm font-semibold text-white rounded-lg transition-all hover:opacity-90 hover:shadow-lg hover:shadow-teal-500/20 active:scale-[0.98]"
-                  style={{ background: 'linear-gradient(135deg, #0d9488 0%, #0891b2 100%)' }}
+                  style={{ background: 'linear-gradient(135deg, #2563eb 0%, #0284c7 100%)' }}
                 >
                   Get started
                 </Link>
@@ -479,7 +479,7 @@ const Header = () => {
                       to="/signup"
                       onClick={() => setMobileOpen(false)}
                       className="block w-full text-center py-2.5 px-4 text-sm font-semibold text-white rounded-xl transition-all hover:opacity-90 mt-2"
-                      style={{ background: 'linear-gradient(135deg, #0d9488, #0891b2)' }}
+                      style={{ background: 'linear-gradient(135deg, #2563eb, #0284c7)' }}
                     >
                       Get started free
                     </Link>

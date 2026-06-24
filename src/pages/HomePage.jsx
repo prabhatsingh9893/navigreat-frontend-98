@@ -609,7 +609,7 @@ function HomePage() {
           <div className="container mx-auto px-6">
             <FadeIn>
               <div className="relative overflow-hidden rounded-3xl p-12 md:p-16 text-center noise-overlay"
-                style={{ background: 'linear-gradient(135deg, #0d9488 0%, #0891b2 50%, #0ea5e9 100%)' }}
+                style={{ background: 'linear-gradient(135deg, #2563eb 0%, #0284c7 50%, #0ea5e9 100%)' }}
               >
                 <div className="absolute inset-0 pointer-events-none">
                   <div className="absolute -top-16 -right-16 w-64 h-64 bg-white/10 rounded-full blur-3xl" />

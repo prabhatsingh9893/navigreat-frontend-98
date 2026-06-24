@@ -41,7 +41,7 @@ const Footer = () => {
       {/* ====== CTA BANNER ====== */}
       <div className="relative z-10 container mx-auto px-6 pt-20 pb-8">
         <div className="relative overflow-hidden rounded-3xl p-8 md:p-12 mb-20 border border-white/10"
-          style={{ background: 'linear-gradient(135deg, #0d9488 0%, #0891b2 55%, #0ea5e9 100%)' }}
+          style={{ background: 'linear-gradient(135deg, #2563eb 0%, #0284c7 55%, #0ea5e9 100%)' }}
         >
           <div className="absolute inset-0 pointer-events-none">
             <div className="absolute -top-10 -right-10 w-48 h-48 bg-white/10 rounded-full blur-2xl" />
