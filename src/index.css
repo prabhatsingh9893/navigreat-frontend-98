@@ -33,6 +33,17 @@
     -webkit-tap-highlight-color: transparent;
   }
 
+  /* Respect users who prefer reduced motion: neutralise the infinite
+     float/shimmer/pulse loops and instant-ify transitions & scrolling. */
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+    }
+  }
+
   body {
     font-family: 'Inter', 'Plus Jakarta Sans', system-ui, sans-serif;
     @apply bg-slate-50 text-slate-900 antialiased;

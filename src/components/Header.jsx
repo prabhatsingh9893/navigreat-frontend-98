@@ -24,10 +24,12 @@ const NAV_LINKS = [
 const Logo = () => {
   return (
     <Link to="/" className="flex items-center group select-none">
+      {/* Logo is navy-on-light artwork; render it crisp white in dark mode
+          (no light asset exists) so it stays legible on the dark header. */}
       <img
         src={logo}
         alt="NaviGreat"
-        className="h-12 w-auto object-contain pointer-events-none transition-all duration-300 dark:brightness-125 dark:drop-shadow-[0_0_12px_rgba(255,255,255,0.24)]"
+        className="h-11 w-auto object-contain pointer-events-none transition-all duration-300 group-hover:scale-[1.03] dark:brightness-0 dark:invert"
       />
     </Link>
   );
@@ -249,7 +251,7 @@ const Header = () => {
                     <p className={`text-[13px] font-semibold leading-tight ${isTransparent ? 'text-slate-800 dark:text-white' : 'text-slate-800 dark:text-slate-100'}`}>
                       {user.username?.split(' ')[0]}
                     </p>
-                    <p className={`text-[11px] capitalize ${isTransparent ? 'text-slate-500 dark:text-white/60' : 'text-slate-400 dark:text-slate-500'}`}>
+                    <p className={`text-[11px] capitalize ${isTransparent ? 'text-slate-500 dark:text-white/70' : 'text-slate-400 dark:text-slate-400'}`}>
                       {user.role}
                     </p>
                   </div>

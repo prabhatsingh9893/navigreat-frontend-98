@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import {
     CheckCircle, Video, Share2, MessageSquare, Zap,
     Briefcase, Calendar, Clock, Radio, MapPin,
-    ExternalLink, ArrowLeft, User as UserIcon, X
+    ExternalLink, ArrowLeft, User as UserIcon, X, BookOpen
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
@@ -309,8 +309,47 @@ const MentorProfile = () => {
         }
     };
 
-    if (loading) return <div className="h-screen flex items-center justify-center font-bold text-gray-500 animate-pulse">Loading Profile...</div>;
-    if (!mentor) return <div className="text-center py-20 text-red-500 font-bold">Mentor Not Found</div>;
+    if (loading) return (
+        <div className="min-h-screen bg-slate-50 dark:bg-[#080d14] pt-28 pb-20">
+            <div className="max-w-6xl mx-auto px-6 grid lg:grid-cols-3 gap-8">
+                {/* Left card skeleton */}
+                <div className="bg-white dark:bg-slate-800 rounded-3xl p-8 border border-slate-100 dark:border-slate-700/50 flex flex-col items-center">
+                    <div className="w-32 h-32 rounded-full bg-slate-200 dark:bg-slate-700 animate-pulse mb-5" />
+                    <div className="h-6 w-40 rounded bg-slate-200 dark:bg-slate-700 animate-pulse mb-3" />
+                    <div className="h-4 w-28 rounded bg-slate-200 dark:bg-slate-700 animate-pulse mb-8" />
+                    <div className="h-12 w-full rounded-xl bg-slate-200 dark:bg-slate-700 animate-pulse mb-3" />
+                    <div className="h-12 w-full rounded-xl bg-slate-200 dark:bg-slate-700 animate-pulse" />
+                </div>
+                {/* Right content skeleton */}
+                <div className="lg:col-span-2 space-y-8">
+                    <div className="bg-white dark:bg-slate-800 rounded-3xl p-8 border border-slate-100 dark:border-slate-700/50 space-y-3">
+                        <div className="h-5 w-32 rounded bg-slate-200 dark:bg-slate-700 animate-pulse mb-2" />
+                        <div className="h-3 w-full rounded bg-slate-200 dark:bg-slate-700 animate-pulse" />
+                        <div className="h-3 w-4/5 rounded bg-slate-200 dark:bg-slate-700 animate-pulse" />
+                    </div>
+                    <div className="bg-white dark:bg-slate-800 rounded-3xl p-8 border border-slate-100 dark:border-slate-700/50 space-y-3">
+                        <div className="h-5 w-40 rounded bg-slate-200 dark:bg-slate-700 animate-pulse mb-2" />
+                        <div className="h-20 w-full rounded-xl bg-slate-200 dark:bg-slate-700 animate-pulse" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+    if (!mentor) return (
+        <div className="min-h-screen bg-slate-50 dark:bg-[#080d14] flex items-center justify-center p-6">
+            <div className="text-center max-w-md">
+                <div className="w-20 h-20 bg-slate-100 dark:bg-slate-800 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                    <UserIcon size={40} className="text-slate-400" />
+                </div>
+                <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-3">Mentor not found</h2>
+                <p className="text-slate-500 dark:text-slate-400 mb-8">This mentor may have removed their profile, or the link isn&apos;t quite right.</p>
+                <div className="flex gap-3 justify-center">
+                    <button onClick={() => navigate('/mentors')} className="btn-primary px-6 py-3 rounded-xl">Browse mentors</button>
+                    <button onClick={() => navigate(-1)} className="btn-secondary px-6 py-3 rounded-xl"><ArrowLeft size={16} /> Go back</button>
+                </div>
+            </div>
+        </div>
+    );
 
     return (
         <div className="bg-slate-50 dark:bg-[#080d14] min-h-screen relative font-sans transition-colors duration-300">
@@ -361,13 +400,20 @@ const MentorProfile = () => {
 
                                 <h1 className="text-3xl font-extrabold text-slate-900 dark:text-white capitalize mb-2">{mentor.username}</h1>
 
-                                <div className="flex items-center justify-center gap-2 mb-6">
-                                    <span className="px-3 py-1 rounded-full bg-teal-50/80 dark:bg-teal-900/20 text-teal-700 dark:text-teal-300 text-xs font-bold border border-teal-100/80 dark:border-teal-900/30 flex items-center gap-1">
+                                <div className="flex flex-wrap items-center justify-center gap-2 mb-6">
+                                    <span className="px-3 py-1 rounded-full bg-teal-50/80 dark:bg-teal-900/20 text-teal-700 dark:text-teal-300 text-xs font-bold border border-teal-100/80 dark:border-teal-900/30 flex items-center gap-1 capitalize">
                                         <Briefcase size={12} /> {mentor.role || "Mentor"}
                                     </span>
-                                    <span className="px-3 py-1 rounded-full bg-cyan-50/80 dark:bg-cyan-900/20 text-cyan-700 dark:text-cyan-300 text-xs font-bold border border-cyan-100/80 dark:border-cyan-900/30 flex items-center gap-1">
-                                        <MapPin size={12} /> {mentor.college?.split(',')[0]}
-                                    </span>
+                                    {mentor.college && (
+                                        <span className="px-3 py-1 rounded-full bg-cyan-50/80 dark:bg-cyan-900/20 text-cyan-700 dark:text-cyan-300 text-xs font-bold border border-cyan-100/80 dark:border-cyan-900/30 flex items-center gap-1">
+                                            <MapPin size={12} /> {mentor.college?.split(',')[0]}
+                                        </span>
+                                    )}
+                                    {mentor.branch && (
+                                        <span className="px-3 py-1 rounded-full bg-amber-50/80 dark:bg-amber-900/20 text-amber-700 dark:text-amber-300 text-xs font-bold border border-amber-100/80 dark:border-amber-900/30 flex items-center gap-1">
+                                            <BookOpen size={12} /> {mentor.branch}
+                                        </span>
+                                    )}
                                 </div>
 
                                 <div className="w-full space-y-3">
@@ -476,6 +522,32 @@ const MentorProfile = () => {
                                         </div>
                                     </div>
 
+                                    {/* What you'll get — only for mentors */}
+                                    {mentor.role === 'mentor' && (
+                                        <div>
+                                            <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+                                                <div className="p-2 bg-amber-50 dark:bg-amber-900/20 rounded-lg text-amber-600 dark:text-amber-400"><Zap size={20} /></div>
+                                                What you&apos;ll get
+                                            </h3>
+                                            <div className="grid sm:grid-cols-2 gap-4">
+                                                {[
+                                                    { icon: <Video size={18} />, title: 'A private 1-on-1 session', desc: 'Live video call, focused entirely on you.' },
+                                                    { icon: <Zap size={18} />, title: 'A personalised action plan', desc: 'Concrete next steps for your goal.' },
+                                                    { icon: <MessageSquare size={18} />, title: 'Ask anything', desc: 'Placements, GATE, internships, higher studies.' },
+                                                    { icon: <CheckCircle size={18} />, title: 'Secure booking', desc: 'Pay safely, get instant confirmation.' },
+                                                ].map((item, i) => (
+                                                    <div key={i} className="flex items-start gap-3 p-4 rounded-2xl bg-slate-50/50 dark:bg-[#151f2e]/30 border border-slate-150/80 dark:border-slate-800/80">
+                                                        <div className="mt-0.5 p-2 rounded-lg bg-teal-100 dark:bg-teal-900/30 text-teal-600 dark:text-teal-400 flex-shrink-0">{item.icon}</div>
+                                                        <div>
+                                                            <p className="font-bold text-slate-800 dark:text-slate-100 text-sm">{item.title}</p>
+                                                            <p className="text-slate-500 dark:text-slate-400 text-xs mt-0.5 leading-relaxed">{item.desc}</p>
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
+
                                     {/* Schedule Section */}
                                     <div>
                                         <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
@@ -488,8 +560,17 @@ const MentorProfile = () => {
                                             <div className="absolute left-4 top-4 bottom-4 w-0.5 bg-slate-150 dark:bg-slate-800"></div>
 
                                             {sessions.filter(s => new Date(s.endTime) > new Date()).length === 0 ? (
-                                                <div className="text-center py-10 bg-slate-50 dark:bg-[#151f2e]/20 rounded-2xl border border-dashed border-slate-200 dark:border-slate-850">
-                                                    <p className="text-slate-400 font-medium">No upcoming sessions scheduled.</p>
+                                                <div className="text-center py-12 px-6 bg-slate-50 dark:bg-[#151f2e]/20 rounded-2xl border border-dashed border-slate-200 dark:border-slate-800">
+                                                    <div className="w-14 h-14 rounded-2xl bg-white dark:bg-[#0d1520] border border-slate-150 dark:border-slate-800 flex items-center justify-center mx-auto mb-4 text-cyan-500">
+                                                        <Calendar size={26} />
+                                                    </div>
+                                                    <p className="text-slate-600 dark:text-slate-300 font-bold mb-1">No public sessions scheduled</p>
+                                                    <p className="text-slate-400 dark:text-slate-500 text-sm mb-5 max-w-xs mx-auto">You don&apos;t have to wait — book a private 1-on-1 priority session at a time that works for you.</p>
+                                                    {mentor.role === 'mentor' && !isLiveNow && (
+                                                        <button onClick={handleOpenBookingModal} className="btn-primary px-6 py-3 rounded-xl text-sm">
+                                                            <Zap size={16} /> Book a priority session
+                                                        </button>
+                                                    )}
                                                 </div>
                                             ) : (
                                                 <div className="space-y-4">
