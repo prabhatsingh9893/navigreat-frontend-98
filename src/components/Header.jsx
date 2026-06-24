@@ -24,12 +24,12 @@ const NAV_LINKS = [
 const Logo = () => {
   return (
     <Link to="/" className="flex items-center group select-none">
-      {/* Logo is navy-on-light artwork; render it crisp white in dark mode
-          (no light asset exists) so it stays legible on the dark header. */}
+      {/* Logo is navy-on-light artwork; render it legibly in dark mode
+          while preserving brand blue/cyan colors using invert + hue-rotate filter. */}
       <img
         src={logo}
         alt="NaviGreat"
-        className="h-14 w-auto object-contain pointer-events-none transition-all duration-300 group-hover:scale-[1.03] dark:brightness-0 dark:invert"
+        className="h-14 w-auto object-contain pointer-events-none transition-all duration-300 group-hover:scale-[1.03] dark:dark-logo-filter"
       />
     </Link>
   );
