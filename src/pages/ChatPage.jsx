@@ -320,7 +320,7 @@ const ChatPage = () => {
     };
 
     return (
-        <div className="flex h-[calc(100vh-64px)] mt-16 bg-slate-50 dark:bg-[#080d14] font-sans transition-colors duration-300">
+        <div className="flex h-[calc(100vh-72px)] mt-[72px] bg-slate-50 dark:bg-[#080d14] font-sans transition-colors duration-300">
             {/* Sidebar */}
             <div className={`${targetUserId ? 'hidden md:flex' : 'flex'} w-full md:w-1/3 bg-white dark:bg-[#0d1520] border-r border-slate-200 dark:border-slate-800/80 flex-col`}>
                 <div className="p-4 border-b border-slate-150 dark:border-slate-800/80 bg-slate-50/50 dark:bg-[#0d1520] flex justify-between items-center">

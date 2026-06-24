@@ -29,7 +29,7 @@ const Logo = () => {
       <img
         src={logo}
         alt="NaviGreat"
-        className="h-11 w-auto object-contain pointer-events-none transition-all duration-300 group-hover:scale-[1.03] dark:brightness-0 dark:invert"
+        className="h-14 w-auto object-contain pointer-events-none transition-all duration-300 group-hover:scale-[1.03] dark:brightness-0 dark:invert"
       />
     </Link>
   );
@@ -181,7 +181,7 @@ const Header = () => {
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${navBg}`}
         style={{ boxShadow: scrolled ? '0 1px 0 rgba(0,0,0,0.06)' : 'none' }}
       >
-        <div className="max-w-7xl mx-auto px-5 md:px-8 h-[64px] flex items-center justify-between gap-8">
+        <div className="max-w-7xl mx-auto px-5 md:px-8 h-[72px] flex items-center justify-between gap-8">
 
           {/* LEFT – Logo */}
           <Logo />
