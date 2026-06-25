@@ -16,6 +16,14 @@ export default {
         'nav-indigo': '#4f46e5',
         'nav-violet': '#7c3aed',
         'nav-accent': '#06b6d4',
+        slate: {
+          150: '#eef1f6',
+          850: '#131c2e',
+        },
+        gray: {
+          555: '#626d7f',
+          650: '#414a58',
+        },
         teal: {
           50: '#eff6ff',
           100: '#dbeafe',
@@ -24,6 +32,8 @@ export default {
           400: '#60a5fa',
           500: '#3b82f6',
           600: '#2563eb',
+          650: '#2056df',
+          655: '#1c52e4',
           700: '#1d4ed8',
           800: '#1e40af',
           900: '#1e3a8a',

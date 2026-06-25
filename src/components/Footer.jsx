@@ -2,6 +2,7 @@ import React from 'react';
 import { Facebook, Twitter, Instagram, Linkedin, Mail, Phone, MapPin, ArrowRight, Send, Sparkles, Heart } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import logo from '../assets/startup-logo.png';
 
 const footerLinks = {
   platform: [
@@ -70,9 +71,13 @@ const Footer = () => {
 
           {/* Brand */}
           <div className="lg:col-span-1">
-            <h3 className="text-2xl font-extrabold text-slate-900 dark:text-white mb-4">
-              Navi<span className="text-teal-600 dark:text-teal-400">Great</span>
-            </h3>
+            <Link to="/" className="flex items-center group select-none mb-4 w-fit">
+              <img
+                src={logo}
+                alt="NaviGreat"
+                className="h-12 w-auto object-contain pointer-events-none transition-all duration-300 dark:dark-logo-filter"
+              />
+            </Link>
             <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed mb-6">
               Bridging the gap between ambition and achievement. We connect aspiring engineers with verified mentors from IITs, NITs & Top Universities.
             </p>

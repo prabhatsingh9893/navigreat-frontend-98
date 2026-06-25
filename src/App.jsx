@@ -30,6 +30,9 @@ const AppTerms = React.lazy(() => import('./pages/AppTerms'));
 const NotFoundPage = React.lazy(() => import('./pages/NotFoundPage'));
 const SessionEndedPage = React.lazy(() => import('./pages/SessionEndedPage'));
 const LiveSession = React.lazy(() => import('./pages/LiveSession.jsx'));
+const StudentDashboard = React.lazy(() => import('./pages/StudentDashboard.jsx'));
+const MentorDashboard = React.lazy(() => import('./pages/MentorDashboard.jsx'));
+import RoleBasedRoute from './components/guards/RoleBasedRoute';
 
 // 🔒 Protected Route Component
 const ProtectedRoute = ({ children }) => {
@@ -112,6 +115,8 @@ function App() {
               {/* 🔒 Protected Routes (Require Login) */}
               <Route path="/mentors" element={<ProtectedRoute><MentorsPage /></ProtectedRoute>} />
               <Route path="/dashboard" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
+              <Route path="/dashboard/student" element={<ProtectedRoute><RoleBasedRoute requiredRole="student"><StudentDashboard /></RoleBasedRoute></ProtectedRoute>} />
+              <Route path="/dashboard/mentor" element={<ProtectedRoute><RoleBasedRoute requiredRole="mentor"><MentorDashboard /></RoleBasedRoute></ProtectedRoute>} />
               <Route path="/mentor/:id" element={<ProtectedRoute><MentorProfile /></ProtectedRoute>} />
               <Route path="/chat" element={<ProtectedRoute><ChatPage /></ProtectedRoute>} />
               <Route path="/chat/:userId" element={<ProtectedRoute><ChatPage /></ProtectedRoute>} />

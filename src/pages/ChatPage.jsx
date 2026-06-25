@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { io } from "socket.io-client";
-import { Send, User as UserIcon, MessageSquare, ArrowLeft, Mic, StopCircle, Check, CheckCheck, Clock, RotateCw, AlertCircle } from 'lucide-react';
+import { Send, User as UserIcon, MessageSquare, ArrowLeft, Mic, StopCircle, Check, CheckCheck, Clock, RotateCw, AlertCircle, Search } from 'lucide-react';
 import { API_BASE_URL } from '../config';
 import toast from 'react-hot-toast';
 
@@ -36,6 +36,7 @@ const ChatPage = () => {
     const [isTyping, setIsTyping] = useState(false);
     const [onlineUsers, setOnlineUsers] = useState(new Set()); // ✅ Track Online Users
     const [isConnected, setIsConnected] = useState(socket.connected);
+    const [searchQuery, setSearchQuery] = useState("");
 
     // 🎙️ Voice Recording State
     const [isRecording, setIsRecording] = useState(false);
@@ -404,59 +405,96 @@ const ChatPage = () => {
     return (
         <div className="flex h-[calc(100vh-72px)] mt-[72px] bg-slate-50 dark:bg-[#080d14] font-sans transition-colors duration-300">
             {/* Sidebar */}
-            <div className={`${targetUserId ? 'hidden md:flex' : 'flex'} w-full md:w-1/3 bg-white dark:bg-[#0d1520] border-r border-slate-200 dark:border-slate-800/80 flex-col`}>
-                <div className="p-4 border-b border-slate-150 dark:border-slate-800/80 bg-slate-50/50 dark:bg-[#0d1520] flex justify-between items-center">
+            <div className={`${targetUserId ? 'hidden md:flex' : 'flex'} w-full md:w-1/3 bg-white dark:bg-[#0b131f] border-r border-slate-200 dark:border-slate-800/80 flex-col`}>
+                {/* Sidebar Header */}
+                <div className="p-4 border-b border-slate-150 dark:border-slate-800/80 bg-slate-50/50 dark:bg-[#0b131f] flex justify-between items-center">
                     <div className="flex items-center gap-2">
                         <h2 className="text-xl font-bold text-slate-800 dark:text-slate-200">Messages</h2>
                         {!isConnected && (
                             <span className="w-2.5 h-2.5 bg-amber-500 rounded-full animate-pulse" title="Connecting to server..."></span>
                         )}
                     </div>
-                    <span className="text-xs bg-teal-50 dark:bg-teal-950/40 text-teal-700 dark:text-teal-400 border border-teal-100 dark:border-teal-900/30 px-2.5 py-1 rounded-full font-bold">{contactList.length} {contactList.length === 1 ? 'Contact' : 'Contacts'}</span>
+                    <span className="text-xs bg-teal-50 dark:bg-teal-950/40 text-teal-700 dark:text-teal-400 border border-teal-100 dark:border-teal-900/30 px-2.5 py-1 rounded-full font-bold">
+                        {contactList.length} {contactList.length === 1 ? 'Contact' : 'Contacts'}
+                    </span>
                 </div>
-                <div className="flex-1 overflow-y-auto">
-                    {contactList.map(contact => (
-                        <div
-                            key={contact._id}
-                            onClick={() => navigate(`/chat/${contact._id}`)}
-                            className={`p-4 flex items-center gap-3 cursor-pointer hover:bg-slate-50 dark:hover:bg-[#151f2e]/40 transition border-b border-slate-100 dark:border-slate-800/60 ${targetUserId === contact._id ? 'bg-teal-50/50 dark:bg-[#151f2e] border-r-4 border-r-teal-500' : ''}`}
-                        >
-                            <div className="w-12 h-12 rounded-full bg-slate-100 dark:bg-[#151f2e] overflow-hidden flex-shrink-0 border border-slate-200 dark:border-slate-800 relative">
-                                <img src={contact.image || `https://api.dicebear.com/7.x/initials/svg?seed=${contact.username}`} alt="avatar" className="w-full h-full object-cover" />
-                                {onlineUsers.has(contact._id) && (
-                                    <span className="absolute bottom-0 right-0 w-3.5 h-3.5 bg-green-500 border-2 border-white dark:border-[#0d1520] rounded-full"></span>
-                                )}
-                            </div>
-                            <div className="flex-1 min-w-0">
-                                <div className="flex justify-between items-baseline mb-0.5">
-                                    <h3 className="font-bold text-slate-800 dark:text-slate-200 text-sm truncate">{contact.username}</h3>
-                                    {contact.lastMessageTime && (
-                                        <span className="text-[10px] text-slate-400 dark:text-slate-500 flex-shrink-0">
-                                            {formatTime(contact.lastMessageTime)}
-                                        </span>
+
+                {/* Sidebar Search Bar */}
+                <div className="p-3 border-b border-slate-150 dark:border-slate-800/60 bg-white dark:bg-[#0b131f]">
+                    <div className="relative">
+                        <input
+                            type="text"
+                            placeholder="Search conversations..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            className="w-full text-xs bg-slate-50 dark:bg-[#151f2e] border border-slate-200 dark:border-slate-800 rounded-xl py-2.5 pl-9 pr-3 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent text-slate-800 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-500 transition-all font-medium"
+                        />
+                        <span className="absolute left-3 top-3 text-slate-400 dark:text-slate-555">
+                            <Search size={14} />
+                        </span>
+                    </div>
+                </div>
+
+                {/* Contact List */}
+                <div className="flex-1 overflow-y-auto py-2 custom-scrollbar">
+                    {contactList.filter(c => c.username?.toLowerCase().includes(searchQuery.toLowerCase())).map(contact => {
+                        const isSelected = targetUserId === contact._id;
+                        const isOnline = onlineUsers.has(contact._id);
+                        return (
+                            <div
+                                key={contact._id}
+                                onClick={() => navigate(`/chat/${contact._id}`)}
+                                className={`mx-2.5 my-1 p-3 rounded-2xl flex items-center gap-3 cursor-pointer transition-all duration-200 border ${
+                                    isSelected 
+                                        ? 'bg-gradient-to-r from-teal-500/10 to-cyan-500/5 dark:from-teal-500/20 dark:to-cyan-500/10 border-teal-500/30 dark:border-teal-500/40 shadow-sm shadow-teal-500/5' 
+                                        : 'border-transparent hover:bg-slate-50 dark:hover:bg-[#151f2e]/35'
+                                }`}
+                            >
+                                <div className="w-11 h-11 rounded-full bg-slate-100 dark:bg-[#151f2e] overflow-hidden flex-shrink-0 border border-slate-200 dark:border-slate-800 relative shadow-inner">
+                                    <img src={contact.image || `https://api.dicebear.com/7.x/initials/svg?seed=${contact.username}`} alt="avatar" className="w-full h-full object-cover" />
+                                    {isOnline && (
+                                        <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white dark:border-[#0b131f] rounded-full shadow-md animate-pulse"></span>
                                     )}
                                 </div>
-                                <div className="flex justify-between items-center">
-                                    <p className="text-xs text-slate-500 dark:text-slate-400 truncate w-3/4">
-                                        {contact.lastMessage || (contact.college ? contact.college : "Tap to chat")}
-                                    </p>
-                                    {contact.unreadCount > 0 && (
-                                        <span className="bg-teal-600 text-white text-[10px] font-bold h-5 min-w-[20px] px-1 flex items-center justify-center rounded-full shadow-sm">
-                                            {contact.unreadCount}
-                                        </span>
-                                    )}
+                                <div className="flex-1 min-w-0">
+                                    <div className="flex justify-between items-baseline mb-0.5">
+                                        <h3 className={`font-bold text-sm truncate ${isSelected ? 'text-teal-650 dark:text-teal-450' : 'text-slate-800 dark:text-slate-255'}`}>{contact.username}</h3>
+                                        {contact.lastMessageTime && (
+                                            <span className="text-[10px] text-slate-400 dark:text-slate-500 flex-shrink-0 font-medium">
+                                                {formatTime(contact.lastMessageTime)}
+                                            </span>
+                                        )}
+                                    </div>
+                                    <div className="flex justify-between items-center">
+                                        <p className={`text-xs truncate w-3/4 ${isSelected ? 'text-slate-600 dark:text-slate-350 font-medium' : 'text-slate-500 dark:text-slate-400'}`}>
+                                            {contact.lastMessage || (contact.college ? contact.college : "Tap to chat")}
+                                        </p>
+                                        {contact.unreadCount > 0 && (
+                                            <span className="bg-teal-650 text-white text-[10px] font-bold h-5 min-w-[20px] px-1.5 flex items-center justify-center rounded-full shadow-sm shadow-teal-500/20">
+                                                {contact.unreadCount}
+                                            </span>
+                                        )}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    ))}
+                        );
+                    })}
+
                     {contactList.length === 0 && (
                         <div className="p-8 text-center">
                             <div className="w-14 h-14 rounded-2xl bg-slate-100 dark:bg-[#151f2e] flex items-center justify-center mx-auto mb-4 text-teal-500">
                                 <MessageSquare size={24} />
                             </div>
-                            <p className="font-bold text-slate-600 dark:text-slate-300 text-sm mb-1">No conversations yet</p>
-                            <p className="text-xs text-slate-400 dark:text-slate-500 mb-5">Message a mentor and your chats will appear here.</p>
-                            <button onClick={() => navigate('/mentors')} className="btn-primary px-5 py-2.5 rounded-xl text-xs">Find a mentor</button>
+                            <p className="font-bold text-slate-600 dark:text-slate-350 text-sm mb-1">No conversations yet</p>
+                            <p className="text-xs text-slate-400 dark:text-slate-500 mb-5 leading-relaxed">Message a mentor and your chats will appear here.</p>
+                            <button onClick={() => navigate('/mentors')} className="bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-700 hover:to-cyan-700 text-white font-bold px-5 py-2.5 rounded-xl text-xs transition shadow-md">Find a mentor</button>
+                        </div>
+                    )}
+
+                    {contactList.length > 0 && contactList.filter(c => c.username?.toLowerCase().includes(searchQuery.toLowerCase())).length === 0 && (
+                        <div className="p-8 text-center text-slate-400 dark:text-slate-500">
+                            <p className="text-sm font-medium">No matches found</p>
+                            <p className="text-xs mt-1">Try searching for a different name</p>
                         </div>
                     )}
                 </div>
@@ -464,31 +502,31 @@ const ChatPage = () => {
 
             {/* Chat Area */}
             {targetUserId ? (
-                <div className="flex-1 flex flex-col bg-slate-100 dark:bg-[#080d14] relative">
-                    {/* Subtle on-brand dot pattern (self-contained, no external asset) */}
-                    <div className="absolute inset-0 opacity-[0.05] dark:opacity-[0.04] pointer-events-none text-teal-600 dark:text-teal-400" style={{ backgroundImage: "radial-gradient(currentColor 1px, transparent 1px)", backgroundSize: "20px 20px" }}></div>
+                <div className="flex-1 flex flex-col bg-slate-50 dark:bg-[#080d14] relative">
+                    {/* Subtle on-brand dot pattern */}
+                    <div className="absolute inset-0 opacity-[0.05] dark:opacity-[0.03] pointer-events-none text-teal-600 dark:text-teal-400" style={{ backgroundImage: "radial-gradient(currentColor 1px, transparent 1px)", backgroundSize: "20px 20px" }}></div>
 
                     {/* Header */}
-                    <div className="p-3 bg-white dark:bg-[#0d1520] border-b border-slate-200 dark:border-slate-800/80 flex items-center justify-between shadow-sm z-10">
+                    <div className="p-4 bg-white/90 dark:bg-[#0b131f]/95 backdrop-blur-md border-b border-slate-150 dark:border-slate-800/80 flex items-center justify-between shadow-sm z-10">
                         <div className="flex items-center gap-3">
-                            <button onClick={() => navigate('/chat')} className="md:hidden p-2 text-slate-600 dark:text-slate-200"><ArrowLeft size={20} /></button>
+                            <button onClick={() => navigate('/chat')} className="md:hidden p-2 text-slate-600 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition"><ArrowLeft size={20} /></button>
 
                             {/* Clickable Profile Section */}
-                            <div onClick={handleViewProfile} className="flex items-center gap-3 cursor-pointer hover:bg-slate-50 dark:hover:bg-[#151f2e] p-1 pr-4 rounded-lg transition">
-                                <div className="w-10 h-10 rounded-full bg-teal-50 dark:bg-[#151f2e] flex items-center justify-center text-teal-600 dark:text-teal-400 font-bold overflow-hidden border border-slate-200 dark:border-slate-800">
-                                    {targetUser?.image ? <img src={targetUser.image} className="w-full h-full object-cover" /> : <UserIcon />}
+                            <div onClick={handleViewProfile} className="flex items-center gap-3 cursor-pointer hover:bg-slate-50 dark:hover:bg-[#151f2e]/60 p-1.5 px-3 rounded-2xl transition-all duration-200">
+                                <div className="w-10 h-10 rounded-full bg-teal-50 dark:bg-[#151f2e] flex items-center justify-center text-teal-600 dark:text-teal-400 font-bold overflow-hidden border border-slate-200/80 dark:border-slate-800 shadow-sm">
+                                    {targetUser?.image ? <img src={targetUser.image} className="w-full h-full object-cover" /> : <UserIcon size={18} />}
                                 </div>
                                 <div>
-                                    <h3 className="font-bold text-slate-900 dark:text-slate-100 hover:underline">{targetUser?.username || "Loading..."}</h3>
-                                    <p className="text-xs flex items-center gap-1 font-medium">
+                                    <h3 className="font-bold text-slate-900 dark:text-slate-100 hover:underline leading-tight text-sm md:text-base">{targetUser?.username || "Loading..."}</h3>
+                                    <p className="text-[11px] flex items-center gap-1 font-semibold mt-0.5">
                                         {isTyping ? (
-                                            <span className="text-teal-500 font-bold animate-pulse">Typing...</span>
+                                            <span className="text-teal-600 dark:text-teal-400 font-bold animate-pulse">typing...</span>
                                         ) : onlineUsers.has(targetUserId) ? (
                                             <span className="text-green-500 flex items-center gap-1">
-                                                <span className="w-2 h-2 bg-green-500 rounded-full"></span> Online
+                                                <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-ping"></span> online
                                             </span>
                                         ) : (
-                                            <span className="text-gray-400">Offline</span>
+                                            <span className="text-slate-400 dark:text-slate-500">offline</span>
                                         )}
                                     </p>
                                 </div>
@@ -497,80 +535,94 @@ const ChatPage = () => {
 
                         {/* Connection Status Indicator */}
                         {!isConnected && (
-                            <div className="flex items-center gap-1.5 px-3 py-1 bg-amber-500/10 text-amber-500 dark:bg-amber-500/15 border border-amber-500/25 rounded-full text-xs font-medium animate-pulse">
+                            <div className="flex items-center gap-1.5 px-3 py-1 bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 rounded-full text-xs font-semibold animate-pulse">
                                 <span className="w-1.5 h-1.5 bg-amber-500 rounded-full animate-ping"></span>
-                                Connecting...
+                                Reconnecting...
                             </div>
                         )}
                     </div>
 
                     {/* Messages */}
-                    <div className="flex-1 overflow-y-auto p-4 space-y-2 z-10 custom-scrollbar">
+                    <div className="flex-1 overflow-y-auto p-5 space-y-4 z-10 custom-scrollbar">
                         {messages.length === 0 ? (
-                            <div className="flex flex-col items-center justify-center h-full text-slate-400 dark:text-slate-500 opacity-80">
-                                <div className="bg-white/50 dark:bg-slate-900/40 p-4 rounded-full mb-3 border border-slate-200 dark:border-slate-800">
-                                    <MessageSquare size={32} className="text-teal-400" />
+                            <div className="flex flex-col items-center justify-center h-full text-slate-450 dark:text-slate-500 opacity-90">
+                                <div className="bg-white dark:bg-[#0b131f] p-5 rounded-3xl mb-4 border border-slate-150 dark:border-slate-800 shadow-md">
+                                    <MessageSquare size={36} className="text-teal-500" />
                                 </div>
-                                <p className="text-sm font-medium">No messages yet</p>
-                                <p className="text-xs">Say &quot;Hi&quot; to start the conversation! 👋</p>
+                                <p className="text-sm font-bold text-slate-700 dark:text-slate-350">No messages yet</p>
+                                <p className="text-xs text-slate-450 mt-1">Start this discussion by typing a message below! 👋</p>
                             </div>
                         ) : (
-                            messages.map((msg) => {
+                            messages.map((msg, index) => {
                                 const isMe = msg.sender === (currentUser._id || currentUser.id);
                                 const failed = msg.status === 'failed';
+                                const msgDate = new Date(msg.timestamp).toLocaleDateString();
+                                const prevMsg = index > 0 ? messages[index - 1] : null;
+                                const prevMsgDate = prevMsg ? new Date(prevMsg.timestamp).toLocaleDateString() : null;
+                                const showDateSeparator = msgDate !== prevMsgDate;
+
                                 return (
-                                    <div key={msg.tempId || msg._id} className={`flex ${isMe ? 'justify-end' : 'justify-start'}`}>
-                                        <div className={`relative max-w-[70%] p-3 px-4 rounded-2xl shadow-sm text-sm ${
-                                            failed
-                                                ? 'bg-red-50 dark:bg-red-900/20 text-slate-800 dark:text-slate-200 border border-red-200 dark:border-red-900/40 rounded-tr-none'
-                                                : isMe
-                                                    ? 'bg-gradient-to-r from-teal-600 to-cyan-600 text-white rounded-tr-none'
-                                                    : 'bg-white dark:bg-[#151f2e] text-slate-800 dark:text-slate-200 rounded-tl-none border border-slate-150/80 dark:border-slate-800/65'
-                                        }`}>
-
-                                            {msg.messageType === 'audio' ? (
-                                                <div className="flex items-center gap-2 min-w-[200px] py-1">
-                                                    <audio controls src={msg.audioUrl} className="w-full h-8 animate-in" />
-                                                </div>
-                                            ) : (
-                                                <p className="leading-relaxed pb-1">{msg.content}</p>
-                                            )}
-
-                                            <div className="flex items-center justify-end gap-1 mt-0.5 select-none">
-                                                <span className={`text-[10px] min-w-[45px] text-right ${failed ? 'text-red-500' : isMe ? 'text-teal-200' : 'text-slate-400 dark:text-slate-500'}`}>
-                                                    {failed ? 'Failed' : formatTime(msg.timestamp)}
+                                    <React.Fragment key={msg.tempId || msg._id || index}>
+                                        {showDateSeparator && (
+                                            <div className="flex justify-center my-6">
+                                                <span className="text-[10px] px-3.5 py-1.5 bg-slate-150/80 dark:bg-[#151f2e] text-slate-500 dark:text-slate-400 rounded-full font-bold uppercase tracking-wider border border-slate-200/50 dark:border-slate-800/40 shadow-sm">
+                                                    {new Date(msg.timestamp).toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' })}
                                                 </span>
-                                                {isMe && !failed && (
-                                                    <span>
-                                                        {msg.status === 'sending'
-                                                            ? <Clock size={13} className="text-teal-200/80" />
-                                                            : msg.status === 'read'
-                                                                ? <CheckCheck size={14} className="text-sky-300" />
-                                                                : msg.status === 'delivered'
-                                                                    ? <CheckCheck size={14} className="text-teal-200" />
-                                                                    : <Check size={14} className="text-teal-200" />}
+                                            </div>
+                                        )}
+                                        <div className={`flex ${isMe ? 'justify-end' : 'justify-start'} animate-in fade-in-40 duration-200 relative`}>
+                                            <div className={`relative max-w-[75%] p-3.5 px-4 rounded-3xl shadow-sm text-sm leading-relaxed ${
+                                                failed
+                                                    ? 'bg-red-50 dark:bg-red-900/20 text-slate-800 dark:text-slate-200 border border-red-200 dark:border-red-900/40 rounded-tr-none'
+                                                    : isMe 
+                                                        ? 'bg-gradient-to-r from-teal-650 to-cyan-600 text-white rounded-tr-sm shadow-teal-500/5' 
+                                                        : 'bg-white dark:bg-[#0b131f] text-slate-800 dark:text-slate-100 rounded-tl-sm border border-slate-150 dark:border-slate-800/80'
+                                            }`}>
+
+                                                {msg.messageType === 'audio' ? (
+                                                    <div className="flex items-center gap-2 min-w-[220px] py-1 bg-black/5 dark:bg-black/20 p-2.5 rounded-2xl">
+                                                        <audio controls src={msg.audioUrl} className="w-full h-8" />
+                                                    </div>
+                                                ) : (
+                                                    <p className="whitespace-pre-wrap">{msg.content}</p>
+                                                )}
+
+                                                <div className="flex items-center justify-end gap-1 mt-1.5 select-none">
+                                                    <span className={`text-[9px] font-semibold ${failed ? 'text-red-500' : isMe ? 'text-teal-100' : 'text-slate-450 dark:text-slate-550'}`}>
+                                                        {failed ? 'Failed' : formatTime(msg.timestamp)}
                                                     </span>
-                                                )}
-                                                {isMe && failed && (
-                                                    <button onClick={() => retryMessage(msg)} title="Retry" className="ml-1 text-red-500 hover:text-red-600 flex items-center gap-0.5 font-bold">
-                                                        <RotateCw size={12} /> Retry
-                                                    </button>
-                                                )}
+                                                    {isMe && !failed && (
+                                                        <span>
+                                                            {msg.status === 'sending'
+                                                                ? <Clock size={13} className="text-teal-200/80" />
+                                                                : msg.status === 'read' || msg.read
+                                                                    ? <CheckCheck size={13} className="text-sky-300" />
+                                                                    : msg.status === 'delivered'
+                                                                        ? <CheckCheck size={13} className="text-teal-200" />
+                                                                        : <Check size={13} className="text-teal-200" />}
+                                                        </span>
+                                                    )}
+                                                    {isMe && failed && (
+                                                        <button onClick={() => retryMessage(msg)} title="Retry" className="ml-1 text-red-500 hover:text-red-600 flex items-center gap-0.5 font-bold">
+                                                            <RotateCw size={12} /> Retry
+                                                        </button>
+                                                    )}
+                                                </div>
                                             </div>
                                             {failed && (
                                                 <span className="absolute -left-6 top-1/2 -translate-y-1/2 text-red-500"><AlertCircle size={15} /></span>
                                             )}
                                         </div>
-                                    </div>
+                                    </React.Fragment>
                                 );
                             })
                         )}
                         <div ref={scrollRef}></div>
                     </div>
 
-                    {/* Input */}
-                    <div className="p-3 bg-white dark:bg-[#0d1520] border-t border-slate-200 dark:border-slate-800/80 z-10">
-                        <div className="flex gap-2 items-center">
+                    {/* Input Area */}
+                    <div className="p-4 bg-white dark:bg-[#0b131f] border-t border-slate-150 dark:border-slate-800/80 z-10 shadow-lg shadow-black/5">
+                        <div className="flex gap-3 items-center max-w-5xl mx-auto w-full">
                             <input
                                 type="text"
                                 value={newMessage}
@@ -581,13 +633,20 @@ const ChatPage = () => {
                                     typingTimeoutRef.current = setTimeout(() => socket.emit("stop_typing", targetUserId), 2000);
                                 }}
                                 onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
-                                placeholder={isRecording ? "Recording audio..." : "Type a message..."}
+                                placeholder={isRecording ? "Recording audio..." : "Type your message..."}
                                 disabled={isRecording}
-                                className={`flex-1 border border-slate-200 dark:border-slate-850 rounded-full px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:bg-white dark:focus:bg-[#0d1520] bg-slate-50 dark:bg-[#151f2e] text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 transition ${isRecording ? 'opacity-50 cursor-not-allowed bg-red-50 dark:bg-red-900/10' : ''}`}
+                                className={`flex-1 border border-slate-200 dark:border-slate-800 rounded-2xl px-5 py-3.5 focus:outline-none focus:ring-2 focus:ring-teal-500/80 focus:border-transparent bg-slate-50 dark:bg-[#151f2e] text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 transition-all font-medium ${
+                                    isRecording ? 'opacity-50 cursor-not-allowed bg-red-50 dark:bg-red-900/10' : ''
+                                }`}
                             />
                             <button
                                 onClick={newMessage.trim() ? sendMessage : (isRecording ? stopRecording : startRecording)}
-                                className={`${isRecording ? 'bg-red-500 hover:bg-red-600 animate-pulse' : 'bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-700 hover:to-cyan-700'} text-white p-3 rounded-full transition shadow-md active:scale-95 flex items-center justify-center`}
+                                className={`${
+                                    isRecording 
+                                        ? 'bg-red-500 hover:bg-red-600 animate-pulse' 
+                                        : 'bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-700 hover:to-cyan-700 hover:shadow-lg hover:shadow-teal-500/15'
+                                } text-white p-3.5 rounded-2xl transition duration-200 active:scale-95 flex items-center justify-center shadow-md`}
+                                title={newMessage.trim() ? "Send message" : (isRecording ? "Stop recording" : "Record voice message")}
                             >
                                 {newMessage.trim() ? <Send size={18} /> : (isRecording ? <StopCircle size={20} /> : <Mic size={20} />)}
                             </button>
@@ -596,14 +655,14 @@ const ChatPage = () => {
 
                 </div>
             ) : (
-                <div className="hidden md:flex flex-1 flex-col items-center justify-center text-slate-400 dark:text-slate-500 bg-slate-50/50 dark:bg-[#080d14] border-l border-slate-200 dark:border-slate-800/80 border-b-[6px] border-b-teal-500">
-                    <div className="w-40 h-40 bg-slate-100 dark:bg-[#151f2e] rounded-full flex items-center justify-center mb-6 border border-slate-200 dark:border-slate-850 shadow-inner">
-                        <MessageSquare size={64} className="opacity-20 text-teal-500 dark:text-teal-400" />
+                <div className="hidden md:flex flex-1 flex-col items-center justify-center text-slate-400 dark:text-slate-500 bg-slate-50/50 dark:bg-[#080d14] border-l border-slate-200 dark:border-slate-800/80 border-b-[6px] border-b-teal-500 animate-in fade-in-50 duration-500">
+                    <div className="w-40 h-40 bg-white dark:bg-[#0b131f] rounded-full flex items-center justify-center mb-6 border border-slate-150 dark:border-slate-800 shadow-md shadow-slate-100/50 dark:shadow-none">
+                        <MessageSquare size={60} className="opacity-30 text-teal-650 dark:text-teal-400" />
                     </div>
-                    <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-200">Welcome to Chat</h2>
-                    <p className="mt-2 text-slate-500 dark:text-slate-400">Select a contact to start messaging.</p>
+                    <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-200">Inbox Conversations</h2>
+                    <p className="mt-2 text-slate-550 dark:text-slate-450 font-medium text-sm">Select a contact from the sidebar to open the chat window.</p>
                     {!isConnected && (
-                        <div className="mt-4 flex items-center gap-2 px-4 py-2 bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 rounded-lg text-sm font-medium animate-pulse">
+                        <div className="mt-5 flex items-center gap-2 px-4 py-2 bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 rounded-xl text-xs font-semibold animate-pulse">
                             <span className="w-2 h-2 bg-amber-500 rounded-full animate-ping"></span>
                             Connecting to real-time chat server...
                         </div>
