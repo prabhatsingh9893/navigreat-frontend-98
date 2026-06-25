@@ -3,21 +3,23 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Sun, Moon, Compass } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
+import logo from '../assets/startup-logo.png';
 
 /**
  * Shared branded shell for the auth pages (Login / Signup / Mentor signup).
  * Left: a branded Summit panel with real social proof (no stock photos).
  * Right: a centered form card passed in as `children`.
  */
-const Wordmark = ({ className = '' }) => (
-  <div className={`inline-flex items-center gap-2 font-extrabold tracking-tight ${className}`}>
-    <span className="grid place-items-center w-9 h-9 rounded-xl bg-gradient-to-br from-teal-500 to-cyan-600 text-white shadow-lg shadow-teal-500/30">
-      <Compass size={20} />
-    </span>
-    <span className="text-2xl">
-      Navi<span className="text-teal-500 dark:text-teal-400">Great</span>
-    </span>
-  </div>
+const Wordmark = ({ className = '', alwaysDark = false }) => (
+  <Link to="/" className={`flex items-center group select-none ${className}`}>
+    <img
+      src={logo}
+      alt="NaviGreat"
+      className={`h-14 w-auto object-contain pointer-events-none transition-all duration-300 group-hover:scale-[1.03] ${
+        alwaysDark ? 'dark-logo-filter' : 'dark:dark-logo-filter'
+      }`}
+    />
+  </Link>
 );
 
 const AuthLayout = ({ eyebrow, title, highlight, subtitle, proof, children }) => {
@@ -44,7 +46,7 @@ const AuthLayout = ({ eyebrow, title, highlight, subtitle, proof, children }) =>
 
         <div className="relative z-10 flex flex-col justify-between w-full p-12 xl:p-16 text-white">
           {/* Brand */}
-          <Wordmark className="text-white" />
+          <Wordmark alwaysDark={true} />
 
           {/* Headline block */}
           <motion.div
@@ -103,8 +105,9 @@ const AuthLayout = ({ eyebrow, title, highlight, subtitle, proof, children }) =>
         >
           {/* Mobile brand (panel hidden on small screens) */}
           <div className="lg:hidden mb-8 flex justify-center">
-            <Wordmark className="text-slate-900 dark:text-white" />
+            <Wordmark alwaysDark={false} className="text-slate-900 dark:text-white" />
           </div>
+
 
           {children}
         </motion.div>

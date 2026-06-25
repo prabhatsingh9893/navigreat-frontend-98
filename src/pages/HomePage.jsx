@@ -187,8 +187,16 @@ function HomePage() {
   const { theme } = useTheme();
   const [mentors, setMentors] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [currentUser, setCurrentUser] = useState(null);
   const navigate = useNavigate();
   const words = ['Dream Job', 'Top IITs', 'Global Unis', 'Success', 'Dream Rank'];
+
+  useEffect(() => {
+    const raw = localStorage.getItem('userData');
+    if (raw) {
+      try { setCurrentUser(JSON.parse(raw)); } catch { /* ignore */ }
+    }
+  }, []);
 
   useEffect(() => {
     fetch(`${API_BASE_URL}/mentors`)
@@ -268,20 +276,33 @@ function HomePage() {
                   transition={{ duration: 0.6, delay: 0.3 }}
                   className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-12"
                 >
-                  <Link
-                    to="/mentors"
-                    className="shimmer-btn text-white px-8 py-4 rounded-2xl font-bold shadow-2xl shadow-teal-500/30 transition-all hover:-translate-y-1 flex items-center justify-center gap-2 group text-base"
-                  >
-                    Find a Mentor
-                    <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
-                  </Link>
-                  <Link
-                    to="/become-mentor"
-                    className="bg-slate-100 hover:bg-slate-200/80 dark:bg-white/10 backdrop-blur-md text-slate-800 dark:text-white border border-slate-200 dark:border-white/20 px-8 py-4 rounded-2xl font-bold transition-all hover:-translate-y-1 flex items-center justify-center gap-2 text-base"
-                  >
-                    Become a Mentor
-                  </Link>
+                  {currentUser ? (
+                    <Link
+                      to={currentUser.role === 'mentor' ? '/dashboard/mentor' : '/dashboard/student'}
+                      className="shimmer-btn text-white px-8 py-4 rounded-2xl font-bold shadow-2xl shadow-teal-500/30 transition-all hover:-translate-y-1 flex items-center justify-center gap-2 group text-base"
+                    >
+                      Go to Workspace ({currentUser.role === 'mentor' ? 'Mentor' : 'Student'})
+                      <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+                    </Link>
+                  ) : (
+                    <>
+                      <Link
+                        to="/login?role=student"
+                        className="shimmer-btn text-white px-8 py-4 rounded-2xl font-bold shadow-2xl shadow-teal-500/30 transition-all hover:-translate-y-1 flex items-center justify-center gap-2 group text-base"
+                      >
+                        Login as Student
+                        <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+                      </Link>
+                      <Link
+                        to="/login?role=mentor"
+                        className="bg-slate-100 hover:bg-slate-200/80 dark:bg-white/10 backdrop-blur-md text-slate-800 dark:text-white border border-slate-200 dark:border-white/20 px-8 py-4 rounded-2xl font-bold transition-all hover:-translate-y-1 flex items-center justify-center gap-2 text-base"
+                      >
+                        Login as Mentor
+                      </Link>
+                    </>
+                  )}
                 </motion.div>
+
 
                 {/* Social proof */}
                 <motion.div
