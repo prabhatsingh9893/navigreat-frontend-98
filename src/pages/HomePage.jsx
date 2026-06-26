@@ -146,6 +146,12 @@ const features = [
   },
 ];
 
+const institutions = [
+  'IIT Delhi', 'IIT Bombay', 'IIT Madras', 'IIT Kanpur', 'IIT Kharagpur',
+  'NIT Trichy', 'NIT Surathkal', 'BITS Pilani', 'IIIT Hyderabad', 'VIT Vellore',
+  'DTU', 'MANIT Bhopal',
+];
+
 const stats = [
   { label: 'IITs Covered', val: 23, suffix: '+', color: 'text-teal-600 dark:text-teal-400' },
   { label: 'NITs Covered', val: 31, suffix: '+', color: 'text-cyan-600 dark:text-cyan-400' },
@@ -367,6 +373,25 @@ function HomePage() {
 
           {/* Bottom fade */}
           <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-slate-50 dark:from-[#080d14] to-transparent" />
+        </section>
+
+        {/* ====== TRUSTED-BY MARQUEE ====== */}
+        <section className="py-10 bg-slate-50 dark:bg-[#080d14] border-y border-slate-100 dark:border-slate-800/60 overflow-hidden">
+          <p className="text-center text-xs font-bold uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 mb-7">
+            Mentors from India&apos;s top institutions
+          </p>
+          <div className="group/marquee relative marquee-mask">
+            <div className="flex w-max animate-marquee gap-4">
+              {[...institutions, ...institutions].map((name, i) => (
+                <span
+                  key={i}
+                  className="flex-shrink-0 inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 text-sm font-bold text-slate-600 dark:text-slate-300 shadow-sm"
+                >
+                  <GraduationCap size={15} className="text-teal-500" /> {name}
+                </span>
+              ))}
+            </div>
+          </div>
         </section>
 
         {/* ====== 2. STATS STRIP ====== */}

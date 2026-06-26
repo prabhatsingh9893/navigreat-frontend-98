@@ -1,9 +1,13 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { io } from "socket.io-client";
-import { Send, User as UserIcon, MessageSquare, ArrowLeft, Mic, StopCircle, Check, CheckCheck } from 'lucide-react';
+import { Send, User as UserIcon, MessageSquare, ArrowLeft, Mic, StopCircle, Check, CheckCheck, Clock, RotateCw, AlertCircle } from 'lucide-react';
 import { API_BASE_URL } from '../config';
 import toast from 'react-hot-toast';
+
+// Map a saved message's flags to a UI status (sent → delivered → read)
+const statusFromMsg = (m) => (m.read ? 'read' : m.delivered ? 'delivered' : 'sent');
+const newTempId = () => `temp-${Date.now()}-${Math.random().toString(36).slice(2)}`;
 
 // Initialize Socket
 const SOCKET_URL = API_BASE_URL.replace('/api', '');
@@ -41,6 +45,9 @@ const ChatPage = () => {
     const scrollRef = useRef();
     const notificationSound = useRef(new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3')); // Beep Sound
     const typingTimeoutRef = useRef(null);
+    const targetRef = useRef(targetUserId);        // latest open conversation (for reconnect resync)
+    const hasConnectedRef = useRef(false);          // distinguishes first connect from reconnect
+    useEffect(() => { targetRef.current = targetUserId; }, [targetUserId]);
 
     // Utils & Helpers defined early to prevent accessed-before-declared issues
     const scrollToBottom = () => {
@@ -60,6 +67,23 @@ const ChatPage = () => {
         }
     };
 
+    // Fetch full message history for a conversation, normalise status, and mark read.
+    const fetchMessages = (uid) => {
+        if (!uid || uid === 'undefined' || !currentUser) return;
+        const token = localStorage.getItem('token');
+        fetch(`${API_BASE_URL}/messages/${uid}`, { headers: { Authorization: `Bearer ${token}` } })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    setMessages(data.messages.map(m => ({ ...m, status: statusFromMsg(m) })));
+                    window.dispatchEvent(new Event('messageNotificationSync'));
+                    // Tell the other party we've read their messages (live read ticks)
+                    socket.emit("mark_read", { senderId: uid, readerId: currentUser._id || currentUser.id });
+                }
+            })
+            .catch(() => {});
+    };
+
     useEffect(() => {
         if (!currentUser) {
             navigate('/login');
@@ -68,8 +92,13 @@ const ChatPage = () => {
 
         const handleConnect = () => {
             setIsConnected(true);
-            console.log("Registering Online:", currentUser._id || currentUser.id);
             socket.emit("register_user", currentUser._id || currentUser.id); // ✅ Emit register_user
+            // On RECONNECT (not the first connect), resync so nothing was missed offline
+            if (hasConnectedRef.current) {
+                fetchContacts();
+                if (targetRef.current) fetchMessages(targetRef.current);
+            }
+            hasConnectedRef.current = true;
         };
 
         const handleDisconnect = () => {
@@ -131,32 +160,37 @@ const ChatPage = () => {
                 }
             });
 
-        // B. Fetch Message History
-        const token = localStorage.getItem('token');
-        fetch(`${API_BASE_URL}/messages/${targetUserId}`, {
-            headers: { Authorization: `Bearer ${token}` }
-        })
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) {
-                    setMessages(data.messages);
-                    window.dispatchEvent(new Event('messageNotificationSync'));
-                }
-            });
+        // B. Fetch Message History (normalised + marks read)
+        fetchMessages(targetUserId);
 
     }, [targetUserId, currentUser]);
 
     // 3. Socket Listeners
     useEffect(() => {
+        const myId = currentUser?._id || currentUser?.id;
+
         const handleReceiveMessage = (msg) => {
             const isCurrentChat = (msg.sender === targetUserId || msg.receiver === targetUserId);
-            const isMe = (msg.sender === currentUser?._id || msg.sender === currentUser?.id);
+            const isMe = (msg.sender === myId);
 
-            // A. Update Messages Area
+            // A. Update Messages Area — reconcile optimistic bubbles + dedup
             if (isCurrentChat) {
-                setMessages((prev) => [...prev, msg]);
+                setMessages((prev) => {
+                    // My own message echoing back: replace the optimistic temp
+                    if (msg.tempId && prev.some(m => m.tempId === msg.tempId)) {
+                        return prev.map(m => m.tempId === msg.tempId
+                            ? { ...msg, tempId: msg.tempId, status: statusFromMsg(msg) }
+                            : m);
+                    }
+                    // Already have it (duplicate echo) → ignore
+                    if (msg._id && prev.some(m => m._id === msg._id)) return prev;
+                    return [...prev, { ...msg, status: statusFromMsg(msg) }];
+                });
                 scrollToBottom();
                 if (!isMe) {
+                    // I'm viewing this thread → confirm delivered + read in real time
+                    socket.emit("message_delivered", { messageId: msg._id, senderId: msg.sender });
+                    socket.emit("mark_read", { senderId: msg.sender, readerId: myId });
                     const token = localStorage.getItem('token');
                     fetch(`${API_BASE_URL}/messages/${msg.sender}/read`, {
                         method: 'PUT',
@@ -166,6 +200,8 @@ const ChatPage = () => {
                     }).catch(err => console.error("Error marking messages as read:", err));
                 }
             } else if (!isMe) {
+                // Message for another conversation → still confirm delivery
+                socket.emit("message_delivered", { messageId: msg._id, senderId: msg.sender });
                 // ✅ Improved Notification
                 // Try to find sender name from contact list or just say "New Message"
                 // contactList might be stale in closure, better to trust the update logic or fetch fresh
@@ -218,12 +254,27 @@ const ChatPage = () => {
             });
         };
 
+        // Live delivery / read receipts for MY sent messages
+        const handleStatus = ({ messageId, status }) => {
+            setMessages(prev => prev.map(m => {
+                if (m.sender !== myId) return m;
+                if (status === 'read') return { ...m, read: true, delivered: true, status: 'read' };
+                if (status === 'delivered') {
+                    if (messageId && m._id !== messageId) return m;
+                    return { ...m, delivered: true, status: m.read ? 'read' : 'delivered' };
+                }
+                return m;
+            }));
+        };
+
         socket.on("receive_message", handleReceiveMessage);
+        socket.on("message_status", handleStatus);
         socket.on("display_typing", () => setIsTyping(true));
         socket.on("hide_typing", () => setIsTyping(false));
 
         return () => {
             socket.off("receive_message", handleReceiveMessage);
+            socket.off("message_status", handleStatus);
             socket.off("display_typing");
             socket.off("hide_typing");
         };
@@ -269,36 +320,67 @@ const ChatPage = () => {
         }
     };
 
-    const sendAudioMessage = (base64Audio) => {
-        if (!targetUserId) return;
+    // Emit a (temp) message to the server with a reliable ACK + timeout.
+    // Drives the optimistic bubble's status: sending → sent/delivered/read, or failed.
+    const emitMessage = (msg) => {
+        setMessages(prev => prev.map(m => m.tempId === msg.tempId ? { ...m, status: 'sending' } : m));
         if (!socket.connected) {
-            toast.error("Not connected to chat server. Please wait for reconnection...");
+            setMessages(prev => prev.map(m => m.tempId === msg.tempId ? { ...m, status: 'failed' } : m));
             return;
         }
-        const msgData = {
-            sender: currentUser._id || currentUser.id,
-            receiver: targetUserId,
-            content: "🎤 Voice Message",
-            messageType: 'audio',
-            audioUrl: base64Audio,
-            timestamp: new Date()
-        };
-        socket.emit("send_message", msgData);
+        socket.timeout(12000).emit("send_message", {
+            sender: msg.sender,
+            receiver: msg.receiver,
+            content: msg.content,
+            messageType: msg.messageType,
+            audioUrl: msg.audioUrl,
+            tempId: msg.tempId,
+        }, (err, res) => {
+            if (err || !res || !res.success) {
+                setMessages(prev => prev.map(m => m.tempId === msg.tempId ? { ...m, status: 'failed' } : m));
+            } else {
+                setMessages(prev => prev.map(m => m.tempId === msg.tempId
+                    ? { ...res.message, tempId: msg.tempId, status: statusFromMsg(res.message) }
+                    : m));
+            }
+        });
     };
 
-    const sendMessage = async () => {
-        if (!newMessage.trim() || !targetUserId) return;
-        if (!socket.connected) {
-            toast.error("Not connected to chat server. Please wait for reconnection...");
-            return;
-        }
-        const msgData = {
-            sender: currentUser._id || currentUser.id,
+    // Add an optimistic bubble immediately, then send it.
+    const dispatchMessage = ({ content, messageType = 'text', audioUrl = '' }) => {
+        if (!targetUserId) return;
+        const myId = currentUser._id || currentUser.id;
+        const optimistic = {
+            _id: newTempId(),
+            tempId: newTempId(),
+            sender: myId,
             receiver: targetUserId,
-            content: newMessage,
-            timestamp: new Date()
+            content,
+            messageType,
+            audioUrl,
+            timestamp: new Date().toISOString(),
+            read: false,
+            delivered: false,
+            status: 'sending',
         };
-        socket.emit("send_message", msgData);
+        optimistic._id = optimistic.tempId; // keep them aligned for keying
+        setMessages(prev => [...prev, optimistic]);
+        scrollToBottom();
+        emitMessage(optimistic);
+    };
+
+    const retryMessage = (msg) => emitMessage(msg);
+
+    const sendAudioMessage = (base64Audio) => {
+        dispatchMessage({ content: "🎤 Voice Message", messageType: 'audio', audioUrl: base64Audio });
+    };
+
+    const sendMessage = () => {
+        const text = newMessage.trim();
+        if (!text || !targetUserId) return;
+        socket.emit("stop_typing", targetUserId);
+        if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
+        dispatchMessage({ content: text });
         setNewMessage("");
     };
 
@@ -433,11 +515,18 @@ const ChatPage = () => {
                                 <p className="text-xs">Say &quot;Hi&quot; to start the conversation! 👋</p>
                             </div>
                         ) : (
-                            messages.map((msg, index) => {
+                            messages.map((msg) => {
                                 const isMe = msg.sender === (currentUser._id || currentUser.id);
+                                const failed = msg.status === 'failed';
                                 return (
-                                    <div key={index} className={`flex ${isMe ? 'justify-end' : 'justify-start'}`}>
-                                        <div className={`relative max-w-[70%] p-3 px-4 rounded-2xl shadow-sm text-sm ${isMe ? 'bg-gradient-to-r from-teal-600 to-cyan-600 text-white rounded-tr-none' : 'bg-white dark:bg-[#151f2e] text-slate-800 dark:text-slate-200 rounded-tl-none border border-slate-150/80 dark:border-slate-800/65'}`}>
+                                    <div key={msg.tempId || msg._id} className={`flex ${isMe ? 'justify-end' : 'justify-start'}`}>
+                                        <div className={`relative max-w-[70%] p-3 px-4 rounded-2xl shadow-sm text-sm ${
+                                            failed
+                                                ? 'bg-red-50 dark:bg-red-900/20 text-slate-800 dark:text-slate-200 border border-red-200 dark:border-red-900/40 rounded-tr-none'
+                                                : isMe
+                                                    ? 'bg-gradient-to-r from-teal-600 to-cyan-600 text-white rounded-tr-none'
+                                                    : 'bg-white dark:bg-[#151f2e] text-slate-800 dark:text-slate-200 rounded-tl-none border border-slate-150/80 dark:border-slate-800/65'
+                                        }`}>
 
                                             {msg.messageType === 'audio' ? (
                                                 <div className="flex items-center gap-2 min-w-[200px] py-1">
@@ -448,15 +537,29 @@ const ChatPage = () => {
                                             )}
 
                                             <div className="flex items-center justify-end gap-1 mt-0.5 select-none">
-                                                <span className={`text-[10px] min-w-[45px] text-right ${isMe ? 'text-teal-200' : 'text-slate-400 dark:text-slate-500'}`}>
-                                                    {formatTime(msg.timestamp)}
+                                                <span className={`text-[10px] min-w-[45px] text-right ${failed ? 'text-red-500' : isMe ? 'text-teal-200' : 'text-slate-400 dark:text-slate-500'}`}>
+                                                    {failed ? 'Failed' : formatTime(msg.timestamp)}
                                                 </span>
-                                                {isMe && (
+                                                {isMe && !failed && (
                                                     <span>
-                                                        {msg.read ? <CheckCheck size={14} className="text-teal-200" /> : <Check size={14} className="text-teal-300" />}
+                                                        {msg.status === 'sending'
+                                                            ? <Clock size={13} className="text-teal-200/80" />
+                                                            : msg.status === 'read'
+                                                                ? <CheckCheck size={14} className="text-sky-300" />
+                                                                : msg.status === 'delivered'
+                                                                    ? <CheckCheck size={14} className="text-teal-200" />
+                                                                    : <Check size={14} className="text-teal-200" />}
                                                     </span>
                                                 )}
+                                                {isMe && failed && (
+                                                    <button onClick={() => retryMessage(msg)} title="Retry" className="ml-1 text-red-500 hover:text-red-600 flex items-center gap-0.5 font-bold">
+                                                        <RotateCw size={12} /> Retry
+                                                    </button>
+                                                )}
                                             </div>
+                                            {failed && (
+                                                <span className="absolute -left-6 top-1/2 -translate-y-1/2 text-red-500"><AlertCircle size={15} /></span>
+                                            )}
                                         </div>
                                     </div>
                                 );
