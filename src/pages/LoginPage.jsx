@@ -147,32 +147,18 @@ function LoginPage() {
     }
   };
 
-  // --- 2. Google Login (Popup for Desktop, Redirect for Mobile) ---
+  // --- 2. Google Login (Redirect Flow for All Devices) ---
   const handleGoogleLogin = async () => {
     setStatusMessage("Connecting to Google...");
     setVerifying(true);
 
     try {
-      // Detect if user is on mobile/tablet device
-      const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-      
-      if (isMobile) {
-        // Mobile browsers block popups by default, use redirect flow
-        await signInWithRedirect(auth, provider);
-      } else {
-        // Desktop browsers can handle popups easily
-        const result = await signInWithPopup(auth, provider);
-        verifyWithBackend(result.user);
-      }
+      // Use redirect flow globally to prevent Brave Shields, Safari, and Mobile popup blockers from interrupting
+      await signInWithRedirect(auth, provider);
     } catch (error) {
       console.error("Google Login Error:", error);
       setVerifying(false);
-
-      if (error.code === 'auth/popup-blocked' || error.code === 'auth/popup-closed-by-user') {
-        toast.error("Popup Blocked. Please allow popups for this site.");
-      } else {
-        toast.error("Login Error: " + error.message);
-      }
+      toast.error("Login Error: " + error.message);
     }
   };
 
