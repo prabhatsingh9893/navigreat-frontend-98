@@ -147,25 +147,30 @@ function LoginPage() {
     }
   };
 
-  // --- 2. Google Login (Universal Popup Handler) ---
+  // --- 2. Google Login (Popup for Desktop, Redirect for Mobile) ---
   const handleGoogleLogin = async () => {
     setStatusMessage("Connecting to Google...");
     setVerifying(true);
 
     try {
-      // Use Popup for ALL devices
-      // Note: Redirect flow causes 'Missing Initial State' on many mobile browsers due to standard cookie blocking.
-      // Popup is safer if domain is authorized.
-      const result = await signInWithPopup(auth, provider);
-      verifyWithBackend(result.user);
+      // Detect if user is on mobile/tablet device
+      const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      
+      if (isMobile) {
+        // Mobile browsers block popups by default, use redirect flow
+        await signInWithRedirect(auth, provider);
+      } else {
+        // Desktop browsers can handle popups easily
+        const result = await signInWithPopup(auth, provider);
+        verifyWithBackend(result.user);
+      }
     } catch (error) {
-      console.error("Google Login Popup Error:", error);
+      console.error("Google Login Error:", error);
+      setVerifying(false);
 
       if (error.code === 'auth/popup-blocked' || error.code === 'auth/popup-closed-by-user') {
-        setVerifying(false);
         toast.error("Popup Blocked. Please allow popups for this site.");
       } else {
-        setVerifying(false); // Reset
         toast.error("Login Error: " + error.message);
       }
     }
