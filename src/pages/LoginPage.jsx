@@ -41,6 +41,7 @@ function LoginPage() {
   // --- Helper: Verify Logic for both Popup and Redirect ---
   const verifyWithBackend = async (user) => {
     if (!user) return;
+    if (localStorage.getItem('token')) return; // Avoid duplicate verification calls
     setVerifying(true);
     setStatusMessage("Verifying Google Account...");
 
@@ -82,14 +83,15 @@ function LoginPage() {
   // --- 0. Handle Auth State (Robust Listener) ---
   useEffect(() => {
     let isMounted = true;
-
+ 
     // A. Check for Redirect Result (Primary for Redirect Flow)
     const checkRedirect = async () => {
       try {
         const result = await getRedirectResult(auth);
         if (result && result.user) {
           console.log("[vAuth] Redirect Success:", result.user);
-          if (isMounted) verifyWithBackend(result.user);
+          // Let it run even if StrictMode unmounted this instance (since it redirects the window anyway)
+          verifyWithBackend(result.user);
         }
       } catch (error) {
         console.error("[vAuth] Redirect Error:", error);
@@ -97,17 +99,17 @@ function LoginPage() {
       }
     };
     checkRedirect();
-
+ 
     // B. Listen for Auth Changes (Backup for when RedirectResult is lost but Session exists)
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
         console.log("[vAuth] Auth State Changed - User Detected:", user.email);
-        if (isMounted) verifyWithBackend(user);
+        verifyWithBackend(user);
       } else {
         console.log("[vAuth] No User Session Found");
       }
     });
-
+ 
     return () => {
       isMounted = false;
       unsubscribe();
