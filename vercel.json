@@ -10,6 +10,16 @@
       ]
     }
   ],
+  "rewrites": [
+    {
+      "source": "/__/auth/:path*",
+      "destination": "https://edumentor-auth-37712.firebaseapp.com/__/auth/:path*"
+    },
+    {
+      "source": "/((?!api|__/auth|static|assets|.*\\..*).*)$",
+      "destination": "/index.html"
+    }
+  ],
   "git": {
     "deploymentEnabled": {
       "main": true,
