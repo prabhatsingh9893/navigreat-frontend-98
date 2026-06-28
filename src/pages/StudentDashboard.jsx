@@ -260,7 +260,7 @@ const StudentDashboard = () => {
             )}
 
             {/* Stats Cards Grid */}
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               {[
                 { label: "Requests Sent", val: bookings?.length || 0, icon: Users, color: "text-teal-500 dark:text-teal-400", bg: "bg-teal-50 dark:bg-teal-950/40", border: "border-teal-150/40 dark:border-teal-900/30", glow: "hover:shadow-teal-500/10" },
                 { label: "Confirmed", val: bookings?.filter(b => b.status === 'confirmed').length || 0, icon: CheckCircle, color: "text-emerald-500 dark:text-emerald-400", bg: "bg-emerald-50 dark:bg-emerald-950/40", border: "border-emerald-150/40 dark:border-emerald-900/30", glow: "hover:shadow-emerald-500/10" },
