@@ -3,8 +3,7 @@ import { Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import toast, { Toaster } from 'react-hot-toast'; // 👉 1. IMPORT ADDED
 import { AnimatePresence } from 'framer-motion';
 import { getToken } from 'firebase/messaging';
-import { messaging, auth } from './firebaseConfig';
-import { getRedirectResult } from 'firebase/auth';
+import { messaging } from './firebaseConfig';
 import { API_BASE_URL } from './config';
 
 import Header from './components/Header.jsx';
@@ -87,46 +86,7 @@ function App() {
     }
   }, []);
 
-  // Check for Firebase Auth Redirect Result globally (covers root landing on redirect)
-  useEffect(() => {
-    const checkRedirect = async () => {
-      if (localStorage.getItem('token')) return;
-      try {
-        const result = await getRedirectResult(auth);
-        if (result && result.user) {
-          console.log("[vAuth Global] Redirect Success:", result.user);
-          const loadingToast = toast.loading("Verifying Google Account...");
-          const payload = {
-            username: result.user.displayName || result.user.email.split('@')[0],
-            email: result.user.email,
-            image: result.user.photoURL || ""
-          };
-
-          const response = await fetch(`${API_BASE_URL}/google-login`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload),
-          });
-
-          const data = await response.json();
-          toast.dismiss(loadingToast);
-
-          if (data.success) {
-            localStorage.setItem('token', data.token);
-            localStorage.setItem('userData', JSON.stringify(data.user));
-            toast.success("Login Successful!");
-            window.location.href = "/"; // Force refresh to update Header
-          } else {
-            toast.error(data.message || "Login Verification Failed");
-          }
-        }
-      } catch (error) {
-        console.error("[vAuth Global] Redirect Error:", error);
-        toast.error("Login Error: " + error.message);
-      }
-    };
-    checkRedirect();
-  }, []);
+  // Note: Google Auth redirect result is handled by LoginPage.jsx — no global check needed here.
 
   return (
     <div className="w-full max-w-full overflow-x-hidden min-h-screen flex flex-col">
