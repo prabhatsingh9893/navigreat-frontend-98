@@ -1,5 +1,5 @@
 import { signInWithPopup, signInWithRedirect, getRedirectResult } from 'firebase/auth';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { auth, provider } from '../firebaseConfig';
 import toast from 'react-hot-toast';
@@ -29,6 +29,7 @@ function LoginPage() {
   const [verifying, setVerifying] = useState(false);
   const [statusMessage, setStatusMessage] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const verifyingRef = useRef(false); // Guard against duplicate backend calls
   const navigate = useNavigate();
 
   // Redirect if already logged in
@@ -42,15 +43,17 @@ function LoginPage() {
   const verifyWithBackend = async (user) => {
     if (!user) return;
     if (localStorage.getItem('token')) return; // Avoid duplicate verification calls
+    // Ref-based guard: prevent concurrent/duplicate calls (StrictMode, onAuthStateChanged race)
+    if (verifyingRef.current) return;
+    verifyingRef.current = true;
     setVerifying(true);
     setStatusMessage("Verifying Google Account...");
 
     try {
-      // Robust Payload to prevent 400 Errors
       const payload = {
-        username: user.displayName || user.email.split('@')[0], // Fallback if name missing
+        username: user.displayName || user.email.split('@')[0],
         email: user.email,
-        image: user.photoURL || "" // Fallback if photo missing
+        image: user.photoURL || ""
       };
 
       console.log("[vLoginFinal] Sending Payload:", payload);
@@ -67,53 +70,37 @@ function LoginPage() {
         localStorage.setItem('token', data.token);
         localStorage.setItem('userData', JSON.stringify(data.user));
         toast.success("Login Successful!");
-        window.location.href = "/"; // Force refresh to update Header
+        navigate('/');  // Use React Router instead of full page reload
+        window.location.reload(); // Single reload to update Header state
       } else {
+        verifyingRef.current = false;
         setVerifying(false);
         console.error("[vLoginFinal] Backend Error:", data);
         toast.error(data.message || "Login Verification Failed");
       }
     } catch (error) {
+      verifyingRef.current = false;
       setVerifying(false);
       console.error("[vLoginFinal] Network Error:", error);
       toast.error("Network Error: Could not reach server.");
     }
   };
 
-  // --- 0. Handle Auth State (Robust Listener) ---
+  // --- 0. Handle Redirect Result (fallback only — fires when user returns from redirect flow) ---
   useEffect(() => {
-    let isMounted = true;
- 
-    // A. Check for Redirect Result (Primary for Redirect Flow)
     const checkRedirect = async () => {
       try {
         const result = await getRedirectResult(auth);
         if (result && result.user) {
-          console.log("[vAuth] Redirect Success:", result.user);
-          // Let it run even if StrictMode unmounted this instance (since it redirects the window anyway)
+          console.log("[vAuth] Redirect Fallback Success:", result.user);
           verifyWithBackend(result.user);
         }
       } catch (error) {
         console.error("[vAuth] Redirect Error:", error);
-        toast.error("Mobile Login Error: " + error.message);
+        toast.error("Login Error: " + error.message);
       }
     };
     checkRedirect();
- 
-    // B. Listen for Auth Changes (Backup for when RedirectResult is lost but Session exists)
-    const unsubscribe = auth.onAuthStateChanged((user) => {
-      if (user) {
-        console.log("[vAuth] Auth State Changed - User Detected:", user.email);
-        verifyWithBackend(user);
-      } else {
-        console.log("[vAuth] No User Session Found");
-      }
-    });
- 
-    return () => {
-      isMounted = false;
-      unsubscribe();
-    };
   }, []);
 
   const handleChange = (e) => {
@@ -149,18 +136,37 @@ function LoginPage() {
     }
   };
 
-  // --- 2. Google Login (Redirect Flow for All Devices) ---
+  // --- 2. Google Login (Popup-first, Redirect fallback) ---
   const handleGoogleLogin = async () => {
     setStatusMessage("Connecting to Google...");
     setVerifying(true);
 
     try {
-      // Use redirect flow globally to prevent Brave Shields, Safari, and Mobile popup blockers from interrupting
-      await signInWithRedirect(auth, provider);
+      // Popup is instant — no page reload, result comes back in-memory
+      const result = await signInWithPopup(auth, provider);
+      if (result && result.user) {
+        await verifyWithBackend(result.user);
+      }
     } catch (error) {
-      console.error("Google Login Error:", error);
-      setVerifying(false);
-      toast.error("Login Error: " + error.message);
+      // If popup was blocked or closed, fall back to redirect flow
+      if (
+        error.code === 'auth/popup-blocked' ||
+        error.code === 'auth/popup-closed-by-user' ||
+        error.code === 'auth/cancelled-popup-request'
+      ) {
+        console.warn("[vAuth] Popup blocked/closed — falling back to redirect flow");
+        try {
+          await signInWithRedirect(auth, provider);
+        } catch (redirectError) {
+          console.error("Google Redirect Error:", redirectError);
+          setVerifying(false);
+          toast.error("Login Error: " + redirectError.message);
+        }
+      } else {
+        console.error("Google Login Error:", error);
+        setVerifying(false);
+        toast.error("Login Error: " + error.message);
+      }
     }
   };
 
@@ -278,8 +284,13 @@ function LoginPage() {
           type="button"
           onClick={async () => {
             setVerifying(true);
-            setStatusMessage("Redirecting...");
-            await signInWithRedirect(auth, provider);
+            setStatusMessage("Redirecting to Google...");
+            try {
+              await signInWithRedirect(auth, provider);
+            } catch (err) {
+              setVerifying(false);
+              toast.error("Redirect failed: " + err.message);
+            }
           }}
           className="text-xs text-slate-400 dark:text-slate-500 hover:text-teal-600 dark:hover:text-teal-400 font-medium transition-colors"
         >
