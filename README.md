@@ -4,6 +4,13 @@
 
 NaviGreat lets students find and book sessions with mentors, chat in real time, and join live classes — while mentors build their profile, schedule sessions, share resources, and earn. This repository is the **React web client**; it talks to the [NaviGreat backend](https://github.com/prabhatsingh9893/navigreat-backend-98) over REST + WebSockets.
 
+**🔗 Live demo:** [navigreat98.vercel.app](https://navigreat98.vercel.app) · **Backend API:** [navigreat-backend-98.onrender.com](https://navigreat-backend-98.onrender.com)
+
+<p align="center">
+  <img src="docs/screenshots/home.jpg" alt="NaviGreat home page" width="49%">
+  <img src="docs/screenshots/become-mentor.jpg" alt="Mentor signup" width="49%">
+</p>
+
 <p align="left">
   <img alt="React" src="https://img.shields.io/badge/React-19-149ECA?logo=react&logoColor=white">
   <img alt="Vite" src="https://img.shields.io/badge/Vite-7-646CFF?logo=vite&logoColor=white">
